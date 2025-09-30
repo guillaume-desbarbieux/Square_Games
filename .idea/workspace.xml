@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0356554c-3d7e-47fd-83de-f51b7ec0d65f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+    <list default="true" id="0356554c-3d7e-47fd-83de-f51b7ec0d65f" name="Changes" comment="il restait des trucs">
+      <change afterPath="$PROJECT_DIR$/filldb.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,12 +67,25 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1759235810188</updated>
-      <workItem from="1759236399032" duration="4425000" />
+      <workItem from="1759236399032" duration="5544000" />
     </task>
+    <task id="LOCAL-00001" summary="il restait des trucs">
+      <option name="closed" value="true" />
+      <created>1759242288369</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1759242288369</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="il restait des trucs" />
+    <option name="LAST_COMMIT_MESSAGE" value="il restait des trucs" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
