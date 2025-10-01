@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="dataSourceStorageLocal" created-in="PS-252.26199.163">
-    <data-source name="@localhost" uuid="a9ed0039-e2f4-40fb-b200-2e1cced91c08">
+  <component name="dataSourceStorageLocal" created-in="DB-252.26199.73">
+    <data-source name="@localhost" uuid="96cf905f-9a49-4ccf-a0d4-813d64eab1ce">
       <database-info product="MySQL" version="8.0.43-0ubuntu0.24.04.2" jdbc-version="4.2" driver-name="MySQL Connector/J" driver-version="mysql-connector-j-8.2.0 (Revision: 06a1f724497fd81c6a659131fda822c9e5085b6c)" dbms="MYSQL" exact-version="8.0.43" exact-driver-version="8.2">
         <extra-name-characters>#@</extra-name-characters>
         <identifier-quote-string>`</identifier-quote-string>
@@ -13,8 +13,8 @@
       <schema-mapping>
         <introspection-scope>
           <node kind="schema">
-            <name qname="@" />
             <name qname="Square_Game" />
+            <name qname="@" />
           </node>
         </introspection-scope>
       </schema-mapping>
