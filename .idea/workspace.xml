@@ -4,16 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0356554c-3d7e-47fd-83de-f51b7ec0d65f" name="Changes" comment="début du remplissage">
-      <change afterPath="$PROJECT_DIR$/alterdb.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/conception/migrationchatgpt.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/data_source_mapping.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
+    <list default="true" id="0356554c-3d7e-47fd-83de-f51b7ec0d65f" name="Changes" comment="remplissage via chat et requetes de test des user stories">
+      <change afterPath="$PROJECT_DIR$/selectstats.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/conception/Square_Game.lo1" beforeDir="false" afterPath="$PROJECT_DIR$/conception/Square_Game.lo1" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/createbdd.sql" beforeDir="false" afterPath="$PROJECT_DIR$/createbdd.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/filldb.sql" beforeDir="false" afterPath="$PROJECT_DIR$/filldb.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,7 +109,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="il restait des trucs" />
     <MESSAGE value="début du remplissage" />
-    <option name="LAST_COMMIT_MESSAGE" value="début du remplissage" />
+    <MESSAGE value="remplissage via chat et requetes de test des user stories" />
+    <option name="LAST_COMMIT_MESSAGE" value="remplissage via chat et requetes de test des user stories" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
