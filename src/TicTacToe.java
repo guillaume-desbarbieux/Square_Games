@@ -1,37 +1,59 @@
+import java.awt.*;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.List;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class TicTacToe {
-    private final int size = 6;
-    private final int numberOfPlayers = 1;
-    Cell[][] cells;
-    Player[] players = new Player[numberOfPlayers];
+    private final int height;
+    private final int width;
+    private Cell[][] cells;
+    private Player[] players;
+    private final int winningLength;
 
     public TicTacToe() {
-        initBoard();
-        char[] symbols = new char[]{'0', 'X', '=', '#'};
-        for (int i = 0; i < numberOfPlayers; i++) {
-            this.players[i] = new Player(i, symbols[i]);
+        this(3,3,3,2);
+    }
+
+    public TicTacToe(int height, int width, int winningLength, int nbPlayers){
+        this.height = Math.max(2,Math.min(20,height));
+        this.width = Math.max(2,Math.min(20,width));
+        this.winningLength = Math.max(2,Math.min(winningLength, Math.max(width, height)));
+        nbPlayers = Math.max(1,Math.min(7,nbPlayers));
+        initCells();
+        initPlayers(nbPlayers);
+    }
+
+    private void initPlayers(int nb_players) {
+
+        this.players = new Player[nb_players];
+        List<Color> possibleColors = Arrays.asList(Color.RED, Color.GREEN, Color.YELLOW, Color.BLUE, Color.PURPLE, Color.CYAN, Color.WHITE);
+        Random random = new Random();
+
+        for (int i = 0; i < nb_players; i++) {
+            Color randomColor = possibleColors.get(random.nextInt(possibleColors.size()));
+            this.players[i] = new Player(i, '●', randomColor);
         }
     }
 
-    private void initBoard() {
-        this.cells = new Cell[this.size][this.size];
-        for (int i = 0; i < this.size; i++) {
-            for (int j = 0; j < this.size; j++) {
+    private void initCells() {
+        this.cells = new Cell[this.height][this.width];
+        for (int i = 0; i < this.height; i++) {
+            for (int j = 0; j < this.width; j++) {
                 cells[i][j] = new Cell();
             }
         }
     }
 
     public void display() {
-        System.out.println("-".repeat(this.size * 4 + 1));
+        System.out.println("-".repeat(width * 4 + 1));
         for (Cell[] row : cells) {
             for (Cell cell : row) {
                 System.out.print("|" + cell.getRepresentation());
             }
             System.out.println("|");
-            System.out.println("-".repeat(this.size * 4 + 1));
+            System.out.println("-".repeat(width * 4 + 1));
         }
     }
 
@@ -39,13 +61,13 @@ public class TicTacToe {
         int x = 0;
         int y = 0;
 
-        while (x > size || x < 1) {
-            System.out.println("ligne ?");
+        while (x < 1 || x > height) {
+            System.out.println("ligne ? [1.." + height + "]");
             x = this.getIntFromUser();
         }
 
-        while (y > size || y < 1) {
-            System.out.println("colonne ?");
+        while (y < 1 || y > width) {
+            System.out.println("colonne ? [1.." + width + "]");
             y = this.getIntFromUser();
         }
 
@@ -64,80 +86,79 @@ public class TicTacToe {
         }
     }
 
-    private void setOwner(int x, int y, Player player) {
-        cells[x][y].setOwner(player);
-    }
-
     public void play() {
-        int currentPlayer = 0;
-        while (!this.isOver()) {
-            System.out.println("====== Joueur " + currentPlayer + " ======");
+        Player currentPlayer = players[0];
+        int freeCells = height * width;
+        display();
+        Player winner = null;
+
+        while (freeCells > 0 && winner == null) {
+            currentPlayer = getNextPlayer(currentPlayer);
+
+            System.out.println("=== Joueur " + currentPlayer.getId() + " ===");
+
             int[] move = getMoveFromPlayer();
-            if (cells[move[0]][move[1]].getOwnerId() == -1) {
-                cells[move[0]][move[1]].setOwner(players[currentPlayer]);
-                currentPlayer = (currentPlayer + 1) % players.length;
+            Cell playedCell = cells[move[0]][move[1]];
+
+            if (playedCell.isEmpty()) {
+                playedCell.setOwner(currentPlayer);
+                freeCells--;
+                if (isWinning(move[0],move[1]))
+                    winner = currentPlayer;
             } else {
                 System.out.println("Cette case est déjà occupée.");
             }
             this.display();
         }
-        if (isWon())
-            System.out.println("Victoire du joueur " + ((currentPlayer + 1) % players.length));
-        else
+        if (winner == null)
             System.out.println("Match Nul");
+        else
+            System.out.println("Victoire du joueur " + winner.getId());
     }
 
-    private boolean isOver() {
-        return isWon() || isFull();
+    private Player getNextPlayer(Player player) {
+        int currentId = player.getId();
+        int nextId = (currentId + 1) % players.length;
+        return players[nextId];
     }
 
-    private boolean isWon() {
-        for (int x = 0; x < this.size; x++) {
-            for (int y = 0; y < this.size - 2; y++) {
-                if (cells[x][y].getOwnerId() != -1
-                        && cells[x][y].getOwnerId() == cells[x][y + 1].getOwnerId()
-                        && cells[x][y].getOwnerId() == cells[x][y + 2].getOwnerId())
-                    return true;
-            }
-        }
 
-        for (int y = 0; y < this.size; y++) {
-            for (int x = 0; x < this.size - 2; x++) {
-                if (cells[x][y].getOwnerId() != -1
-                        && cells[x][y].getOwnerId() == cells[x + 1][y].getOwnerId()
-                        && cells[x][y].getOwnerId() == cells[x + 2][y].getOwnerId())
-                    return true;
-            }
-        }
+    private boolean isWinning(int row, int col) {
+        int playerId = cells[row][col].getOwnerId();
+        if (playerId == -1)
+            return false;
 
-        for (int x = 0; x < this.size - 2; x++) {
-            for (int y = 0; y < this.size - 2; y++) {
-                if (cells[x][y].getOwnerId() != -1
-                        && cells[x][y].getOwnerId() == cells[x + 1][y + 1].getOwnerId()
-                        && cells[x][y].getOwnerId() == cells[x + 2][y + 2].getOwnerId())
-                    return true;
-            }
-        }
+        int[][] directions = {
+                {0, 1}, // horizontally
+                {1, 0}, // vertically
+                {1, 1}, // diagonally ↘
+                {1, -1} // diagonally ↙
+        };
 
-        for (int x = 0; x < this.size - 2; x++) {
-            for (int y = 2; y < this.size; y++) {
-                if (cells[x][y].getOwnerId() != -1
-                        && cells[x][y].getOwnerId() == cells[x + 1][y - 1].getOwnerId()
-                        && cells[x][y].getOwnerId() == cells[x + 2][y - 2].getOwnerId())
-                    return true;
-            }
+        for (int[] dir : directions) {
+            int count = 1;
+            count += countInDirection(row, col, dir[0], dir[1], playerId);
+            count += countInDirection(row, col, -dir[0], -dir[1], playerId);
+
+            if (count >= winningLength)
+                return true;
+
         }
         return false;
     }
 
-    private boolean isFull() {
-        for (Cell[] row : cells) {
-            for (Cell cell : row) {
-                if (cell.getOwnerId() == -1)
-                    return false;
-            }
-        }
-        return true;
-    }
+    private int countInDirection(int row, int col, int dRow, int dCol, int playerId) {
+        int count = 0;
 
+        int r = row + dRow;
+        int c = col + dCol;
+        while (r >= 0 && r < width
+                && c >= 0 && c < height
+                && cells[r][c].getOwnerId() == playerId) {
+            count++;
+            r += dRow;
+            c += dCol;
+        }
+        return count;
+    }
 }

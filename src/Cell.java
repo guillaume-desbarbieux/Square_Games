@@ -23,4 +23,8 @@ public class Cell {
         else
             return owner.getId();
     }
+
+    public boolean isEmpty(){
+        return this.owner == null;
+    }
 }

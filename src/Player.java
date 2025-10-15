@@ -3,9 +3,9 @@ public class Player {
     private final int id;
 
 
-    public Player(int id, char symbol) {
+    public Player(int id, char symbol, Color color) {
         this.id = id;
-        this.representation = " " + symbol + " ";
+        this.representation = " " + color + symbol + Color.RESET + " ";
     }
 
     public String getRepresentation() {
