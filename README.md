@@ -7,35 +7,55 @@ classDiagram
     TicTacToe --> Player : contains
     Cell --> Player : ownedBy
     Main --> TicTacToe : call
+    TicTacToe --> GameScanner : use
+    Player --> GameScanner : use
     
+    
+    class Main{
+     + main():void
+    }
     
     class TicTacToe{
-     - size : int
-     - cells : Cell [][]
-     - player1 : Player
-     - player2 : Player
-     - initBoard() void
-     - display() void
-     - getMoveFromPlayer() void
-     - setOwner(int x, int y, Player player) void
+     - height : int
+     - width : int
+     - winningLength : int
+     - scanner : GameScanner
+     - players : Player []
+     - board : Board
+     
+     - initPlayers(int quantity) void
+     - clamp(int value, int min, int max) int
+     
+     + display() void
      + play() void
-     - isOver() boolean
-
+     
+     - getNextPlayer(Player) Player
+     - isWinning (int col, int row) boolean
+     - countInDirections(int row, int col, int dRow, int dCol, int id) int
     }
     
     class Cell{
         - representation : String
         - owner : Player
+        
+        + setOwner(Player) void
         + getRepresentation() String
         + getOwner() Player
-        
+        + isEmpty() boolean        
     }
     
     class Player{
+        - id int
         - representation : String
+        
+        + getId() int
         + getRepresentation() String
+        + getMove(GameScanner, Board) int[]        
     }
     
-    class Main{
-    + main():void
+    class GameScanner{
+        - scanner : Scanner
+        + getIntFromUser() int
     }
+    
+

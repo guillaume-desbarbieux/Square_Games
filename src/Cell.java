@@ -17,11 +17,8 @@ public class Cell {
         this.owner = player;
     }
 
-    public int getOwnerId() {
-        if (this.owner == null)
-            return -1;
-        else
-            return owner.getId();
+    public Player getOwner() {
+            return this.owner;
     }
 
     public boolean isEmpty(){
