@@ -15,7 +15,7 @@ public class Power4 {
 
 
     public Power4() {
-        this(3, 3, 3, 2);
+        this(6, 7, 4, 2);
     }
 
     public Power4(int height, int width, int winningLength, int nbPlayers) {
