@@ -1,4 +1,4 @@
-package Power4;
+package Player;
 
 public enum Color {
     RESET("\u001B[0m"),

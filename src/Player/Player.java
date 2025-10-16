@@ -1,4 +1,8 @@
-package TicTacToe;
+package Player;
+
+import Board.TicTacToeBoard;
+import Interact.InteractionUser;
+import Interact.View;
 
 public abstract class Player {
     private final int id;
@@ -17,5 +21,5 @@ public abstract class Player {
         return this.id;
     }
 
-    public abstract int[] getMove(InteractionUser interact, View view, Board board);
+    public abstract int[] getMove(InteractionUser interact, View view, TicTacToeBoard board);
 }

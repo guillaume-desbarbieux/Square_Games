@@ -1,9 +1,9 @@
-package Power4;
+package Board;
 
-public class Board {
+public class Power4Board {
     private final Cell[][] cells;
 
-    public Board(int height, int width) {
+    public Power4Board(int height, int width) {
         this.cells = new Cell[height][width];
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {

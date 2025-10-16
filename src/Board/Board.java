@@ -1,9 +1,10 @@
-package TicTacToe;
+package Board;
 
-import java.util.ArrayList;
+import Player.Player;
+
 import java.util.List;
 
-public class Board {
+public abstract class Board {
     private final Cell[][] cells;
 
     public Board(int height, int width) {
@@ -27,7 +28,9 @@ public class Board {
         return this.cells[0].length;
     }
 
-    public void playMove(int row, int col, Player player) {
+    public abstract void playMove(int row, int col, Player player);
+
+    public void setCell(int row, int col, Player player) {
         getCell(row, col).setOwner(player);
     }
 
@@ -41,16 +44,7 @@ public class Board {
         return true;
     }
 
-    public List<int[]> getFreeCells() {
-        List<int []> listFreeCells = new ArrayList<>();
+    public abstract List<int[]> getPlayableCells();
 
-        for (int i = 0 ; i < height() ; i++){
-            for (int j = 0 ; j < width() ; j++){
-                if (getCell(i,j).isEmpty()){
-                    listFreeCells.add(new int[]{i,j});
-                }
-            }
-        }
-        return listFreeCells;
-    }
+    public abstract boolean isPlayable(int[] move);
 }

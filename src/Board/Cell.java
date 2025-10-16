@@ -1,4 +1,6 @@
-package Power4;
+package Board;
+
+import Player.Player;
 
 public class Cell {
     private String representation;
@@ -6,7 +8,7 @@ public class Cell {
 
 
     public Cell() {
-        this.representation = "   ";
+        this.representation = "·";
         this.owner = null;
     }
 

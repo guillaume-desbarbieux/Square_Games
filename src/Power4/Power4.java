@@ -1,5 +1,7 @@
 package Power4;
 
+import Board.Power4Board;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -10,7 +12,7 @@ public class Power4 {
     private final int width;
     private final int winningLength;
     private final GameScanner scanner;
-    private final Board board;
+    private final Power4Board board;
     private Player[] players;
 
 
@@ -23,7 +25,7 @@ public class Power4 {
         this.width = clamp(width, 2, 20);
         this.winningLength = clamp(winningLength, 2, Math.max(width, height));
         this.scanner = new GameScanner();
-        this.board = new Board(height, width);
+        this.board = new Power4Board(height, width);
         initPlayers(clamp(nbPlayers, 1, 7));
     }
 
