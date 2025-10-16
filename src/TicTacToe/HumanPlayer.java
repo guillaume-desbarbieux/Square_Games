@@ -6,23 +6,23 @@ public class HumanPlayer extends Player {
     }
 
     @Override
-    public int[] getMove(GameScanner scanner, View view, Board board) {
+    public int[] getMove(InteractionUser interact, View view, Board board) {
         int x = 0;
         int y = 0;
 
         while (x < 1 || x > board.height()) {
             view.displayMessage("ligne ? [1.." + board.height() + "]");
-            x = scanner.getIntFromUser();
+            x = interact.getIntFromUser();
 
         }
         while (y < 1 || y > board.width()) {
             view.displayMessage("colonne ? [1.." + board.width() + "]");
-            y = scanner.getIntFromUser();
+            y = interact.getIntFromUser();
         }
         if (board.getCell(x-1, y-1).isEmpty()) {
             return new int[]{x - 1, y - 1};
         } else {
-            return getMove(scanner, view, board);
+            return getMove(interact, view, board);
         }
     }
 }

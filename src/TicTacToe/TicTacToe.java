@@ -6,28 +6,44 @@ import java.util.Collections;
 import java.util.List;
 
 public class TicTacToe {
-    private final int height;
-    private final int width;
-    private final int winningLength;
-    private final GameScanner scanner;
-    private final View view;
-    private final Board board;
+    private int height;
+    private int width;
+    private int winningLength;
+    private View view;
+    private InteractionUser interact;
+    private Board board;
     private Player[] players;
 
 
     public TicTacToe() {
-        this(3, 3, 3, 1,1);
+        this.view = new View();
+        this.interact = new InteractionUser(view);
+        menu();
     }
 
-    public TicTacToe(int height, int width, int winningLength, int nbHumanPlayers, int nbArtificialPlayers) {
-        this.height = clamp(height, 2, 20);
-        this.width = clamp(width, 2, 20);
-        this.winningLength = clamp(winningLength, 2, Math.max(width, height));
-        this.scanner = new GameScanner();
-        this.view = new View();
+    private void menu() {
+        view.displayTitle("TicTacToe     -     Menu Principal");
+        view.displayMessage("Hauteur plateau ? [3..20]");
+        int height = interact.getIntFromUser();
+        view.displayMessage("Largeur plateau ? [3..20]");
+        int width = interact.getIntFromUser();
+        view.displayMessage("nb Joueurs humains ? [0..7]");
+        int nbHumanPlayers = interact.getIntFromUser();
+        view.displayMessage("nb Joueurs artificiels ? [0..7]");
+        int nbArtificialPlayers = interact.getIntFromUser();
+        view.displayMessage("longueur gagnante ? [3..20]");
+        int winningLength = interact.getIntFromUser();
+
+        initGame(height, width, winningLength, nbHumanPlayers, nbArtificialPlayers);
+    }
+
+    private void initGame(int height, int width, int winningLength, int nbHumanPlayers, int nbArtificialPlayers) {
+        this.height = clamp(height, 3, 20);
+        this.width = clamp(width, 3, 20);
+        this.winningLength = clamp(winningLength, 3, Math.max(width, height));
         this.board = new Board(height, width);
         nbHumanPlayers = clamp(nbHumanPlayers, 0, 7);
-        nbArtificialPlayers = clamp(nbArtificialPlayers, (nbHumanPlayers == 0)? 1 : 0, 7-nbHumanPlayers);
+        nbArtificialPlayers = clamp(nbArtificialPlayers, (nbHumanPlayers == 0) ? 1 : 0, 7 - nbHumanPlayers);
         initPlayers(nbHumanPlayers, nbArtificialPlayers);
     }
 
@@ -37,14 +53,14 @@ public class TicTacToe {
 
     private void initPlayers(int nbHumanPlayers, int nbArtificialPlayers) {
 
-        this.players = new Player[nbHumanPlayers + nbArtificialPlayers ];
+        this.players = new Player[nbHumanPlayers + nbArtificialPlayers];
         List<Color> possibleColors = new ArrayList<>(Arrays.asList(Color.RED, Color.GREEN, Color.YELLOW, Color.BLUE, Color.PURPLE, Color.CYAN, Color.WHITE));
         Collections.shuffle(possibleColors);
 
         for (int i = 0; i < nbHumanPlayers; i++) {
             this.players[i] = new HumanPlayer(i, '●', possibleColors.get(i % possibleColors.size()));
         }
-        for (int i = nbHumanPlayers ; i < nbHumanPlayers + nbArtificialPlayers ; i++){
+        for (int i = nbHumanPlayers; i < nbHumanPlayers + nbArtificialPlayers; i++) {
             this.players[i] = new ArticicialPlayer(i, '●', possibleColors.get(i % possibleColors.size()));
         }
     }
@@ -63,7 +79,7 @@ public class TicTacToe {
 
             view.displayMessage("=== Joueur " + currentPlayer.getId() + currentPlayer.getRepresentation() + " ===");
 
-            int[] move = currentPlayer.getMove(scanner, view, board);
+            int[] move = currentPlayer.getMove(interact, view, board);
             board.playMove(move[0], move[1], currentPlayer);
             if (isWinning(move[0], move[1])) {
                 winner = currentPlayer;
@@ -74,9 +90,9 @@ public class TicTacToe {
         }
 
         if (winner == null) {
-           view.displayMessage("Match Nul");
+            view.displayMessage("Match Nul");
         } else {
-           view.displayMessage("Victoire du joueur " + winner.getId());
+            view.displayMessage("Victoire du joueur " + winner.getId());
         }
     }
 
