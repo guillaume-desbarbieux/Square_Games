@@ -1,5 +1,4 @@
 package TicTacToe;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -90,7 +89,7 @@ public class TicTacToe {
 
         while (!board.isFull() && winner == null) {
 
-            view.displayMessage("=== Joueur " + currentPlayer.getId() + currentPlayer.getRepresentation() + " ===");
+            view.displayMessage("=== Joueur " + currentPlayer.getRepresentation() + " ===");
 
             int[] move = currentPlayer.getMove(interact, view, board);
             board.playMove(move[0], move[1], currentPlayer);
@@ -105,7 +104,7 @@ public class TicTacToe {
         if (winner == null) {
             view.displayMessage("Match Nul");
         } else {
-            view.displayMessage("Victoire du joueur " + winner.getId());
+            view.displayMessage("Victoire du joueur " + winner.getRepresentation());
         }
     }
 
