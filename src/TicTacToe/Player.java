@@ -17,5 +17,5 @@ public abstract class Player {
         return this.id;
     }
 
-    public abstract int[] getMove(GameScanner scanner, Board board);
+    public abstract int[] getMove(GameScanner scanner, View view, Board board);
 }

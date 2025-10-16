@@ -8,7 +8,7 @@ public class ArticicialPlayer extends Player{
     }
 
     @Override
-    public int[] getMove(GameScanner scanner, Board board) {
+    public int[] getMove(GameScanner scanner, View view, Board board) {
         Random random = new Random();
         List<int[]> listFreeCells = board.getFreeCells();
         return listFreeCells.get(random.nextInt(0, listFreeCells.size()));

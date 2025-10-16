@@ -63,7 +63,7 @@ public class TicTacToe {
 
             view.displayMessage("=== Joueur " + currentPlayer.getId() + currentPlayer.getRepresentation() + " ===");
 
-            int[] move = currentPlayer.getMove(this.scanner, this.board);
+            int[] move = currentPlayer.getMove(scanner, view, board);
             board.playMove(move[0], move[1], currentPlayer);
             if (isWinning(move[0], move[1])) {
                 winner = currentPlayer;
