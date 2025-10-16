@@ -3,25 +3,25 @@
 ```mermaid
 classDiagram
     
-    TicTacToe --> Cell : contains
-    TicTacToe --> Player : contains
-    Cell --> Player : ownedBy
-    Main --> TicTacToe : call
-    TicTacToe --> GameScanner : use
-    Player --> GameScanner : use
+    TicTacToe.TicTacToe --> TicTacToe.Cell : contains
+    TicTacToe.TicTacToe --> TicTacToe.Player : contains
+    TicTacToe.Cell --> TicTacToe.Player : ownedBy
+    TicTacToe.Main --> TicTacToe.TicTacToe : call
+    TicTacToe.TicTacToe --> TicTacToe.GameScanner : use
+    TicTacToe.Player --> TicTacToe.GameScanner : use
     
     
-    class Main{
+    class TicTacToe.Main{
      + main():void
     }
     
-    class TicTacToe{
+    class TicTacToe.TicTacToe{
      - height : int
      - width : int
      - winningLength : int
-     - scanner : GameScanner
-     - players : Player []
-     - board : Board
+     - scanner : TicTacToe.GameScanner
+     - players : TicTacToe.Player []
+     - board : TicTacToe.Board
      
      - initPlayers(int quantity) void
      - clamp(int value, int min, int max) int
@@ -29,31 +29,31 @@ classDiagram
      + display() void
      + play() void
      
-     - getNextPlayer(Player) Player
+     - getNextPlayer(TicTacToe.Player) TicTacToe.Player
      - isWinning (int col, int row) boolean
      - countInDirections(int row, int col, int dRow, int dCol, int id) int
     }
     
-    class Cell{
+    class TicTacToe.Cell{
         - representation : String
-        - owner : Player
+        - owner : TicTacToe.Player
         
-        + setOwner(Player) void
+        + setOwner(TicTacToe.Player) void
         + getRepresentation() String
-        + getOwner() Player
+        + getOwner() TicTacToe.Player
         + isEmpty() boolean        
     }
     
-    class Player{
+    class TicTacToe.Player{
         - id int
         - representation : String
         
         + getId() int
         + getRepresentation() String
-        + getMove(GameScanner, Board) int[]        
+        + getMove(TicTacToe.GameScanner, TicTacToe.Board) int[]        
     }
     
-    class GameScanner{
+    class TicTacToe.GameScanner{
         - scanner : Scanner
         + getIntFromUser() int
     }
