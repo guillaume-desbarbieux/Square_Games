@@ -6,7 +6,7 @@ public class Cell {
 
 
     public Cell() {
-        this.representation = "   ";
+        this.representation = "·";
         this.owner = null;
     }
 

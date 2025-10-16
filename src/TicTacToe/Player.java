@@ -6,7 +6,7 @@ public abstract class Player {
 
     public Player(int id, char symbol, Color color) {
         this.id = id;
-        this.representation = " " + color + symbol + Color.RESET + " ";
+        this.representation = "" + color + symbol + Color.RESET;
     }
 
     public String getRepresentation() {

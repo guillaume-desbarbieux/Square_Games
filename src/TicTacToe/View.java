@@ -1,35 +1,46 @@
 package TicTacToe;
 
 public class View {
+    private boolean maximize = false;
 
     public View() {
     }
 
+    public void setMaximize(boolean maximize) {
+        this.maximize = maximize;
+    }
+
     public void displayMessage(String message) {
+
         System.out.println(message);
     }
 
-
     public void displayBoard(Board board) {
-        StringBuilder message = new StringBuilder();
         int indexWidth = String.valueOf(board.height()).length();
-        int cellWidth = 3;
+        String horizontalSeparator = " ";
+        String verticalSeparator = "";
+        int cellWidth = horizontalSeparator.length() + 1;
 
-        String separator = "\n" + " ".repeat(indexWidth + 1) + "-".repeat((cellWidth + 1) * board.width() + 1) + "\n";
+        if (maximize) {
+            horizontalSeparator = " | ";
+            cellWidth = horizontalSeparator.length() + 1;
+            verticalSeparator = " ".repeat(indexWidth + cellWidth/2) + "-".repeat(cellWidth * board.width()) + "\n";
+        }
 
-        message.append(" ".repeat(indexWidth + 2));
+        StringBuilder message = new StringBuilder();
+        message.append(" ".repeat(indexWidth));
 
         for (int j = 0; j < board.width(); j++) {
-            message.append(String.format("%" + cellWidth + "d ", j + 1));
+            message.append(String.format("%" + cellWidth + "d", j + 1));
         }
-        message.append(separator);
+        message.append("\n").append(verticalSeparator);
 
         for (int i = 0; i < board.height(); i++) {
-            message.append(String.format("%" + indexWidth + "d |", i + 1));
+            message.append(String.format("%" + indexWidth + "d", i + 1)).append(horizontalSeparator);
             for (int j = 0; j < board.width(); j++) {
-                message.append(String.format("%" + cellWidth + "s", board.getCell(i, j).getRepresentation())).append("|");
+                message.append(board.getCell(i, j).getRepresentation()).append(horizontalSeparator);
             }
-            message.append(separator);
+            message.append("\n").append(verticalSeparator);
         }
         displayMessage(message.toString());
     }

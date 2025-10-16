@@ -20,8 +20,19 @@ public class TicTacToe {
         this.interact = new InteractionUser(view);
     }
 
-    public void menu() {
-        view.displayTitle("TicTacToe     -     Menu Principal");
+    public void start(){
+        view.displayTitle("TicTacToe");
+        view.displayMessage("Partie Rapide ? (1 pour oui)");
+        if (interact.getIntFromUser() == 1){
+            initGame(3,3,3,1,1);
+        } else {
+            menu();
+        }
+        play();
+    }
+
+    private void menu() {
+        view.displayTitle("Menu Principal");
         view.displayMessage("Hauteur plateau ? [3..20]");
         int height = interact.getIntFromUser();
         view.displayMessage("Largeur plateau ? [3..20]");
@@ -32,6 +43,8 @@ public class TicTacToe {
         int nbArtificialPlayers = interact.getIntFromUser();
         view.displayMessage("longueur gagnante ? [3..20]");
         int winningLength = interact.getIntFromUser();
+        view.displayMessage("taille affichage ? [0..1]");
+        view.setMaximize(interact.getIntFromUser() != 0);
 
         initGame(height, width, winningLength, nbHumanPlayers, nbArtificialPlayers);
         play();
