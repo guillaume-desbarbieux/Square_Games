@@ -1,39 +1,42 @@
 import java.awt.*;
-import java.util.Arrays;
-import java.util.Random;
+import java.util.*;
 import java.util.List;
-import java.util.InputMismatchException;
-import java.util.Scanner;
 
 public class TicTacToe {
     private final int height;
     private final int width;
+    private final int winningLength;
+    private final Scanner scanner;
     private Cell[][] cells;
     private Player[] players;
-    private final int winningLength;
+
 
     public TicTacToe() {
-        this(3,3,3,2);
+        this(3, 3, 3, 2);
     }
 
-    public TicTacToe(int height, int width, int winningLength, int nbPlayers){
-        this.height = Math.max(2,Math.min(20,height));
-        this.width = Math.max(2,Math.min(20,width));
-        this.winningLength = Math.max(2,Math.min(winningLength, Math.max(width, height)));
-        nbPlayers = Math.max(1,Math.min(7,nbPlayers));
+    public TicTacToe(int height, int width, int winningLength, int nbPlayers) {
+        this.height = clamp(height, 2, 20);
+        this.width = clamp(width, 2, 20);
+        this.winningLength = clamp(winningLength, 2, Math.max(width, height));
+        this.scanner = new Scanner(System.in);
+        nbPlayers = clamp(nbPlayers, 1, 7);
         initCells();
         initPlayers(nbPlayers);
+    }
+
+    private int clamp(int value, int min, int max) {
+        return Math.max(min, Math.min(max, value));
     }
 
     private void initPlayers(int nb_players) {
 
         this.players = new Player[nb_players];
-        List<Color> possibleColors = Arrays.asList(Color.RED, Color.GREEN, Color.YELLOW, Color.BLUE, Color.PURPLE, Color.CYAN, Color.WHITE);
-        Random random = new Random();
+        List<Color> possibleColors = new ArrayList<>(Arrays.asList(Color.RED, Color.GREEN, Color.YELLOW, Color.BLUE, Color.PURPLE, Color.CYAN, Color.WHITE));
+        Collections.shuffle(possibleColors);
 
         for (int i = 0; i < nb_players; i++) {
-            Color randomColor = possibleColors.get(random.nextInt(possibleColors.size()));
-            this.players[i] = new Player(i, '●', randomColor);
+            this.players[i] = new Player(i, '●', possibleColors.get(i % possibleColors.size()));
         }
     }
 
@@ -47,14 +50,29 @@ public class TicTacToe {
     }
 
     public void display() {
-        System.out.println("-".repeat(width * 4 + 1));
-        for (Cell[] row : cells) {
-            for (Cell cell : row) {
-                System.out.print("|" + cell.getRepresentation());
-            }
-            System.out.println("|");
-            System.out.println("-".repeat(width * 4 + 1));
+        int indexWidth = 2;
+        int cellWidth = 3;
+
+        String separator = " ".repeat(indexWidth + 1) + "-".repeat((cellWidth + 1) * width + 1);
+
+        System.out.print(" ".repeat(indexWidth + 1));
+        for (int j = 0; j < width; j++) {
+            System.out.printf("%" + cellWidth + "d ", j + 1);
         }
+        System.out.println();
+
+        System.out.println(separator);
+
+        for (int i = 0; i < height; i++) {
+            System.out.printf("%" + indexWidth + "d |", i + 1);
+            for (int j = 0; j < width; j++) {
+                System.out.printf("%" + cellWidth + "s", cells[i][j].getRepresentation());
+                System.out.print("|");
+            }
+            System.out.println();
+            System.out.println(separator);
+        }
+        System.out.println();
     }
 
     public int[] getMoveFromPlayer() {
@@ -75,13 +93,12 @@ public class TicTacToe {
     }
 
     private int getIntFromUser() {
-        Scanner scanner = new Scanner(System.in);
         while (true) {
             try {
-                return scanner.nextInt();
+                return this.scanner.nextInt();
             } catch (InputMismatchException e) {
                 System.out.println("Ceci n'est pas un entier.");
-                scanner.nextLine();
+                this.scanner.nextLine();
             }
         }
     }
@@ -93,27 +110,29 @@ public class TicTacToe {
         Player winner = null;
 
         while (freeCells > 0 && winner == null) {
-            currentPlayer = getNextPlayer(currentPlayer);
 
-            System.out.println("=== Joueur " + currentPlayer.getId() + " ===");
+
+            System.out.println("=== Joueur " + currentPlayer.getId() + currentPlayer.getRepresentation() + " ===");
 
             int[] move = getMoveFromPlayer();
             Cell playedCell = cells[move[0]][move[1]];
 
             if (playedCell.isEmpty()) {
                 playedCell.setOwner(currentPlayer);
+
                 freeCells--;
-                if (isWinning(move[0],move[1]))
+                if (isWinning(move[0], move[1])) {
                     winner = currentPlayer;
+                } else {
+                    currentPlayer = getNextPlayer(currentPlayer);
+                }
             } else {
                 System.out.println("Cette case est déjà occupée.");
             }
             this.display();
         }
-        if (winner == null)
-            System.out.println("Match Nul");
-        else
-            System.out.println("Victoire du joueur " + winner.getId());
+        if (winner == null) System.out.println("Match Nul");
+        else System.out.println("Victoire du joueur " + winner.getId());
     }
 
     private Player getNextPlayer(Player player) {
@@ -125,11 +144,9 @@ public class TicTacToe {
 
     private boolean isWinning(int row, int col) {
         int playerId = cells[row][col].getOwnerId();
-        if (playerId == -1)
-            return false;
+        if (playerId == -1) return false;
 
-        int[][] directions = {
-                {0, 1}, // horizontally
+        int[][] directions = {{0, 1}, // horizontally
                 {1, 0}, // vertically
                 {1, 1}, // diagonally ↘
                 {1, -1} // diagonally ↙
@@ -140,8 +157,7 @@ public class TicTacToe {
             count += countInDirection(row, col, dir[0], dir[1], playerId);
             count += countInDirection(row, col, -dir[0], -dir[1], playerId);
 
-            if (count >= winningLength)
-                return true;
+            if (count >= winningLength) return true;
 
         }
         return false;
@@ -149,11 +165,10 @@ public class TicTacToe {
 
     private int countInDirection(int row, int col, int dRow, int dCol, int playerId) {
         int count = 0;
-
         int r = row + dRow;
         int c = col + dCol;
-        while (r >= 0 && r < width
-                && c >= 0 && c < height
+        while (r >= 0 && r < height
+                && c >= 0 && c < width
                 && cells[r][c].getOwnerId() == playerId) {
             count++;
             r += dRow;
