@@ -10,6 +10,7 @@ public class TicTacToe {
     private final int width;
     private final int winningLength;
     private final GameScanner scanner;
+    private final View view;
     private final Board board;
     private Player[] players;
 
@@ -23,6 +24,7 @@ public class TicTacToe {
         this.width = clamp(width, 2, 20);
         this.winningLength = clamp(winningLength, 2, Math.max(width, height));
         this.scanner = new GameScanner();
+        this.view = new View();
         this.board = new Board(height, width);
         nbHumanPlayers = clamp(nbHumanPlayers, 0, 7);
         nbArtificialPlayers = clamp(nbArtificialPlayers, (nbHumanPlayers == 0)? 1 : 0, 7-nbHumanPlayers);
@@ -47,50 +49,19 @@ public class TicTacToe {
         }
     }
 
-
-    public void display() {
-        int indexWidth = 2;
-        int cellWidth = 3;
-
-        String separator = " ".repeat(indexWidth + 1) + "-".repeat((cellWidth + 1) * width + 1);
-
-        System.out.print(" ".repeat(indexWidth + 1));
-        for (int j = 0; j < width; j++) {
-            System.out.printf("%" + cellWidth + "d ", j + 1);
-        }
-        System.out.println();
-        System.out.println(separator);
-
-        for (int i = 0; i < height; i++) {
-            System.out.printf("%" + indexWidth + "d |", i + 1);
-            for (int j = 0; j < width; j++) {
-                System.out.printf("%" + cellWidth + "s", board.getCell(i, j).getRepresentation());
-                System.out.print("|");
-            }
-            System.out.println();
-            System.out.println(separator);
-        }
-        System.out.println();
-    }
-
     public void play() {
-        int widthMessage = 50;
-        System.out.println();
-        System.out.println("-".repeat(widthMessage));
-        System.out.printf("""
+        view.displayTitle(String.format("""
                 TicTacToe sur grille %dx%d pour %d joueurs.
                 Alignez %d jetons pour gagner...
-                %""" + widthMessage + "s%n", height, width, players.length, winningLength, "Bonne chance !");
-        System.out.println("-".repeat(widthMessage));
-        System.out.println();
+                %50s""", height, width, players.length, winningLength, "Bonne chance !"));
 
         Player currentPlayer = players[0];
-        display();
+        view.displayBoard(board);
         Player winner = null;
 
         while (!board.isFull() && winner == null) {
 
-            System.out.println("=== Joueur " + currentPlayer.getId() + currentPlayer.getRepresentation() + " ===");
+            view.displayMessage("=== Joueur " + currentPlayer.getId() + currentPlayer.getRepresentation() + " ===");
 
             int[] move = currentPlayer.getMove(this.scanner, this.board);
             board.playMove(move[0], move[1], currentPlayer);
@@ -99,13 +70,13 @@ public class TicTacToe {
             } else {
                 currentPlayer = getNextPlayer(currentPlayer);
             }
-            this.display();
+            view.displayBoard(board);
         }
 
         if (winner == null) {
-            System.out.println("Match Nul");
+           view.displayMessage("Match Nul");
         } else {
-            System.out.println("Victoire du joueur " + winner.getId());
+           view.displayMessage("Victoire du joueur " + winner.getId());
         }
     }
 
@@ -114,6 +85,7 @@ public class TicTacToe {
         int nextId = (currentId + 1) % players.length;
         return players[nextId];
     }
+
 
     private boolean isWinning(int row, int col) {
         int playerId = board.getCell(row, col).getOwner().getId();
