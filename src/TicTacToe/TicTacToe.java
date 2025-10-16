@@ -15,30 +15,35 @@ public class TicTacToe {
 
 
     public TicTacToe() {
-        this(3, 3, 3, 2);
+        this(3, 3, 3, 1,1);
     }
 
-    public TicTacToe(int height, int width, int winningLength, int nbPlayers) {
+    public TicTacToe(int height, int width, int winningLength, int nbHumanPlayers, int nbArtificialPlayers) {
         this.height = clamp(height, 2, 20);
         this.width = clamp(width, 2, 20);
         this.winningLength = clamp(winningLength, 2, Math.max(width, height));
         this.scanner = new GameScanner();
         this.board = new Board(height, width);
-        initPlayers(clamp(nbPlayers, 1, 7));
+        nbHumanPlayers = clamp(nbHumanPlayers, 0, 7);
+        nbArtificialPlayers = clamp(nbArtificialPlayers, (nbHumanPlayers == 0)? 1 : 0, 7-nbHumanPlayers);
+        initPlayers(nbHumanPlayers, nbArtificialPlayers);
     }
 
     private int clamp(int value, int min, int max) {
         return Math.max(min, Math.min(max, value));
     }
 
-    private void initPlayers(int nb_players) {
+    private void initPlayers(int nbHumanPlayers, int nbArtificialPlayers) {
 
-        this.players = new Player[nb_players];
+        this.players = new Player[nbHumanPlayers + nbArtificialPlayers ];
         List<Color> possibleColors = new ArrayList<>(Arrays.asList(Color.RED, Color.GREEN, Color.YELLOW, Color.BLUE, Color.PURPLE, Color.CYAN, Color.WHITE));
         Collections.shuffle(possibleColors);
 
-        for (int i = 0; i < nb_players; i++) {
+        for (int i = 0; i < nbHumanPlayers; i++) {
             this.players[i] = new HumanPlayer(i, '●', possibleColors.get(i % possibleColors.size()));
+        }
+        for (int i = nbHumanPlayers ; i < nbHumanPlayers + nbArtificialPlayers ; i++){
+            this.players[i] = new ArticicialPlayer(i, '●', possibleColors.get(i % possibleColors.size()));
         }
     }
 
