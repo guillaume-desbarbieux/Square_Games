@@ -18,10 +18,9 @@ public class TicTacToe {
     public TicTacToe() {
         this.view = new View();
         this.interact = new InteractionUser(view);
-        menu();
     }
 
-    private void menu() {
+    public void menu() {
         view.displayTitle("TicTacToe     -     Menu Principal");
         view.displayMessage("Hauteur plateau ? [3..20]");
         int height = interact.getIntFromUser();
@@ -35,6 +34,7 @@ public class TicTacToe {
         int winningLength = interact.getIntFromUser();
 
         initGame(height, width, winningLength, nbHumanPlayers, nbArtificialPlayers);
+        play();
     }
 
     private void initGame(int height, int width, int winningLength, int nbHumanPlayers, int nbArtificialPlayers) {
@@ -65,7 +65,7 @@ public class TicTacToe {
         }
     }
 
-    public void play() {
+    private void play() {
         view.displayTitle(String.format("""
                 TicTacToe sur grille %dx%d pour %d joueurs.
                 Alignez %d jetons pour gagner...
@@ -108,9 +108,9 @@ public class TicTacToe {
         if (playerId == -1) return false;
 
         int[][] directions = {{0, 1}, // horizontally
-                {1, 0}, // vertically
-                {1, 1}, // diagonally ↘
-                {1, -1} // diagonally ↙
+                              {1, 0}, // vertically
+                              {1, 1}, // diagonally ↘
+                              {1,-1} // diagonally ↙
         };
 
         for (int[] dir : directions) {
