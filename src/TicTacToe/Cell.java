@@ -1,3 +1,5 @@
+package TicTacToe;
+
 public class Cell {
     private String representation;
     private Player owner;

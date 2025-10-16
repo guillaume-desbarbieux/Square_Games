@@ -1,3 +1,5 @@
+package TicTacToe;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,7 +38,7 @@ public class TicTacToe {
         Collections.shuffle(possibleColors);
 
         for (int i = 0; i < nb_players; i++) {
-            this.players[i] = new Player(i, '●', possibleColors.get(i % possibleColors.size()));
+            this.players[i] = new HumanPlayer(i, '●', possibleColors.get(i % possibleColors.size()));
         }
     }
 
@@ -52,13 +54,12 @@ public class TicTacToe {
             System.out.printf("%" + cellWidth + "d ", j + 1);
         }
         System.out.println();
-
         System.out.println(separator);
 
         for (int i = 0; i < height; i++) {
             System.out.printf("%" + indexWidth + "d |", i + 1);
             for (int j = 0; j < width; j++) {
-                System.out.printf("%" + cellWidth + "s", board.getCell(i,j).getRepresentation());
+                System.out.printf("%" + cellWidth + "s", board.getCell(i, j).getRepresentation());
                 System.out.print("|");
             }
             System.out.println();
@@ -72,41 +73,35 @@ public class TicTacToe {
         System.out.println();
         System.out.println("-".repeat(widthMessage));
         System.out.printf("""
-                Nouvelle partie sur grille %dx%d pour %d joueurs.
+                TicTacToe sur grille %dx%d pour %d joueurs.
                 Alignez %d jetons pour gagner...
                 %""" + widthMessage + "s%n", height, width, players.length, winningLength, "Bonne chance !");
         System.out.println("-".repeat(widthMessage));
         System.out.println();
 
         Player currentPlayer = players[0];
-        int freeCells = height * width;
         display();
         Player winner = null;
 
-        while (freeCells > 0 && winner == null) {
-
+        while (!board.isFull() && winner == null) {
 
             System.out.println("=== Joueur " + currentPlayer.getId() + currentPlayer.getRepresentation() + " ===");
 
             int[] move = currentPlayer.getMove(this.scanner, this.board);
-            Cell playedCell = board.getCell(move[0],move[1]);
-
-            if (playedCell.isEmpty()) {
-                playedCell.setOwner(currentPlayer);
-
-                freeCells--;
-                if (isWinning(move[0], move[1])) {
-                    winner = currentPlayer;
-                } else {
-                    currentPlayer = getNextPlayer(currentPlayer);
-                }
+            board.playMove(move[0], move[1], currentPlayer);
+            if (isWinning(move[0], move[1])) {
+                winner = currentPlayer;
             } else {
-                System.out.println("Cette case est déjà occupée.");
+                currentPlayer = getNextPlayer(currentPlayer);
             }
             this.display();
         }
-        if (winner == null) System.out.println("Match Nul");
-        else System.out.println("Victoire du joueur " + winner.getId());
+
+        if (winner == null) {
+            System.out.println("Match Nul");
+        } else {
+            System.out.println("Victoire du joueur " + winner.getId());
+        }
     }
 
     private Player getNextPlayer(Player player) {
@@ -116,7 +111,7 @@ public class TicTacToe {
     }
 
     private boolean isWinning(int row, int col) {
-        int playerId = board.getCell(row,col).getOwner().getId();
+        int playerId = board.getCell(row, col).getOwner().getId();
         if (playerId == -1) return false;
 
         int[][] directions = {{0, 1}, // horizontally
@@ -142,8 +137,8 @@ public class TicTacToe {
         int c = col + dCol;
         while (r >= 0 && r < height
                 && c >= 0 && c < width
-                && !board.getCell(r,c).isEmpty()
-                && board.getCell(r,c).getOwner().getId() == playerId) {
+                && !board.getCell(r, c).isEmpty()
+                && board.getCell(r, c).getOwner().getId() == playerId) {
             count++;
             r += dRow;
             c += dCol;

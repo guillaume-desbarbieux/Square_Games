@@ -1,21 +1,11 @@
-public class Player {
-    private final String representation;
-    private final int id;
+package TicTacToe;
 
-
-    public Player(int id, char symbol, Color color) {
-        this.id = id;
-        this.representation = " " + color + symbol + Color.RESET + " ";
+public class HumanPlayer extends Player {
+    public HumanPlayer(int id, char symbol, Color color) {
+        super(id, symbol, color);
     }
 
-    public String getRepresentation() {
-        return this.representation;
-    }
-
-    public int getId() {
-        return this.id;
-    }
-
+    @Override
     public int[] getMove(GameScanner scanner, Board board) {
         int x = 0;
         int y = 0;
@@ -29,6 +19,10 @@ public class Player {
             System.out.println("colonne ? [1.." + board.width() + "]");
             y = scanner.getIntFromUser();
         }
-        return new int[]{x - 1, y - 1};
+        if (board.getCell(x-1, y-1).isEmpty()) {
+            return new int[]{x - 1, y - 1};
+        } else {
+            return getMove(scanner, board);
+        }
     }
 }
