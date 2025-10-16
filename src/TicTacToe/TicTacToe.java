@@ -9,8 +9,8 @@ public class TicTacToe {
     private int height;
     private int width;
     private int winningLength;
-    private View view;
-    private InteractionUser interact;
+    private final View view;
+    private final InteractionUser interact;
     private Board board;
     private Player[] players;
 

@@ -7,8 +7,8 @@ classDiagram
     TicTacToe.TicTacToe --> TicTacToe.Player : contains
     TicTacToe.Cell --> TicTacToe.Player : ownedBy
     TicTacToe.Main --> TicTacToe.TicTacToe : call
-    TicTacToe.TicTacToe --> TicTacToe.GameScanner : use
-    TicTacToe.Player --> TicTacToe.GameScanner : use
+    TicTacToe.TicTacToe --> TicTacToe.InteractionUser : use
+    TicTacToe.Player --> TicTacToe.InteractionUser : use
     
     
     class TicTacToe.Main{
@@ -19,7 +19,7 @@ classDiagram
      - height : int
      - width : int
      - winningLength : int
-     - scanner : TicTacToe.GameScanner
+     - scanner : TicTacToe.InteractionUser
      - players : TicTacToe.Player []
      - board : TicTacToe.Board
      
@@ -50,10 +50,10 @@ classDiagram
         
         + getId() int
         + getRepresentation() String
-        + getMove(TicTacToe.GameScanner, TicTacToe.Board) int[]        
+        + getMove(TicTacToe.InteractionUser, TicTacToe.Board) int[]        
     }
     
-    class TicTacToe.GameScanner{
+    class TicTacToe.InteractionUser{
         - scanner : Scanner
         + getIntFromUser() int
     }
