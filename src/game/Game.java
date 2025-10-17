@@ -1,14 +1,15 @@
-package Games;
+package game;
 
-import Board.Board;
-import Interact.InteractionUser;
-import Interact.View;
-import Player.Player;
-import Player.PlayerFactory;
+import board.Board;
+import move.Move;
+import ui.InteractionUser;
+import ui.View;
+import player.Player;
+import player.factory.PlayerFactory;
 
 import java.util.List;
 
-public abstract class SquareGame {
+public abstract class Game {
     protected final View view;
     protected final InteractionUser interact;
     protected PlayerFactory playerFactory;
@@ -16,7 +17,7 @@ public abstract class SquareGame {
     protected List<Player> players;
 
 
-    public SquareGame() {
+    public Game() {
         this.view = new View();
         this.interact = new InteractionUser(view);
         this.playerFactory = new PlayerFactory(interact, this.getClass());
@@ -37,7 +38,7 @@ public abstract class SquareGame {
         return players.get(nextId);
     }
 
-    protected abstract boolean isWinning(int row, int col);
+    protected abstract boolean isWinning(Move move);
 
     protected boolean makeAlignment(int row, int col, int winningLength) {
         int playerId = board.getCell(row, col).getOwner().getId();

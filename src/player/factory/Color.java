@@ -1,4 +1,4 @@
-package Player;
+package player.factory;
 
 public enum Color {
     RESET("\u001B[0m"),

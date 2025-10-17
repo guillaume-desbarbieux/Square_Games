@@ -1,9 +1,15 @@
-package Player;
+package player.factory;
 
-import Games.Connect4;
-import Games.SquareGame;
-import Games.TicTacToe;
-import Interact.InteractionUser;
+import game.connect4.Connect4;
+import game.Game;
+import game.tictactoe.TicTacToe;
+import ui.InteractionUser;
+import player.ArtificialPlayer;
+import player.HumanPlayer;
+import player.Player;
+import player.ai.ArtificialIntelligence;
+import player.ai.Connect4AI;
+import player.ai.TicTacToeAI;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,10 +17,10 @@ import java.util.List;
 
 public class PlayerFactory {
     InteractionUser interact;
-    Class<? extends SquareGame> gameClass;
+    Class<? extends Game> gameClass;
     List<Color> possibleColors = new ArrayList<>(Arrays.asList(Color.RED, Color.GREEN, Color.YELLOW, Color.BLUE, Color.PURPLE, Color.CYAN, Color.WHITE));
 
-    public PlayerFactory(InteractionUser interact, Class<? extends SquareGame> gameClass) {
+    public PlayerFactory(InteractionUser interact, Class<? extends Game> gameClass) {
         this.interact = interact;
         this.gameClass = gameClass;
     }
@@ -47,7 +53,7 @@ public class PlayerFactory {
         if (gameClass.equals(TicTacToe.class))
             return new TicTacToeAI();
         if (gameClass.equals(Connect4.class))
-            return new ConnectFourAI();
+            return new Connect4AI();
         throw new IllegalStateException("Type de jeu non supporté : " + gameClass.getName());
     }
 }

@@ -1,10 +1,16 @@
-package Games;
+package game.tictactoe;
 
-import Board.TicTacToeBoard;
-import Player.Player;
+import board.TicTacToeBoard;
+import game.Game;
+import move.Move;
+import move.TicTacToeMove;
+import move.factory.MoveInputAdapter;
+import move.factory.TicTacToeInputAdapter;
+import player.Player;
 
-public class TicTacToe extends SquareGame {
+public class TicTacToe extends Game {
     private int winningLength = 3;
+    protected final MoveInputAdapter adapter = new TicTacToeInputAdapter(interact);
 
     public TicTacToe() {
         super();
@@ -63,14 +69,13 @@ public class TicTacToe extends SquareGame {
 
             view.display("=== Joueur " + currentPlayer.getRepresentation() + " ===");
 
-            int[] move = currentPlayer.getNextMove(board);
+            Move move = currentPlayer.getNextMove(board, adapter);
             while (!board.isPlayable(move)) {
                 view.displayError("Cette case est déjà occupée.");
-                view.display(move[0] + "," + move[1]);
-                move = currentPlayer.getNextMove(board);
+                move = currentPlayer.getNextMove(board, adapter);
             }
-            board.playMove(move[0], move[1], currentPlayer);
-            if (isWinning(move[0], move[1])) {
+            board.playMove(move, currentPlayer);
+            if (isWinning(move)) {
                 winner = currentPlayer;
             } else {
                 currentPlayer = getNextPlayer(currentPlayer);
@@ -86,7 +91,10 @@ public class TicTacToe extends SquareGame {
     }
 
     @Override
-    protected boolean isWinning(int row, int col) {
-        return makeAlignment(row, col, winningLength);
+    protected boolean isWinning(Move move) {
+        if (move instanceof TicTacToeMove ticTacToeMove)
+            return makeAlignment(ticTacToeMove.getRow(), ticTacToeMove.getCol(), winningLength);
+        else
+            return false;
     }
 }

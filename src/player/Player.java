@@ -1,6 +1,9 @@
-package Player;
+package player;
 
-import Board.Board;
+import board.Board;
+import move.Move;
+import move.factory.MoveInputAdapter;
+import player.factory.Color;
 
 public abstract class Player {
     private final int id;
@@ -19,5 +22,5 @@ public abstract class Player {
         return this.id;
     }
 
-    public abstract int[] getNextMove(Board board);
+    public abstract Move getNextMove(Board board, MoveInputAdapter adapter);
 }

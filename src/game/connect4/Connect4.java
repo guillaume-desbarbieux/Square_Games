@@ -1,10 +1,17 @@
-package Games;
+package game.connect4;
 
-import Board.Connect4Board;
-import Player.Player;
+import board.Connect4Board;
+import move.Connect4Move;
+import move.Move;
+import move.factory.Connect4InputAdapter;
+import move.factory.MoveInputAdapter;
+import player.Player;
+import game.Game;
 
-public class Connect4 extends SquareGame {
+public class Connect4 extends Game {
     private int winningLength = 4;
+    protected final MoveInputAdapter adapter = new Connect4InputAdapter(interact);
+
 
     public Connect4() {
         super();
@@ -57,14 +64,13 @@ public class Connect4 extends SquareGame {
 
             view.display("=== Joueur " + currentPlayer.getRepresentation() + " ===");
 
-            int[] move = currentPlayer.getNextMove(board);
+            Move move = currentPlayer.getNextMove(board,adapter );
             while (!board.isPlayable(move)) {
                 view.displayError("Cette case n'est pas jouable.");
-                view.display(move[0] + "," + move[1]);
-                move = currentPlayer.getNextMove(board);
+                move = currentPlayer.getNextMove(board, adapter);
             }
-            board.playMove(move[0], move[1], currentPlayer);
-            if (isWinning(move[0], move[1])) {
+            board.playMove(move, currentPlayer);
+            if (isWinning(move)) {
                 winner = currentPlayer;
             } else {
                 currentPlayer = getNextPlayer(currentPlayer);
@@ -79,7 +85,13 @@ public class Connect4 extends SquareGame {
     }
 
     @Override
-    protected boolean isWinning(int row, int col) {
-        return makeAlignment(row, col, winningLength);
+    protected boolean isWinning(Move move) {
+        if (move instanceof Connect4Move connect4Move) {
+            int col = connect4Move.getCol();
+            Connect4Board C4Board = (Connect4Board) board;
+            int row = C4Board.getRow(col) + 1;
+            return makeAlignment(row,col, winningLength);
+        } else
+            return false;
     }
 }

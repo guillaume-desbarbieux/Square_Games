@@ -1,6 +1,6 @@
-package Interact;
+package ui;
 
-import Board.Board;
+import board.Board;
 
 public class View {
     private boolean maximize = false;

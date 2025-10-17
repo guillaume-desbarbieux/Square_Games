@@ -1,8 +1,7 @@
-package Board;
+package board;
 
-import Player.Player;
-
-import java.util.ArrayList;
+import move.Move;
+import player.Player;
 import java.util.List;
 
 public abstract class Board {
@@ -29,7 +28,7 @@ public abstract class Board {
         return this.cells[0].length;
     }
 
-    public abstract void playMove(int row, int col, Player player);
+    public abstract void playMove(Move move, Player player);
 
     public void setCell(int row, int col, Player player) {
         getCell(row, col).setOwner(player);
@@ -45,19 +44,7 @@ public abstract class Board {
         return true;
     }
 
-    public List<int[]> getPlayableCells(){
-        List<int[]> listPlayableCells = new ArrayList<>();
+    public abstract List<Move> getPlayableMoves();
 
-        for (int i = 0; i < height(); i++) {
-            for (int j = 0; j < width(); j++) {
-                int [] cell = new int[]{i, j};
-                if (isPlayable(cell)) {
-                    listPlayableCells.add(cell);
-                }
-            }
-        }
-        return listPlayableCells;
-    }
-
-    public abstract boolean isPlayable(int[] move);
+    public abstract boolean isPlayable(Move move);
 }
