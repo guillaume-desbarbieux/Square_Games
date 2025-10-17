@@ -2,10 +2,11 @@ package Board;
 
 import Player.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Board {
-    private final Cell[][] cells;
+    protected final Cell[][] cells;
 
     public Board(int height, int width) {
         this.cells = new Cell[height][width];
@@ -44,7 +45,19 @@ public abstract class Board {
         return true;
     }
 
-    public abstract List<int[]> getPlayableCells();
+    public List<int[]> getPlayableCells(){
+        List<int[]> listPlayableCells = new ArrayList<>();
+
+        for (int i = 0; i < height(); i++) {
+            for (int j = 0; j < width(); j++) {
+                int [] cell = new int[]{i, j};
+                if (isPlayable(cell)) {
+                    listPlayableCells.add(cell);
+                }
+            }
+        }
+        return listPlayableCells;
+    }
 
     public abstract boolean isPlayable(int[] move);
 }

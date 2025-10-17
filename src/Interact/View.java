@@ -1,6 +1,6 @@
 package Interact;
 
-import Board.TicTacToeBoard;
+import Board.Board;
 
 public class View {
     private boolean maximize = false;
@@ -21,7 +21,7 @@ public class View {
         System.out.println(message);
     }
 
-    public void displayBoard(TicTacToeBoard board) {
+    public void displayBoard(Board board) {
         int indexWidth = String.valueOf(board.height()).length();
         String horizontalSeparator = " ";
         String verticalSeparator = "";
