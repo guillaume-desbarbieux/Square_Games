@@ -1,32 +1,37 @@
+#ClassDiagram
+
 ```Mermaid
 
 classDiagram
-direction BT
-class ArtificialIntelligence {
-<<Interface>>
-+ getNextMove(Board) Move
-  }
+
+   class ArtificialIntelligence {
+    <<Interface>>
+    + getNextMove(Board) Move
+    }
+    
   class ArtificialPlayer {
-- ArtificialIntelligence ai
-+ getNextMove(Board, MoveInputAdapter) Move
-  }
+    - ArtificialIntelligence ai
+    + getNextMove(Board, MoveInputAdapter) Move
+    }
+    
   class Board {
-# Cell[][] cells
-+ width() int
-+ isPlayable(Move) boolean
-+ height() int
-+ getPlayableMoves() List~Move~
-+ getCell(int, int) Cell
-+ isFull() boolean
-+ playMove(Move, Player) void
+    # Cell[][] cells
+    + width() int
+    + isPlayable(Move) boolean
+    + height() int
+    + getPlayableMoves() List~Move~
+    + getCell(int, int) Cell
+    + isFull() boolean
+    + playMove(Move, Player) void
   }
+  
   class Cell {
-- Player owner
-- String representation
-+ getRepresentation() String
-+ setOwner(Player) void
-+ getOwner() Player
-+ isEmpty() boolean
+    - Player owner
+    - String representation
+    + getRepresentation() String
+    + setOwner(Player) void
+    + getOwner() Player
+    + isEmpty() boolean
   }
 
 class Connect4 {
@@ -181,3 +186,5 @@ TicTacToeBoard  -->  Board
 TicTacToeInputAdapter "1" *--> "interact 1" InteractionUser
 TicTacToeInputAdapter  ..>  MoveInputAdapter
 TicTacToeMove  -->  Move 
+
+```Mermaid
