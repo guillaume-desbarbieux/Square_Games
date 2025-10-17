@@ -26,7 +26,7 @@ public class PlayerFactory {
     }
 
     public Player createHumanPlayer(int id, char symbol, Color color, InteractionUser interact) {
-        return new HumanPlayer(id, symbol, color, interact);
+        return new HumanPlayer(id, symbol, color);
     }
 
     public Player createArtificialPlayer(int id, char symbol, Color color, ArtificialIntelligence ai) {

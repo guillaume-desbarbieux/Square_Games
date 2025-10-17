@@ -30,10 +30,6 @@ public abstract class Board {
 
     public abstract void playMove(Move move, Player player);
 
-    public void setCell(int row, int col, Player player) {
-        getCell(row, col).setOwner(player);
-    }
-
     public boolean isFull() {
         for (Cell[] row : cells) {
             for (Cell cell : row) {

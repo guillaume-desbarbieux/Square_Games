@@ -1,7 +1,7 @@
-import Games.Connect4;
-import Games.TicTacToe;
-import Interact.InteractionUser;
-import Interact.View;
+import game.connect4.Connect4;
+import game.tictactoe.TicTacToe;
+import ui.InteractionUser;
+import ui.View;
 
 public class Main {
     public static void main(String[] args) {
