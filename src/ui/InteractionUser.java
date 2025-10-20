@@ -56,9 +56,4 @@ public class InteractionUser {
             }
         }
     }
-
-    public String getString(String message) {
-        view.display(message);
-        return scanner.nextLine();
-    }
 }

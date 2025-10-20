@@ -2,16 +2,18 @@ package board;
 
 import move.Move;
 import player.Player;
+import player.factory.RepresentationFactory;
+
 import java.util.List;
 
 public abstract class Board {
     protected final Cell[][] cells;
 
-    public Board(int height, int width) {
+    public Board(int height, int width, RepresentationFactory factory) {
         this.cells = new Cell[height][width];
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                cells[i][j] = new Cell();
+                cells[i][j] = new Cell(factory.getRepresentation());
             }
         }
     }

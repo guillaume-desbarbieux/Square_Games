@@ -3,18 +3,17 @@ package player;
 import board.Board;
 import move.Move;
 import move.factory.MoveInputAdapter;
-import player.factory.Color;
 
 public abstract class Player {
     private final int id;
-    private final String representation;
+    private final Representation representation;
 
-    public Player(int id, char symbol, Color color) {
+    public Player(int id, Representation representation) {
         this.id = id;
-        this.representation = "" + color + symbol + Color.RESET;
+        this.representation = representation;
     }
 
-    public String getRepresentation() {
+    public Representation getRepresentation() {
         return this.representation;
     }
 

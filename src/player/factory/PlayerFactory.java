@@ -3,7 +3,7 @@ package player.factory;
 import game.connect4.Connect4;
 import game.Game;
 import game.tictactoe.TicTacToe;
-import ui.InteractionUser;
+import player.Representation;
 import player.ArtificialPlayer;
 import player.HumanPlayer;
 import player.Player;
@@ -12,40 +12,39 @@ import player.ai.Connect4AI;
 import player.ai.TicTacToeAI;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class PlayerFactory {
-    InteractionUser interact;
-    Class<? extends Game> gameClass;
-    List<Color> possibleColors = new ArrayList<>(Arrays.asList(Color.RED, Color.GREEN, Color.YELLOW, Color.BLUE, Color.PURPLE, Color.CYAN, Color.WHITE));
+    final Class<? extends Game> gameClass;
+    final RepresentationFactory representationFactory;
 
-    public PlayerFactory(InteractionUser interact, Class<? extends Game> gameClass) {
-        this.interact = interact;
+    public PlayerFactory(Class<? extends Game> gameClass) {
         this.gameClass = gameClass;
+        List<Character> symbols = new ArrayList<>(List.of('●'));
+        this.representationFactory = new RepresentationFactory(Color.getList(), symbols);
     }
 
-    public Player createHumanPlayer(int id, char symbol, Color color, InteractionUser interact) {
-        return new HumanPlayer(id, symbol, color);
+    public Player createHumanPlayer(int id, Representation representation) {
+        return new HumanPlayer(id, representation);
     }
 
-    public Player createArtificialPlayer(int id, char symbol, Color color, ArtificialIntelligence ai) {
-        return new ArtificialPlayer(id, symbol, color, ai);
+    public Player createArtificialPlayer(int id, Representation representation, ArtificialIntelligence ai) {
+        return new ArtificialPlayer(id, representation, ai);
     }
 
     public List<Player> createPlayers(int nbHumanPlayers, int nbArtificialPlayers) {
         List<Player> players = new ArrayList<>();
+        List<Representation> representations = representationFactory.getRepresentations(nbHumanPlayers + nbArtificialPlayers);
+        ArtificialIntelligence ai = createAI();
 
         for (int i = 0; i < nbHumanPlayers; i++) {
-            Color color = possibleColors.get(i % possibleColors.size());
-            players.add(createHumanPlayer(i, '●', color, interact));
+            players.add(createHumanPlayer(i, representations.get(i)));
         }
 
         for (int i = nbHumanPlayers; i < nbArtificialPlayers + nbHumanPlayers; i++) {
-            Color color = possibleColors.get(i % possibleColors.size());
-            ArtificialIntelligence ai = createAI();
-            players.add(createArtificialPlayer(i, '●', color, ai));
+            players.add(createArtificialPlayer(i, representations.get(i), ai));
         }
+
         return players;
     }
 

@@ -3,6 +3,8 @@ package board;
 import move.Connect4Move;
 import move.Move;
 import player.Player;
+import player.factory.Color;
+import player.factory.RepresentationFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +12,7 @@ import java.util.List;
 public class Connect4Board extends Board {
 
     public Connect4Board(int height, int width) {
-        super(height, width);
+        super(height, width, new RepresentationFactory(List.of(Color.WHITE), List.of('·')));
     }
 
     @java.lang.Override

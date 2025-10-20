@@ -12,7 +12,7 @@ import java.util.List;
 public abstract class Game {
     protected final View view;
     protected final InteractionUser interact;
-    protected PlayerFactory playerFactory;
+    protected final PlayerFactory playerFactory;
     protected Board board;
     protected List<Player> players;
 
@@ -20,7 +20,7 @@ public abstract class Game {
     public Game() {
         this.view = new View();
         this.interact = new InteractionUser(view);
-        this.playerFactory = new PlayerFactory(interact, this.getClass());
+        this.playerFactory = new PlayerFactory(this.getClass());
 
     }
 

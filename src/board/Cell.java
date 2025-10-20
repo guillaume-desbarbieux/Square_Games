@@ -1,18 +1,19 @@
 package board;
 
 import player.Player;
+import player.Representation;
 
 public class Cell {
-    private String representation;
+    private Representation representation;
     private Player owner;
 
 
-    public Cell() {
-        this.representation = "·";
+    public Cell(Representation representation) {
+        this.representation = representation;
         this.owner = null;
     }
 
-    public String getRepresentation() {
+    public Representation getRepresentation() {
         return this.representation;
     }
 

@@ -1,8 +1,9 @@
 package player.factory;
 
+import java.util.List;
+
 public enum Color {
     RESET("\u001B[0m"),
-    BLACK("\u001B[30m"),
     RED("\u001B[31m"),
     GREEN("\u001B[32m"),
     YELLOW("\u001B[33m"),
@@ -15,6 +16,10 @@ public enum Color {
 
     Color(String code) {
         this.code = code;
+    }
+
+    public static List<Color> getList() {
+        return List.of(Color.values());
     }
 
     @Override
