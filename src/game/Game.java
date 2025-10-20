@@ -15,6 +15,7 @@ public abstract class Game {
     protected final PlayerFactory playerFactory;
     protected Board board;
     protected List<Player> players;
+    protected Player currentPlayer;
 
 
     public Game() {
@@ -32,10 +33,10 @@ public abstract class Game {
 
     protected abstract void play();
 
-    protected Player getNextPlayer(Player player){
-        int currentId = player.getId();
+    protected void getNextPlayer(){
+        int currentId = currentPlayer.getId();
         int nextId = (currentId + 1) % players.size();
-        return players.get(nextId);
+        this.currentPlayer = players.get(nextId);
     }
 
     protected abstract boolean isWinning(Move move);

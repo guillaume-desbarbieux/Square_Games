@@ -56,7 +56,7 @@ public class Connect4 extends Game {
                 Alignez %d jetons pour gagner...
                 %50s""", board.height(), board.width(), players.size(), winningLength, "Bonne chance !"));
 
-        Player currentPlayer = players.getFirst();
+        currentPlayer = players.getFirst();
         view.displayBoard(board);
         Player winner = null;
 
@@ -73,7 +73,7 @@ public class Connect4 extends Game {
             if (isWinning(move)) {
                 winner = currentPlayer;
             } else {
-                currentPlayer = getNextPlayer(currentPlayer);
+                getNextPlayer();
             }
             view.displayBoard(board);
         }
