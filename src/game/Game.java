@@ -2,6 +2,7 @@ package game;
 
 import board.Board;
 import move.Move;
+import move.factory.MoveInputAdapter;
 import ui.InteractionUser;
 import ui.View;
 import player.Player;
@@ -16,22 +17,85 @@ public abstract class Game {
     protected Board board;
     protected List<Player> players;
     protected Player currentPlayer;
+    protected String name;
+    protected int defaultHeight;
+    protected int defaultWidth;
+    protected final MoveInputAdapter moveInputAdapter;
 
-
-    public Game() {
-        this.view = new View();
-        this.interact = new InteractionUser(view);
+    public Game(String name, int defaultHeight, int defaultWidth, MoveInputAdapter moveInputAdapter) {
+        this.name = name;
+        this.defaultHeight = defaultHeight;
+        this.defaultWidth = defaultWidth;
+        this.view = View.getInstance();
+        this.interact = InteractionUser.getInstance();
         this.playerFactory = new PlayerFactory(this.getClass());
+        this.moveInputAdapter = moveInputAdapter;
 
     }
 
-    public abstract void start();
+    public void start(){
+        initBoard(defaultHeight, defaultWidth);
+        view.displayTitle(this.name);
+        int choice = interact.getChoice("Bienvenue !", new String[]{"Partie Rapide", "Paramètres avancés"});
+        if (choice == 1) {
+            initPlayers(1,1);
+        } else {
+            menu();
+        }
+        play();
+    }
 
-    protected abstract void menu();
+    protected void menu() {
+        view.displayTitle("Menu Principal");
+        int nbHumanPlayers = interact.getInt("nb Joueurs Humains", 0, 2);
+        int nbArtificialPlayers = 2 - nbHumanPlayers;
+        int choice = interact.getChoice("Affichage du plateau", new String[]{"Petit", "Grand"});
+        view.setMaximize(choice == 2);
+        initPlayers(nbHumanPlayers, nbArtificialPlayers);
+        play();
+    }
 
-    protected abstract void initGame(int height, int width, int nbHumanPlayers, int nbArtificialPlayers);
+    protected abstract void initBoard(int height, int width);
 
-    protected abstract void play();
+    protected void initPlayers(int nbHumanPlayers, int nbArtificialPlayers){
+        nbHumanPlayers = clamp(nbHumanPlayers, 0, 7);
+        nbArtificialPlayers = clamp(nbArtificialPlayers, (nbHumanPlayers == 0) ? 1 : 0, 7 - nbHumanPlayers);
+        this.players = playerFactory.createPlayers(nbHumanPlayers, nbArtificialPlayers);
+    }
+
+    protected abstract void displayRules();
+
+    protected void play(){
+        displayRules();
+
+        currentPlayer = players.getFirst();
+        view.displayBoard(board);
+        Player winner = null;
+
+        while (board.isNotFull() && winner == null) {
+
+            view.display("=== Joueur " + currentPlayer.getRepresentation() + " ===");
+
+            Move move = currentPlayer.getNextMove(board, moveInputAdapter);
+            while (board.isPlayable(move)) {
+                view.displayError("Cette case est déjà occupée.");
+                move = currentPlayer.getNextMove(board, moveInputAdapter);
+            }
+            board.playMove(move, currentPlayer);
+            if (isWinning(move)) {
+                winner = currentPlayer;
+            } else {
+                getNextPlayer();
+            }
+            view.displayBoard(board);
+        }
+
+        if (winner == null) {
+            view.display("Match Nul");
+        } else {
+            view.display("Victoire du joueur " + winner.getRepresentation());
+        }
+    }
 
     protected void getNextPlayer(){
         int currentId = currentPlayer.getId();
@@ -45,7 +109,8 @@ public abstract class Game {
         int playerId = board.getCell(row, col).getOwner().getId();
         if (playerId == -1) return false;
 
-        int[][] directions = {{0, 1}, // horizontally
+        int[][] directions = {
+                {0, 1}, // horizontally
                 {1, 0}, // vertically
                 {1, 1}, // diagonally ↘
                 {1, -1} // diagonally ↙
@@ -55,9 +120,7 @@ public abstract class Game {
             int count = 1;
             count += countInDirection(row, col, dir[0], dir[1], playerId);
             count += countInDirection(row, col, -dir[0], -dir[1], playerId);
-
             if (count >= winningLength) return true;
-
         }
         return false;
     }

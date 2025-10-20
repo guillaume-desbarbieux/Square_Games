@@ -12,6 +12,6 @@ public class HumanPlayer extends Player {
 
     @Override
     public Move getNextMove(Board board, MoveInputAdapter adapter) {
-        return adapter.getMoveFromHumanPlayer(this, board);
+        return adapter.getMoveFromHumanPlayer(board);
     }
 }

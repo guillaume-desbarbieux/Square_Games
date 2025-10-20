@@ -32,14 +32,14 @@ public abstract class Board {
 
     public abstract void playMove(Move move, Player player);
 
-    public boolean isFull() {
+    public boolean isNotFull() {
         for (Cell[] row : cells) {
             for (Cell cell : row) {
                 if (cell.isEmpty())
-                    return false;
+                    return true;
             }
         }
-        return true;
+        return false;
     }
 
     public abstract List<Move> getPlayableMoves();

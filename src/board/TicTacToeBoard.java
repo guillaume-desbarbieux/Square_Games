@@ -25,7 +25,7 @@ public class TicTacToeBoard extends Board {
         if (row < 0 || row >= this.height() || col < 0 || col >= this.width())
             throw new IllegalArgumentException("La case n'existe pas");
 
-        if (isPlayable(ticTacToeMove))
+        if (!isPlayable(ticTacToeMove))
             getCell(row, col).setOwner(player);
     }
 
@@ -35,7 +35,7 @@ public class TicTacToeBoard extends Board {
         for (int col = 0; col < this.width(); col++) {
             for (int row = 0; row < this.height(); row++) {
                 Move move = new TicTacToeMove(row, col);
-                if (isPlayable(move))
+                if (!isPlayable(move))
                     moves.add(move);
             }
         }
@@ -45,14 +45,14 @@ public class TicTacToeBoard extends Board {
     @Override
     public boolean isPlayable(Move move) {
         if (!(move instanceof TicTacToeMove ticTacToeMove))
-            return false;
+            return true;
 
         int col = ticTacToeMove.getCol();
         int row = ticTacToeMove.getRow();
 
         if (row < 0 || row >= this.height() || col < 0 || col >= this.width())
-            return false;
+            return true;
 
-        return getCell(row, col).isEmpty();
+        return !getCell(row, col).isEmpty();
     }
 }

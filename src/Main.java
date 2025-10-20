@@ -5,8 +5,8 @@ import ui.View;
 
 public class Main {
     public static void main(String[] args) {
-        View view = new View();
-        InteractionUser interact = new InteractionUser(view);
+        View view = View.getInstance();
+        InteractionUser interact = InteractionUser.getInstance();
         int choice = 0;
 
         while (choice != 3) {

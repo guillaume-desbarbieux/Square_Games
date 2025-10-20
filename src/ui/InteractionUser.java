@@ -7,10 +7,18 @@ public class InteractionUser {
     
     private final Scanner scanner;
     private final View view;
+    private static InteractionUser instance;
     
-    public InteractionUser(View view){
-        this.view = view;
+    private InteractionUser(){
+        this.view = View.getInstance();
         this.scanner = new Scanner(System.in);
+    }
+
+    public static InteractionUser getInstance(){
+        if (InteractionUser.instance == null){
+            InteractionUser.instance = new InteractionUser();
+        }
+        return InteractionUser.instance;
     }
 
     public int getInt(String message) {

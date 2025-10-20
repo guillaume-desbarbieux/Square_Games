@@ -3,6 +3,7 @@ package ui;
 import board.Board;
 
 public class View {
+    private static View instance;
     private boolean maximize = false;
     public static final String RESET = "\u001B[0m";
     public static final String GREEN = "\u001B[32m";
@@ -10,7 +11,13 @@ public class View {
     public static final String YELLOW = "\u001B[33m";
     public static final String RED = "\u001B[31m";
 
-    public View() {
+    private View() {}
+
+    public static View getInstance(){
+        if (View.instance == null){
+            View.instance = new View();
+        }
+        return View.instance;
     }
 
     public void setMaximize(boolean maximize) {
