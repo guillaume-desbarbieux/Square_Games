@@ -17,6 +17,6 @@ public class TicTacToeInputAdapter implements MoveInputAdapter{
     public Move getMoveFromHumanPlayer(HumanPlayer player, Board board) {
         int row = interact.getInt("ligne ?", 1, board.height()) - 1;
         int col = interact.getInt("colonne ?", 1, board.width()) - 1;
-        return new TicTacToeMove(player.getId(), row, col);
+        return new TicTacToeMove(row, col);
     }
 }

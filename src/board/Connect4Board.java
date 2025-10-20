@@ -31,7 +31,7 @@ public class Connect4Board extends Board {
     public List<Move> getPlayableMoves() {
         List<Move> moves = new ArrayList<>();
         for (int col = 0; col < this.width(); col++) {
-            Move move = new Connect4Move(0, col);
+            Move move = new Connect4Move(col);
             if (isPlayable(move))
                 moves.add(move);
         }

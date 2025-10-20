@@ -4,8 +4,8 @@ public class TicTacToeMove extends Move {
     private final int row;
     private final int col;
 
-    public TicTacToeMove(int playerId, int row, int col) {
-        super(playerId);
+    public TicTacToeMove(int row, int col) {
+        super();
         this.row = row;
         this.col = col;
     }

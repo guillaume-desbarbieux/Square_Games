@@ -34,7 +34,7 @@ public class TicTacToeBoard extends Board {
         List<Move> moves = new ArrayList<>();
         for (int col = 0; col < this.width(); col++) {
             for (int row = 0; row < this.height(); row++) {
-                Move move = new TicTacToeMove(0, row, col);
+                Move move = new TicTacToeMove(row, col);
                 if (isPlayable(move))
                     moves.add(move);
             }

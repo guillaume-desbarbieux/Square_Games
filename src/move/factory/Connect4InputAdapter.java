@@ -16,6 +16,6 @@ public class Connect4InputAdapter implements MoveInputAdapter {
     @Override
     public Move getMoveFromHumanPlayer(HumanPlayer player, Board board) {
         int col = interact.getInt("colonne ?", 1, board.width()) - 1;
-        return new Connect4Move(player.getId(), col);
+        return new Connect4Move(col);
     }
 }
