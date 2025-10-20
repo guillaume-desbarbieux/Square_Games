@@ -33,12 +33,12 @@ public abstract class Game {
 
     }
 
-    public void start(){
+    public void start() {
         initBoard(defaultHeight, defaultWidth);
         view.displayTitle(this.name);
         int choice = interact.getChoice("Bienvenue !", new String[]{"Partie Rapide", "Paramètres avancés"});
         if (choice == 1) {
-            initPlayers(1,1);
+            initPlayers(1, 1);
         } else {
             menu();
         }
@@ -57,7 +57,7 @@ public abstract class Game {
 
     protected abstract void initBoard(int height, int width);
 
-    protected void initPlayers(int nbHumanPlayers, int nbArtificialPlayers){
+    protected void initPlayers(int nbHumanPlayers, int nbArtificialPlayers) {
         nbHumanPlayers = clamp(nbHumanPlayers, 0, 7);
         nbArtificialPlayers = clamp(nbArtificialPlayers, (nbHumanPlayers == 0) ? 1 : 0, 7 - nbHumanPlayers);
         this.players = playerFactory.createPlayers(nbHumanPlayers, nbArtificialPlayers);
@@ -65,7 +65,7 @@ public abstract class Game {
 
     protected abstract void displayRules();
 
-    protected void play(){
+    protected void play() {
         displayRules();
 
         currentPlayer = players.getFirst();
@@ -73,21 +73,25 @@ public abstract class Game {
         Player winner = null;
 
         while (board.isNotFull() && winner == null) {
-
             view.display("=== Joueur " + currentPlayer.getRepresentation() + " ===");
+            boolean isTurnInProgress = true;
+            while (isTurnInProgress) {
 
-            Move move = currentPlayer.getNextMove(board, moveInputAdapter);
-            while (board.isPlayable(move)) {
-                view.displayError("Cette case est déjà occupée.");
-                move = currentPlayer.getNextMove(board, moveInputAdapter);
+                Move move = currentPlayer.getNextMove(board, moveInputAdapter);
+
+                if (isPlayable(move)) {
+                    isTurnInProgress = playMove(move);
+
+                    if (isWinning(move)) {
+                        winner = currentPlayer;
+                        isTurnInProgress = false;
+                    }
+                } else {
+                    view.displayError("Coup impossible");
+                }
+                view.displayBoard(board);
             }
-            board.playMove(move, currentPlayer);
-            if (isWinning(move)) {
-                winner = currentPlayer;
-            } else {
-                getNextPlayer();
-            }
-            view.displayBoard(board);
+            getNextPlayer();
         }
 
         if (winner == null) {
@@ -97,11 +101,11 @@ public abstract class Game {
         }
     }
 
-    protected void getNextPlayer(){
-        int currentId = currentPlayer.getId();
-        int nextId = (currentId + 1) % players.size();
-        this.currentPlayer = players.get(nextId);
-    }
+    protected abstract boolean isPlayable(Move move);
+
+    protected abstract boolean playMove(Move move);
+
+    protected abstract void getNextPlayer();
 
     protected abstract boolean isWinning(Move move);
 

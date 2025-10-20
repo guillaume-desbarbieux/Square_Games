@@ -1,20 +1,20 @@
-package game.connect4;
+package game.gomoku;
 
 import board.Board;
-import move.ColMove;
-import move.Move;
-import move.factory.ColInputAdapter;
 import game.Game;
+import move.Move;
+import move.RowColMove;
+import move.factory.RowColInputAdapter;
 import player.factory.Color;
 import player.factory.RepresentationFactory;
 
 import java.util.List;
 
-public class Connect4 extends Game {
-    private final int winningLength = 4;
+public class Gomoku extends Game {
+    private final int winningLength = 5;
 
-    public Connect4() {
-        super("Puissance 4", 6, 7, new ColInputAdapter());
+    public Gomoku() {
+        super("Gomoku", 15, 15, new RowColInputAdapter());
     }
 
     protected void displayRules() {
@@ -26,20 +26,19 @@ public class Connect4 extends Game {
 
     @Override
     protected boolean isPlayable(Move move) {
-        if (move instanceof ColMove colMove) {
-            int col = colMove.getCol();
-            if (col < 0 || col >= board.width())
-                return false;
-            return board.getCell(0, col).isEmpty();
+        if (move instanceof RowColMove rowColMove) {
+            int row = rowColMove.getRow();
+            int col = rowColMove.getCol();
+            return board.getCell(row, col).isEmpty();
         }
         return false;
     }
 
     @Override
     protected boolean playMove(Move move) {
-        if (move instanceof ColMove colMove) {
-            int col = colMove.getCol();
-            int row = getRow(col);
+        if (move instanceof RowColMove rowColMove) {
+            int row = rowColMove.getRow();
+            int col = rowColMove.getCol();
             board.getCell(row, col).setOwner(currentPlayer);
             return false;
         }
@@ -60,19 +59,9 @@ public class Connect4 extends Game {
 
     @Override
     protected boolean isWinning(Move move) {
-        if (move instanceof ColMove c4Move) {
-            int col = c4Move.getCol();
-            int row = getRow(col) + 1;
-            return makeAlignment(row, col, winningLength);
-        } else
+        if (move instanceof RowColMove ticTacToeMove)
+            return makeAlignment(ticTacToeMove.getRow(), ticTacToeMove.getCol(), winningLength);
+        else
             return false;
-    }
-
-    protected int getRow(int col) {
-        int row = -1;
-        while (row + 1 < board.height() && board.getCell(row + 1, col).isEmpty()) {
-            row++;
-        }
-        return row;
     }
 }

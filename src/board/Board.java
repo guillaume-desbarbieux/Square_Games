@@ -1,12 +1,8 @@
 package board;
-
-import move.Move;
-import player.Player;
 import player.factory.RepresentationFactory;
 
-import java.util.List;
 
-public abstract class Board {
+public class Board {
     protected final Cell[][] cells;
 
     public Board(int height, int width, RepresentationFactory factory) {
@@ -30,8 +26,6 @@ public abstract class Board {
         return this.cells[0].length;
     }
 
-    public abstract void playMove(Move move, Player player);
-
     public boolean isNotFull() {
         for (Cell[] row : cells) {
             for (Cell cell : row) {
@@ -41,8 +35,4 @@ public abstract class Board {
         }
         return false;
     }
-
-    public abstract List<Move> getPlayableMoves();
-
-    public abstract boolean isPlayable(Move move);
 }

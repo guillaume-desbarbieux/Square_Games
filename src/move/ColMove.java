@@ -1,9 +1,9 @@
 package move;
 
-public class Connect4Move extends Move {
+public class ColMove extends Move {
     private final int col;
 
-    public Connect4Move(int col) {
+    public ColMove(int col) {
         super();
         this.col = col;
     }
