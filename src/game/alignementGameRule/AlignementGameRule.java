@@ -124,3 +124,14 @@ public class AlignementGameRule extends Rule {
         return count;
     }
 }
+
+/*
+
+Heuristique d'évaluation :
+si profondeur max atteinte, moduler score selon plus grand alignement trouvés.
+
+
+
+alpha beta prunning
+couper les branches qui ne seront jamais mieux que celles déjà explorées.
+ */
