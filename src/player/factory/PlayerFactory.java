@@ -1,7 +1,5 @@
 package player.factory;
 
-import game.alignementGame.AlignementGame;
-import game.Game;
 import player.Representation;
 import player.ArtificialPlayer;
 import player.HumanPlayer;
@@ -13,11 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerFactory {
-    final Class<? extends Game> gameClass;
     final RepresentationFactory representationFactory;
 
-    public PlayerFactory(Class<? extends Game> gameClass) {
-        this.gameClass = gameClass;
+    public PlayerFactory(){
         List<Character> symbols = new ArrayList<>(List.of('●'));
         this.representationFactory = new RepresentationFactory(Color.getList(), symbols);
     }
@@ -33,7 +29,7 @@ public class PlayerFactory {
     public List<Player> createPlayers(int nbHumanPlayers, int nbArtificialPlayers) {
         List<Player> players = new ArrayList<>();
         List<Representation> representations = representationFactory.getRepresentations(nbHumanPlayers + nbArtificialPlayers);
-        ArtificialIntelligence ai = createAI();
+        ArtificialIntelligence ai = new MakeAlignementAI();
 
         for (int i = 0; i < nbHumanPlayers; i++) {
             players.add(createHumanPlayer(i, representations.get(i)));
@@ -44,11 +40,5 @@ public class PlayerFactory {
         }
 
         return players;
-    }
-
-    private ArtificialIntelligence createAI() {
-        if (gameClass.equals(AlignementGame.class))
-            return new MakeAlignementAI();
-        throw new IllegalStateException("Type de jeu non supporté : " + gameClass.getName());
     }
 }

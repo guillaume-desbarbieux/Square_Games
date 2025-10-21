@@ -1,14 +1,14 @@
 package move.factory;
 
 import board.Board;
-import move.ColMove;
+import game.Rule;
 import move.Move;
+import player.Player;
 import player.ai.ArtificialIntelligence;
 import ui.InteractionUser;
-import java.util.ArrayList;
 import java.util.List;
 
-public class ColInputAdapter implements MoveInputAdapter {
+public class ColInputAdapter implements MoveAdapter {
     private final InteractionUser interact;
 
     public ColInputAdapter() {
@@ -16,19 +16,21 @@ public class ColInputAdapter implements MoveInputAdapter {
     }
 
     @Override
-    public Move getMoveFromHumanPlayer(Board board) {
+    public Move getMoveFromHumanPlayer(Board board, Player player) {
         int col = interact.getInt("colonne ?", 1, board.width()) - 1;
-        return new ColMove(col);
+        int row = getRowPlaying(board, col);
+        return new Move(player, row, col);
+    }
+
+    public int getRowPlaying(Board board, int col) {
+        int row = -1;
+        while (row + 1 < board.height() && board.getCell(row + 1, col).isEmpty())
+            row++;
+        return row;
     }
 
     @Override
-    public Move getMoveFromAI(Board board, ArtificialIntelligence ai) {
-        List<Move> listPlayableMoves = new ArrayList<>();
-        for (int col = 0; col < board.width(); col++) {
-            if (board.getCell(0, col).isEmpty()) {
-                listPlayableMoves.add(new ColMove(col));
-            }
-        }
-        return  ai.getNextMove(board, listPlayableMoves);
+    public Move getMoveFromAI(Board board, Rule rule, Player player, List<Player> players, ArtificialIntelligence ai) {
+       return ai.getNextMove(board, rule, player, players);
     }
 }

@@ -51,7 +51,7 @@ public class View {
         for (int i = 0; i < board.height(); i++) {
             message.append(String.format("%" + indexWidth + "d", i + 1)).append(horizontalSeparator);
             for (int j = 0; j < board.width(); j++) {
-                message.append(board.getCell(i, j).getRepresentation()).append(horizontalSeparator);
+                message.append(board.getCell(i, j).render()).append(horizontalSeparator);
             }
             message.append("\n").append(verticalSeparator);
         }

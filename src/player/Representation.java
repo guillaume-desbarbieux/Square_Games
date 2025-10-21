@@ -2,12 +2,14 @@ package player;
 
 public class Representation {
     private final String representation;
+    private final String highlight;
 
-    public Representation(String representation){
+    public Representation(String representation, String highlight) {
         this.representation = representation;
+        this.highlight = highlight;
     }
 
-    public String toString(){
-        return this.representation;
+    public String render(boolean highlighted) {
+        return highlighted ? highlight : representation;
     }
 }

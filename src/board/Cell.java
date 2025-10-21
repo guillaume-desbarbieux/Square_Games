@@ -5,16 +5,18 @@ import player.Representation;
 
 public class Cell {
     private Representation representation;
+    private boolean isHighlighted;
     private Player owner;
 
 
-    public Cell(Representation representation) {
-        this.representation = representation;
+    public Cell(Representation emptyRepresentation) {
+        this.representation = emptyRepresentation;
         this.owner = null;
+        this.isHighlighted = false;
     }
 
-    public Representation getRepresentation() {
-        return this.representation;
+    public String render(){
+        return representation.render(isHighlighted);
     }
 
     public void setOwner(Player player) {
@@ -23,10 +25,18 @@ public class Cell {
     }
 
     public Player getOwner() {
-            return this.owner;
+        return this.owner;
     }
 
-    public boolean isEmpty(){
+    public boolean isEmpty() {
         return this.owner == null;
+    }
+
+    public void highlight() {
+        this.isHighlighted = true;
+    }
+
+    public Representation getRepresentation() {
+        return this.representation;
     }
 }

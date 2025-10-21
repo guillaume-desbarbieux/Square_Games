@@ -1,4 +1,5 @@
 package board;
+
 import player.factory.RepresentationFactory;
 
 
@@ -26,13 +27,22 @@ public class Board {
         return this.cells[0].length;
     }
 
-    public boolean isNotFull() {
-        for (Cell[] row : cells) {
-            for (Cell cell : row) {
-                if (cell.isEmpty())
-                    return true;
+    private Board(Cell[][] cells) {
+        this.cells = cells;
+    }
+
+    public Board copy() {
+        Cell[][] clonedCells = new Cell[this.height()][this.width()];
+
+        for (int row = 0; row < this.height(); row++) {
+            for (int col = 0; col < this.width(); col++) {
+                Cell original = this.cells[row][col];
+                Cell copied = new Cell(original.getRepresentation());
+                if (!original.isEmpty())
+                    copied.setOwner(original.getOwner());
+                clonedCells[row][col] = copied;
             }
         }
-        return false;
+        return new Board(clonedCells);
     }
 }

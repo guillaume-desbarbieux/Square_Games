@@ -1,8 +1,11 @@
 package player;
 
 import board.Board;
+import game.Rule;
 import move.Move;
-import move.factory.MoveInputAdapter;
+import move.factory.MoveAdapter;
+
+import java.util.List;
 
 public class HumanPlayer extends Player {
 
@@ -11,7 +14,7 @@ public class HumanPlayer extends Player {
     }
 
     @Override
-    public Move getNextMove(Board board, MoveInputAdapter adapter) {
-        return adapter.getMoveFromHumanPlayer(board);
+    public Move getNextMove(Board board, Rule rule, MoveAdapter adapter, List<Player> players) {
+        return adapter.getMoveFromHumanPlayer(board, this);
     }
 }

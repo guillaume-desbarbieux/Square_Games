@@ -1,6 +1,7 @@
-import game.alignementGame.AlignementGame;
-import move.factory.ColInputAdapter;
-import move.factory.RowColInputAdapter;
+import game.Game;
+import game.alignementGameRule.Connect4Rule;
+import game.alignementGameRule.GomokuRule;
+import game.alignementGameRule.TicTacToeRule;
 import ui.InteractionUser;
 import ui.View;
 
@@ -11,14 +12,14 @@ public class Main {
         int choice = 0;
 
         while (choice != 4) {
-            view.displayTitle("Bienvenue sur Square GameType");
+            view.displayTitle("Bienvenue sur Square Game");
             choice = interact.getChoice("Choisissez un jeu", new String[]{
-                    "TicTacToe", "Puissance 4", "Gomoku", "Quitter"});
+                    "TicTacToe", "Gomoku", "Puissance 4", "Quitter"});
             switch (choice) {
-                case 1 -> new AlignementGame("TicTacToe", 3, 3, 3, new RowColInputAdapter()).start();
-                case 2 -> new AlignementGame("Puissance 4", 6, 7, 4, new ColInputAdapter()).start();
-                case 3 -> new AlignementGame("Gomoku", 15, 15, 5, new RowColInputAdapter()).start();
-                case 4 -> view.display("A bientôt !");
+                case 1 -> new Game(new TicTacToeRule()).start();
+                case 2 -> new Game(new GomokuRule()).start();
+                case 3 -> new Game(new Connect4Rule()).start();
+                case 4 -> view.display("à bientôt");
                 default -> view.displayError("Choix invalide");
             }
             view.display("\n");

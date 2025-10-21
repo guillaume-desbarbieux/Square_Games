@@ -12,22 +12,24 @@ public class RepresentationFactory {
     private final Color resetColor;
     private final List<Character> symbols;
     private final Random random;
+    private final Character highlight;
 
     public RepresentationFactory(List<Color> colors, List<Character> symbols) {
         this.symbols = new ArrayList<>(symbols);
         this.colors = new ArrayList<>(colors);
         this.resetColor = Color.RESET;
         this.random = new Random();
+        this.highlight = '✪';
     }
 
     public Representation getRepresentation() {
         Color color = this.colors.get(random.nextInt(colors.size()));
         Character symbol = this.symbols.get(random.nextInt(symbols.size()));
-        return getRepresentation(color, symbol);
+        return getRepresentation(color,symbol,highlight);
     }
 
-    public Representation getRepresentation(Color color, Character symbol) {
-        return new Representation("" + color + symbol + resetColor);
+    public Representation getRepresentation(Color color, Character symbol, Character highlight) {
+        return new Representation("" + color + symbol + resetColor, "" + color + highlight + resetColor);
     }
 
     public List<Representation> getRepresentations(int quantity) {
@@ -35,7 +37,7 @@ public class RepresentationFactory {
         Collections.shuffle(colors);
         Collections.shuffle(symbols);
         for (int i = 0; i < quantity; i++) {
-            representations.add(getRepresentation(colors.get(i % colors.size()), symbols.get(i % symbols.size())));
+            representations.add(getRepresentation(colors.get(i % colors.size()), symbols.get(i % symbols.size()), highlight));
         }
         return representations;
     }
