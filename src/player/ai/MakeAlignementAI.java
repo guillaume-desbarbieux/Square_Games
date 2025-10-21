@@ -8,7 +8,7 @@ import player.Player;
 import java.util.*;
 
 public class MakeAlignementAI implements ArtificialIntelligence {
-    private static final int MAX_DEPTH = 3;
+    private static final int MAX_DEPTH = 15;
 
 
     @Override
@@ -20,52 +20,61 @@ public class MakeAlignementAI implements ArtificialIntelligence {
 
         for (Move move : validMoves) {
             Board clonedBoard = board.copy();
-            scores.add(evaluateMove(clonedBoard, rule, move, player, opponent, MAX_DEPTH - 1, true));
+            scores.add(evaluateMove(clonedBoard, rule, move, player, opponent, MAX_DEPTH - 1, true, Integer.MIN_VALUE, Integer.MAX_VALUE));
         }
         int bestScore = Collections.max(scores);
 
         List<Move> bestMoves = new ArrayList<>();
-        for (int i = 0 ; i < scores.size() ; i++){
-            if (scores.get(i) == bestScore){
+        for (int i = 0; i < scores.size(); i++) {
+            if (scores.get(i) == bestScore) {
                 bestMoves.add(validMoves.get(i));
             }
         }
         return bestMoves.get(new Random().nextInt(bestMoves.size()));
-}
-
-private int evaluateMove(Board board, Rule rule, Move move, Player player, Player opponent, int depth, boolean isPlayerTurn) {
-    if (rule.isMoveWinning(board, move))
-        return isPlayerTurn ? +depth : -depth;
-    if (rule.isGameOver(board, move) || depth == 0)
-        return 0;
-
-    rule.playMove(board, move);
-    isPlayerTurn = !isPlayerTurn;
-
-    Player current = isPlayerTurn ? player : opponent;
-    List<Move> moves = rule.getValidMoves(board, current);
-
-    if (moves.isEmpty())
-        return 0;
-
-    int bestScore = isPlayerTurn ? Integer.MIN_VALUE : Integer.MAX_VALUE;
-
-    for (Move nextMove : moves) {
-        Board clonedBoard = board.copy();
-        int score = evaluateMove(clonedBoard, rule, nextMove, player, opponent, depth - 1, isPlayerTurn);
-
-        if (isPlayerTurn)
-            bestScore = Math.max(bestScore, score);
-        else
-            bestScore = Math.min(bestScore, score);
     }
-    return bestScore;
-}
 
-private Player getOpponent(Player player, List<Player> players) {
-    for (Player p : players)
-        if (p.getId() != player.getId())
-            return p;
-    return null;
-}
+    private int evaluateMove(Board board, Rule rule, Move move, Player player, Player opponent, int depth, boolean isPlayerTurn, int alpha, int beta) {
+        if (rule.isMoveWinning(board, move))
+            return isPlayerTurn ? +depth : -depth;
+        if (rule.isGameOver(board, move) || depth == 0)
+            return evaluateBoard(board, rule, player, opponent, isPlayerTurn);
+
+        rule.playMove(board, move);
+        isPlayerTurn = !isPlayerTurn;
+
+        Player current = isPlayerTurn ? player : opponent;
+        List<Move> moves = rule.getValidMoves(board, current);
+
+        if (moves.isEmpty())
+            return 0;
+
+        int bestScore = isPlayerTurn ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+
+        for (Move nextMove : moves) {
+            Board clonedBoard = board.copy();
+            int score = evaluateMove(clonedBoard, rule, nextMove, player, opponent, depth - 1, isPlayerTurn, alpha, beta);
+
+            if (isPlayerTurn) {
+                bestScore = Math.max(bestScore, score);
+                alpha = Math.max(alpha, score);
+            } else {
+                bestScore = Math.min(bestScore, score);
+                beta = Math.min(beta, score);
+            }
+            if (alpha >= beta)
+                return bestScore;
+        }
+        return bestScore;
+    }
+
+    private int evaluateBoard(Board board, Rule rule, Player player, Player opponent, boolean isPlayerTurn) {
+        return 0;
+    }
+
+    private Player getOpponent(Player player, List<Player> players) {
+        for (Player p : players)
+            if (p.getId() != player.getId())
+                return p;
+        return null;
+    }
 }
