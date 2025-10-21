@@ -5,8 +5,6 @@ import move.ColMove;
 import move.Move;
 import player.ai.ArtificialIntelligence;
 import ui.InteractionUser;
-
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
