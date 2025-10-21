@@ -7,7 +7,6 @@ public class ColMove extends Move {
         super();
         this.col = col;
     }
-
     public int getCol() {
         return col;
     }

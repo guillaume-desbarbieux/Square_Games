@@ -17,9 +17,9 @@ public abstract class Game {
     protected Board board;
     protected List<Player> players;
     protected Player currentPlayer;
-    protected String name;
-    protected int defaultHeight;
-    protected int defaultWidth;
+    protected final String name;
+    protected final int defaultHeight;
+    protected final int defaultWidth;
     protected final MoveInputAdapter moveInputAdapter;
 
     public Game(String name, int defaultHeight, int defaultWidth, MoveInputAdapter moveInputAdapter) {

@@ -1,15 +1,13 @@
 package player.factory;
 
-import game.connect4.Connect4;
+import game.alignementGame.AlignementGame;
 import game.Game;
-import game.tictactoe.TicTacToe;
 import player.Representation;
 import player.ArtificialPlayer;
 import player.HumanPlayer;
 import player.Player;
 import player.ai.ArtificialIntelligence;
-import player.ai.Connect4AI;
-import player.ai.TicTacToeAI;
+import player.ai.MakeAlignementAI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,10 +47,8 @@ public class PlayerFactory {
     }
 
     private ArtificialIntelligence createAI() {
-        if (gameClass.equals(TicTacToe.class))
-            return new TicTacToeAI();
-        if (gameClass.equals(Connect4.class))
-            return new Connect4AI();
+        if (gameClass.equals(AlignementGame.class))
+            return new MakeAlignementAI();
         throw new IllegalStateException("Type de jeu non supporté : " + gameClass.getName());
     }
 }

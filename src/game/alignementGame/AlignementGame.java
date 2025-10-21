@@ -1,20 +1,22 @@
-package game.connect4;
+package game.alignementGame;
 
 import board.Board;
+import game.Game;
 import move.ColMove;
 import move.Move;
-import move.factory.ColInputAdapter;
-import game.Game;
+import move.RowColMove;
+import move.factory.MoveInputAdapter;
 import player.factory.Color;
 import player.factory.RepresentationFactory;
 
 import java.util.List;
 
-public class Connect4 extends Game {
-    private final int winningLength = 4;
+public class AlignementGame extends Game {
+    private final int winningLength;
 
-    public Connect4() {
-        super("Puissance 4", 6, 7, new ColInputAdapter());
+    public AlignementGame(String name, int height, int width, int winningLength, MoveInputAdapter moveInputAdapter) {
+        super(name, height, width, moveInputAdapter);
+        this.winningLength = winningLength;
     }
 
     protected void displayRules() {
@@ -26,10 +28,13 @@ public class Connect4 extends Game {
 
     @Override
     protected boolean isPlayable(Move move) {
+        if (move instanceof RowColMove rowColMove) {
+            int row = rowColMove.getRow();
+            int col = rowColMove.getCol();
+            return board.getCell(row, col).isEmpty();
+        }
         if (move instanceof ColMove colMove) {
             int col = colMove.getCol();
-            if (col < 0 || col >= board.width())
-                return false;
             return board.getCell(0, col).isEmpty();
         }
         return false;
@@ -37,9 +42,15 @@ public class Connect4 extends Game {
 
     @Override
     protected boolean playMove(Move move) {
+        if (move instanceof RowColMove rowColMove) {
+            int row = rowColMove.getRow();
+            int col = rowColMove.getCol();
+            board.getCell(row, col).setOwner(currentPlayer);
+            return false;
+        }
         if (move instanceof ColMove colMove) {
             int col = colMove.getCol();
-            int row = getRow(col);
+            int row = getRowPlaying(col);
             board.getCell(row, col).setOwner(currentPlayer);
             return false;
         }
@@ -60,15 +71,20 @@ public class Connect4 extends Game {
 
     @Override
     protected boolean isWinning(Move move) {
-        if (move instanceof ColMove c4Move) {
-            int col = c4Move.getCol();
-            int row = getRow(col) + 1;
+        int row, col;
+        if (move instanceof RowColMove rowColMoveMove) {
+            row = rowColMoveMove.getRow();
+            col = rowColMoveMove.getCol();
             return makeAlignment(row, col, winningLength);
-        } else
-            return false;
+        }
+        if (move instanceof ColMove colMove) {
+            col = colMove.getCol();
+            row = getRowPlaying(col) + 1;
+            return makeAlignment(row, col, winningLength);
+        }
+        return false;
     }
-
-    protected int getRow(int col) {
+    protected int getRowPlaying(int col) {
         int row = -1;
         while (row + 1 < board.height() && board.getCell(row + 1, col).isEmpty()) {
             row++;

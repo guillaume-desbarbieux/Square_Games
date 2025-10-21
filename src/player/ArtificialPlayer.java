@@ -15,6 +15,6 @@ public class ArtificialPlayer extends Player {
 
     @Override
     public Move getNextMove(Board board, MoveInputAdapter adapter) {
-        return ai.getNextMove(board);
+        return adapter.getMoveFromAI(board, ai);
     }
 }
