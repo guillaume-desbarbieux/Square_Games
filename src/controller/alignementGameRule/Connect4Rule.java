@@ -1,8 +1,8 @@
-package game.alignementGameRule;
+package controller.alignementGameRule;
 
-import board.Board;
-import move.Move;
-import move.factory.ColInputAdapter;
+import model.Board;
+import model.Move;
+import controller.moveAdapter.ColInputAdapter;
 
 public class Connect4Rule extends AlignementGameRule {
     public Connect4Rule() {

@@ -1,10 +1,10 @@
-package player;
+package model.player;
 
-import board.Board;
-import game.Rule;
-import move.Move;
-import move.factory.MoveAdapter;
-import player.ai.ArtificialIntelligence;
+import model.Board;
+import controller.Rule;
+import model.Move;
+import controller.moveAdapter.MoveAdapter;
+import controller.ai.ArtificialIntelligence;
 
 import java.util.List;
 

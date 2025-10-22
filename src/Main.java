@@ -1,9 +1,9 @@
-import game.Game;
-import game.alignementGameRule.Connect4Rule;
-import game.alignementGameRule.GomokuRule;
-import game.alignementGameRule.TicTacToeRule;
-import ui.InteractionUser;
-import ui.View;
+import controller.Game;
+import controller.alignementGameRule.Connect4Rule;
+import controller.alignementGameRule.GomokuRule;
+import controller.alignementGameRule.TicTacToeRule;
+import view.InteractionUser;
+import view.View;
 
 public class Main {
     public static void main(String[] args) {

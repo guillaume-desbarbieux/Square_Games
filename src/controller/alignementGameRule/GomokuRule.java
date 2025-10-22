@@ -1,6 +1,6 @@
-package game.alignementGameRule;
+package controller.alignementGameRule;
 
-import move.factory.RowColInputAdapter;
+import controller.moveAdapter.RowColInputAdapter;
 
 public class GomokuRule extends AlignementGameRule {
     public GomokuRule() {

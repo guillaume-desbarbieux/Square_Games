@@ -1,9 +1,9 @@
-package player.ai;
+package controller.ai;
 
-import board.Board;
-import game.Rule;
-import move.Move;
-import player.Player;
+import model.Board;
+import controller.Rule;
+import model.Move;
+import model.player.Player;
 import java.util.List;
 
 public interface ArtificialIntelligence {

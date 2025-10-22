@@ -62,7 +62,7 @@ class Connect4AI {
   }
   class Game {
 # View view
-# Board board
+# Board _old.board
 # PlayerFactory playerFactory
 # List~Player~ players
 # InteractionUser interact
@@ -170,7 +170,7 @@ Connect4Board  -->  Board
 Connect4InputAdapter "1" *--> "interact 1" InteractionUser
 Connect4InputAdapter  ..>  MoveInputAdapter
 Connect4Move  -->  Move : extends
-Game "1" *--> "board 1" Board
+Game "1" *--> "_old.board 1" Board
 Game "1" *--> "interact 1" InteractionUser
 Game "1" *--> "players *" Player
 Game "1" *--> "playerFactory 1" PlayerFactory

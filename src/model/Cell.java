@@ -1,7 +1,7 @@
-package board;
+package model;
 
-import player.Player;
-import player.Representation;
+import model.player.Player;
+import model.player.Representation;
 
 public class Cell {
     private Representation representation;

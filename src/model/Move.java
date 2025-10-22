@@ -1,6 +1,6 @@
-package move;
+package model;
 
-import player.Player;
+import model.player.Player;
 
 public class Move {
     private final Player player;

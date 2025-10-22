@@ -1,9 +1,9 @@
-package player.ai;
+package controller.ai;
 
-import board.Board;
-import game.Rule;
-import move.Move;
-import player.Player;
+import model.Board;
+import controller.Rule;
+import model.Move;
+import model.player.Player;
 
 import java.util.*;
 
@@ -39,7 +39,7 @@ public class MakeAlignementAI implements ArtificialIntelligence {
             return isPlayerTurn ? -1000 - depth : 1000 + depth;
 
         if (rule.isBoardFull(board) || depth == 0)
-            //return evaluateBoard(board, rule, player, opponent, isPlayerTurn);
+            //return evaluateBoard(_old.board, rule, model.player, opponent, isPlayerTurn);
             return 0;
 
         List<Move> moves = rule.getValidMoves(board, isPlayerTurn ? player : opponent);
@@ -84,7 +84,7 @@ public class MakeAlignementAI implements ArtificialIntelligence {
         return bestEval;
     }
     /*
-    private int evaluateBoard(Board board, Rule rule, Player player, Player opponent, boolean isPlayerTurn) {
+    private int evaluateBoard(Board _old.board, Rule rule, Player model.player, Player opponent, boolean isPlayerTurn) {
         return 0;
     }
     */

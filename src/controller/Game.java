@@ -1,12 +1,12 @@
-package game;
+package controller;
 
-import board.Board;
-import move.Move;
-import move.factory.MoveAdapter;
-import ui.InteractionUser;
-import ui.View;
-import player.Player;
-import player.factory.PlayerFactory;
+import model.Board;
+import model.Move;
+import controller.moveAdapter.MoveAdapter;
+import view.InteractionUser;
+import view.View;
+import model.player.Player;
+import model.player.factory.PlayerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +50,7 @@ public class Game {
         int nbHumanPlayers = interact.getInt("nb Joueurs Humains", 0, rule.getDefaultNbPlayers());
         int nbArtificialPlayers = rule.getDefaultNbPlayers() - nbHumanPlayers;
         int choice = interact.getChoice("Affichage du plateau", new String[]{"Petit", "Grand"});
-        view.setMaximize(choice == 2);
+        board.setMaximize(choice == 2);
         initPlayers(nbHumanPlayers, nbArtificialPlayers);
     }
 
@@ -63,7 +63,7 @@ public class Game {
         currentPlayer = rule.getFirstPlayer(players);
 
         do {
-            view.displayBoard(board);
+            view.display(board.toString());
             view.display("=== Joueur " + currentPlayer.render() + " ===");
             Move move = currentPlayer.getNextMove(board, rule, adapter, players);
             if (rule.isMoveValid(board, move)) {
@@ -79,10 +79,10 @@ public class Game {
         Move lastMove = movesHistory.getLast();
         if (rule.isMoveWinning(board, lastMove)) {
             displayWinningBoard();
-            view.displayBoard(board);
+            view.display(board.toString());
             view.display("Victoire du joueur " + lastMove.getPlayer().render());
         } else {
-            view.displayBoard(board);
+            view.display(board.toString());
             view.display("Match Nul");
         }
     }

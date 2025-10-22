@@ -1,12 +1,12 @@
-package game.alignementGameRule;
+package controller.alignementGameRule;
 
-import board.Board;
-import game.Rule;
-import move.Move;
-import move.factory.MoveAdapter;
-import player.Player;
-import player.factory.Color;
-import player.factory.RepresentationFactory;
+import model.Board;
+import controller.Rule;
+import model.Move;
+import controller.moveAdapter.MoveAdapter;
+import model.player.Player;
+import model.player.factory.Color;
+import model.player.factory.RepresentationFactory;
 
 import java.util.ArrayList;
 import java.util.List;

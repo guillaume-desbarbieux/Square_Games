@@ -1,9 +1,9 @@
-package game;
+package controller;
 
-import board.Board;
-import move.Move;
-import move.factory.MoveAdapter;
-import player.Player;
+import model.Board;
+import model.Move;
+import controller.moveAdapter.MoveAdapter;
+import model.player.Player;
 
 import java.util.List;
 

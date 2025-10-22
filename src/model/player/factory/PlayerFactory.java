@@ -1,11 +1,11 @@
-package player.factory;
+package model.player.factory;
 
-import player.Representation;
-import player.ArtificialPlayer;
-import player.HumanPlayer;
-import player.Player;
-import player.ai.ArtificialIntelligence;
-import player.ai.MakeAlignementAI;
+import model.player.Representation;
+import model.player.ArtificialPlayer;
+import model.player.HumanPlayer;
+import model.player.Player;
+import controller.ai.ArtificialIntelligence;
+import controller.ai.MakeAlignementAI;
 
 import java.util.ArrayList;
 import java.util.List;
