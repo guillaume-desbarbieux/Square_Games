@@ -39,9 +39,11 @@ public class AlignementGameRule extends Rule {
 
     @Override
     public boolean isGameOver(Board board, Move lastMove) {
-        if (isMoveWinning(board, lastMove))
-            return true;
+        return (isMoveWinning(board, lastMove) || isBoardFull(board));
+    }
 
+    @Override
+    public boolean isBoardFull(Board board) {
         for (int row = 0; row < height; row++)
             for (int col = 0; col < width; col++)
                 if (board.getCell(row, col).isEmpty())
@@ -83,8 +85,8 @@ public class AlignementGameRule extends Rule {
     }
 
     @Override
-    public boolean isMoveWinning(Board board, Move move) {
-        return makeAlignment(board, move);
+    public boolean isMoveWinning(Board board, Move lastMove) {
+        return makeAlignment(board, lastMove);
     }
 
 

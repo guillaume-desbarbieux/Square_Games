@@ -8,7 +8,7 @@ import player.Player;
 import java.util.*;
 
 public class MakeAlignementAI implements ArtificialIntelligence {
-    private static final int MAX_DEPTH = 15;
+    private static final int MAX_DEPTH = 11;
 
 
     @Override
@@ -20,7 +20,8 @@ public class MakeAlignementAI implements ArtificialIntelligence {
 
         for (Move move : validMoves) {
             Board clonedBoard = board.copy();
-            scores.add(evaluateMove(clonedBoard, rule, move, player, opponent, MAX_DEPTH - 1, true, Integer.MIN_VALUE, Integer.MAX_VALUE));
+            rule.playMove(clonedBoard, move);
+            scores.add(evaluateMove(clonedBoard, rule, move, player, opponent, MAX_DEPTH - 1, false, Integer.MIN_VALUE, Integer.MAX_VALUE));
         }
         int bestScore = Collections.max(scores);
 
@@ -33,14 +34,12 @@ public class MakeAlignementAI implements ArtificialIntelligence {
         return bestMoves.get(new Random().nextInt(bestMoves.size()));
     }
 
-    private int evaluateMove(Board board, Rule rule, Move move, Player player, Player opponent, int depth, boolean isPlayerTurn, int alpha, int beta) {
-        if (rule.isMoveWinning(board, move))
-            return isPlayerTurn ? +depth : -depth;
-        if (rule.isGameOver(board, move) || depth == 0)
-            return evaluateBoard(board, rule, player, opponent, isPlayerTurn);
+    private int evaluateMove(Board board, Rule rule, Move lastMove, Player player, Player opponent, int depth, boolean isPlayerTurn, int alpha, int beta) {
+        if (rule.isMoveWinning(board, lastMove))
+            return isPlayerTurn ? -1000 - depth : +1000 + depth;
 
-        rule.playMove(board, move);
-        isPlayerTurn = !isPlayerTurn;
+        if (rule.isBoardFull(board) || depth == 0)
+            return evaluateBoard(board, rule, player, opponent, isPlayerTurn);
 
         Player current = isPlayerTurn ? player : opponent;
         List<Move> moves = rule.getValidMoves(board, current);
@@ -50,9 +49,15 @@ public class MakeAlignementAI implements ArtificialIntelligence {
 
         int bestScore = isPlayerTurn ? Integer.MIN_VALUE : Integer.MAX_VALUE;
 
-        for (Move nextMove : moves) {
+        for (Move move : moves) {
             Board clonedBoard = board.copy();
-            int score = evaluateMove(clonedBoard, rule, nextMove, player, opponent, depth - 1, isPlayerTurn, alpha, beta);
+            rule.playMove(clonedBoard, move);
+
+            if (rule.isMoveWinning(clonedBoard, move))
+                return isPlayerTurn ? +900 + depth : -900 - depth;
+
+
+            int score = evaluateMove(clonedBoard, rule, move, player, opponent, depth - 1, isPlayerTurn, alpha, beta);
 
             if (isPlayerTurn) {
                 bestScore = Math.max(bestScore, score);

@@ -45,7 +45,9 @@ public abstract class Rule {
 
     public abstract boolean isMoveValid(Board board, Move move);
 
-    public abstract boolean isMoveWinning(Board board, Move move);
+    public abstract boolean isBoardFull(Board board);
+
+    public abstract boolean isMoveWinning(Board board, Move lastMove);
 
     public abstract Player getNextPlayer(Board board, Player player, List<Player> players);
 
