@@ -1,8 +1,8 @@
-package controller;
+package model.rule;
 
 import model.Board;
 import model.Move;
-import controller.moveAdapter.MoveAdapter;
+import controller.MoveAdapter;
 import model.player.Player;
 
 import java.util.List;

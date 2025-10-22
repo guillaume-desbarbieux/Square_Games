@@ -1,4 +1,4 @@
-package controller.alignementGameRule;
+package model.rule;
 
 import controller.moveAdapter.RowColInputAdapter;
 

@@ -4,8 +4,8 @@ import model.player.Representation;
 import model.player.ArtificialPlayer;
 import model.player.HumanPlayer;
 import model.player.Player;
-import controller.ai.ArtificialIntelligence;
-import controller.ai.MakeAlignementAI;
+import model.ai.ArtificialIntelligence;
+import model.ai.MakeAlignementAI;
 
 import java.util.ArrayList;
 import java.util.List;

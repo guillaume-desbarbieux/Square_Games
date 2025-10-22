@@ -1,7 +1,7 @@
-package controller.ai;
+package model.ai;
 
 import model.Board;
-import controller.Rule;
+import model.rule.Rule;
 import model.Move;
 import model.player.Player;
 
@@ -36,7 +36,7 @@ public class MakeAlignementAI implements ArtificialIntelligence {
 
     private int evaluateMove(Board board, Rule rule, Move lastMove, Player player, Player opponent, int depth, boolean isPlayerTurn, int alpha, int beta) {
         if (rule.isMoveWinning(board, lastMove))
-            return isPlayerTurn ? -1000 - depth : 1000 + depth;
+            return isPlayerTurn ? 1000 + depth : - 1000 - depth;
 
         if (rule.isBoardFull(board) || depth == 0)
             //return evaluateBoard(_old.board, rule, model.player, opponent, isPlayerTurn);

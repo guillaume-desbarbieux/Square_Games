@@ -1,7 +1,7 @@
-package controller.ai;
+package model.ai;
 
 import model.Board;
-import controller.Rule;
+import model.rule.Rule;
 import model.Move;
 import model.player.Player;
 import java.util.List;

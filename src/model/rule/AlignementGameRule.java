@@ -1,9 +1,8 @@
-package controller.alignementGameRule;
+package model.rule;
 
 import model.Board;
-import controller.Rule;
 import model.Move;
-import controller.moveAdapter.MoveAdapter;
+import controller.MoveAdapter;
 import model.player.Player;
 import model.player.factory.Color;
 import model.player.factory.RepresentationFactory;

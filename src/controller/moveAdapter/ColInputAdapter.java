@@ -1,23 +1,25 @@
 package controller.moveAdapter;
 
+import controller.MoveAdapter;
 import model.Board;
-import controller.Rule;
+import model.rule.Rule;
 import model.Move;
 import model.player.Player;
-import controller.ai.ArtificialIntelligence;
-import view.InteractionUser;
+import model.ai.ArtificialIntelligence;
+import view.View;
+
 import java.util.List;
 
 public class ColInputAdapter implements MoveAdapter {
-    private final InteractionUser interact;
+    private final View view;
 
     public ColInputAdapter() {
-        this.interact = InteractionUser.getInstance();
+        this.view = View.getInstance();
     }
 
     @Override
     public Move getMoveFromHumanPlayer(Board board, Player player) {
-        int col = interact.getInt("colonne ?", 1, board.width()) - 1;
+        int col = view.getInt("colonne ?", 1, board.width()) - 1;
         int row = getRowPlaying(board, col);
         return new Move(player, row, col);
     }

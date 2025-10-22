@@ -1,9 +1,8 @@
 package controller;
 
+import model.rule.Rule;
 import model.Board;
 import model.Move;
-import controller.moveAdapter.MoveAdapter;
-import view.InteractionUser;
 import view.View;
 import model.player.Player;
 import model.player.factory.PlayerFactory;
@@ -14,7 +13,6 @@ import java.util.List;
 public class Game {
     protected final Rule rule;
     protected final View view;
-    protected final InteractionUser interact;
     protected final PlayerFactory playerFactory;
     protected final MoveAdapter adapter;
 
@@ -27,7 +25,6 @@ public class Game {
     public Game(Rule rule) {
         this.rule = rule;
         this.view = View.getInstance();
-        this.interact = InteractionUser.getInstance();
         this.playerFactory = new PlayerFactory();
         this.adapter = rule.getAdapter();
         this.board = rule.getInitialBoard();
@@ -36,7 +33,7 @@ public class Game {
 
     public void start() {
         view.displayTitle(rule.getName());
-        int choice = interact.getChoice("Bienvenue !", new String[]{"Partie Rapide", "Paramètres avancés"});
+        int choice = view.getChoice("Bienvenue !", new String[]{"Partie Rapide", "Paramètres avancés"});
         if (choice == 1) {
             initPlayers(1, rule.getDefaultNbPlayers() - 1);
         } else {
@@ -47,10 +44,10 @@ public class Game {
 
     protected void menu() {
         view.displayTitle("Menu Principal");
-        int nbHumanPlayers = interact.getInt("nb Joueurs Humains", 0, rule.getDefaultNbPlayers());
+        int nbHumanPlayers = view.getInt("nb Joueurs Humains", 0, rule.getDefaultNbPlayers());
         int nbArtificialPlayers = rule.getDefaultNbPlayers() - nbHumanPlayers;
-        int choice = interact.getChoice("Affichage du plateau", new String[]{"Petit", "Grand"});
-        board.setMaximize(choice == 2);
+        int choice = view.getChoice("Affichage du plateau", new String[]{"Petit", "Grand"});
+        view.setMaximize(choice == 2);
         initPlayers(nbHumanPlayers, nbArtificialPlayers);
     }
 
@@ -63,7 +60,7 @@ public class Game {
         currentPlayer = rule.getFirstPlayer(players);
 
         do {
-            view.display(board.toString());
+            view.displayBoard(board);
             view.display("=== Joueur " + currentPlayer.render() + " ===");
             Move move = currentPlayer.getNextMove(board, rule, adapter, players);
             if (rule.isMoveValid(board, move)) {
@@ -79,10 +76,10 @@ public class Game {
         Move lastMove = movesHistory.getLast();
         if (rule.isMoveWinning(board, lastMove)) {
             displayWinningBoard();
-            view.display(board.toString());
+            view.displayBoard(board);
             view.display("Victoire du joueur " + lastMove.getPlayer().render());
         } else {
-            view.display(board.toString());
+            view.displayBoard(board);
             view.display("Match Nul");
         }
     }

@@ -1,10 +1,10 @@
-package controller.moveAdapter;
+package controller;
 
 import model.Board;
-import controller.Rule;
+import model.rule.Rule;
 import model.Move;
 import model.player.Player;
-import controller.ai.ArtificialIntelligence;
+import model.ai.ArtificialIntelligence;
 import java.util.List;
 
 public interface MoveAdapter {

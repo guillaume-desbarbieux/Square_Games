@@ -1,10 +1,10 @@
 package model.player;
 
 import model.Board;
-import controller.Rule;
+import model.rule.Rule;
 import model.Move;
-import controller.moveAdapter.MoveAdapter;
-import controller.ai.ArtificialIntelligence;
+import controller.MoveAdapter;
+import model.ai.ArtificialIntelligence;
 
 import java.util.List;
 
