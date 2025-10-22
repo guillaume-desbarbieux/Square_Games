@@ -1,11 +1,6 @@
 package model.player;
 
-import model.Board;
-import model.rule.Rule;
-import model.Move;
-import controller.MoveAdapter;
-
-import java.util.List;
+import model.player.representation.Representation;
 
 public abstract class Player {
     private final int id;
@@ -20,13 +15,11 @@ public abstract class Player {
         return this.representation;
     }
 
-    public String render(){
+    public String render() {
         return this.representation.render(false);
     }
 
     public int getId() {
         return this.id;
     }
-
-    public abstract Move getNextMove(Board board, Rule rule, MoveAdapter adapter, List<Player> players);
 }

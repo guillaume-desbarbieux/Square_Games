@@ -1,6 +1,6 @@
 package model;
 
-import model.player.factory.RepresentationFactory;
+import model.player.representation.RepresentationFactory;
 
 
 public class Board {

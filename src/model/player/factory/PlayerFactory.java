@@ -1,11 +1,13 @@
 package model.player.factory;
 
-import model.player.Representation;
-import model.player.ArtificialPlayer;
+import model.player.representation.Color;
+import model.player.representation.Representation;
+import model.player.ai.ArtificialPlayer;
 import model.player.HumanPlayer;
 import model.player.Player;
-import model.ai.ArtificialIntelligence;
-import model.ai.MakeAlignementAI;
+import model.player.ai.ArtificialIntelligence;
+import model.player.ai.MakeAlignementAI;
+import model.player.representation.RepresentationFactory;
 
 import java.util.ArrayList;
 import java.util.List;

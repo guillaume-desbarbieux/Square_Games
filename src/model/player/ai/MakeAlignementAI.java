@@ -1,9 +1,9 @@
-package model.ai;
+package model.player.ai;
 
 import model.Board;
+import model.player.Player;
 import model.rule.Rule;
 import model.Move;
-import model.player.Player;
 
 import java.util.*;
 

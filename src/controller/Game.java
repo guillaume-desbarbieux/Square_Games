@@ -1,8 +1,16 @@
 package controller;
 
+import controller.moveAdapter.ColInputAdapter;
+import controller.moveAdapter.MoveAdapter;
+import controller.moveAdapter.RowColInputAdapter;
+import model.player.ai.ArtificialPlayer;
+import model.player.HumanPlayer;
+import model.rule.Connect4Rule;
+import model.rule.GomokuRule;
 import model.rule.Rule;
 import model.Board;
 import model.Move;
+import model.rule.TicTacToeRule;
 import view.View;
 import model.player.Player;
 import model.player.factory.PlayerFactory;
@@ -26,9 +34,19 @@ public class Game {
         this.rule = rule;
         this.view = View.getInstance();
         this.playerFactory = new PlayerFactory();
-        this.adapter = rule.getAdapter();
+        this.adapter = createAdapterForRule(rule);
         this.board = rule.getInitialBoard();
         this.movesHistory = new ArrayList<>();
+    }
+
+    private MoveAdapter createAdapterForRule(Rule rule) {
+        if (rule instanceof Connect4Rule) {
+            return new ColInputAdapter();
+        } else if (rule instanceof GomokuRule || rule instanceof TicTacToeRule) {
+            return new RowColInputAdapter();
+        }
+        // Par défaut
+        return new RowColInputAdapter();
     }
 
     public void start() {
@@ -62,7 +80,7 @@ public class Game {
         do {
             view.displayBoard(board);
             view.display("=== Joueur " + currentPlayer.render() + " ===");
-            Move move = currentPlayer.getNextMove(board, rule, adapter, players);
+            Move move = getNextMove(currentPlayer);
             if (rule.isMoveValid(board, move)) {
                 rule.playMove(board, move);
                 movesHistory.add(move);
@@ -82,6 +100,15 @@ public class Game {
             view.displayBoard(board);
             view.display("Match Nul");
         }
+    }
+
+    private Move getNextMove(Player player) {
+        if (player instanceof HumanPlayer) {
+            return adapter.getMoveFromHumanPlayer(board, player);
+        } else if (player instanceof ArtificialPlayer aiPlayer) {
+            return adapter.getMoveFromAI(board, rule, player, players, aiPlayer.getAi());
+        }
+        throw new IllegalStateException("Type de joueur inconnu");
     }
 
     private void displayWinningBoard() {

@@ -1,4 +1,4 @@
-package model.player;
+package model.player.representation;
 
 public class Representation {
     private final String representation;

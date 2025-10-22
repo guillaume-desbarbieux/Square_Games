@@ -1,7 +1,7 @@
 package model;
 
 import model.player.Player;
-import model.player.Representation;
+import model.player.representation.Representation;
 
 public class Cell {
     private Representation representation;

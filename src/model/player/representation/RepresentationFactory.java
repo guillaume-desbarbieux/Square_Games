@@ -1,6 +1,4 @@
-package model.player.factory;
-
-import model.player.Representation;
+package model.player.representation;
 
 import java.util.ArrayList;
 import java.util.Collections;

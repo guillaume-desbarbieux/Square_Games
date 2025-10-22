@@ -2,7 +2,6 @@ package model.rule;
 
 import model.Board;
 import model.Move;
-import controller.MoveAdapter;
 import model.player.Player;
 
 import java.util.List;
@@ -12,14 +11,12 @@ public abstract class Rule {
     protected final int height;
     protected final int width;
     protected final int defaultNbPlayers;
-    protected final MoveAdapter adapter;
 
-    public Rule(String name, int height, int width, int defaultNbPlayers, MoveAdapter adapter) {
+    public Rule(String name, int height, int width, int defaultNbPlayers) {
         this.name = name;
         this.height = height;
         this.width = width;
         this.defaultNbPlayers = defaultNbPlayers;
-        this.adapter = adapter;
     }
 
     public String getName() {
@@ -28,11 +25,6 @@ public abstract class Rule {
 
     public int getDefaultNbPlayers() {
         return this.defaultNbPlayers;
-    }
-
-    public MoveAdapter getAdapter() {
-        return adapter;
-
     }
 
     public abstract Board getInitialBoard();

@@ -1,4 +1,4 @@
-package model.player.factory;
+package model.player.representation;
 
 import java.util.List;
 

@@ -2,10 +2,9 @@ package model.rule;
 
 import model.Board;
 import model.Move;
-import controller.MoveAdapter;
 import model.player.Player;
-import model.player.factory.Color;
-import model.player.factory.RepresentationFactory;
+import model.player.representation.Color;
+import model.player.representation.RepresentationFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +12,8 @@ import java.util.List;
 public class AlignementGameRule extends Rule {
     protected final int winningLength;
 
-    public AlignementGameRule(String name, int height, int width, int defaultNbPlayers, int winningLength, MoveAdapter adapter) {
-        super(name, height, width, defaultNbPlayers, adapter);
+    public AlignementGameRule(String name, int height, int width, int defaultNbPlayers, int winningLength) {
+        super(name, height, width, defaultNbPlayers);
         this.winningLength = winningLength;
     }
 

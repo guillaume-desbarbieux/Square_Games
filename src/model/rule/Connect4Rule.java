@@ -2,11 +2,10 @@ package model.rule;
 
 import model.Board;
 import model.Move;
-import controller.moveAdapter.ColInputAdapter;
 
 public class Connect4Rule extends AlignementGameRule {
     public Connect4Rule() {
-        super("Puissance 4", 6, 7, 2, 4, new ColInputAdapter());
+        super("Puissance 4", 6, 7, 2, 4);
     }
 
     @Override
