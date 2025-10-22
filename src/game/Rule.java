@@ -49,7 +49,7 @@ public abstract class Rule {
 
     public abstract boolean isMoveWinning(Board board, Move lastMove);
 
-    public abstract Player getNextPlayer(Board board, Player player, List<Player> players);
+    public abstract Player getNextPlayer(Player player, List<Player> players);
 
     public abstract Player getFirstPlayer(List<Player> players);
 }

@@ -66,7 +66,7 @@ public class AlignementGameRule extends Rule {
     }
 
     @Override
-    public Player getNextPlayer(Board board, Player currentPlayer, List<Player> players) {
+    public Player getNextPlayer(Player currentPlayer, List<Player> players) {
         return players.get((currentPlayer.getId() + 1) % players.size());
     }
 
@@ -126,14 +126,3 @@ public class AlignementGameRule extends Rule {
         return count;
     }
 }
-
-/*
-
-Heuristique d'évaluation :
-si profondeur max atteinte, moduler score selon plus grand alignement trouvés.
-
-
-
-alpha beta prunning
-couper les branches qui ne seront jamais mieux que celles déjà explorées.
- */

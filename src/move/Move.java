@@ -3,9 +3,9 @@ package move;
 import player.Player;
 
 public class Move {
-    protected final Player player;
-    protected final int row;
-    protected final int col;
+    private final Player player;
+    private final int row;
+    private final int col;
 
     public Move (Player player, int row, int col){
         this.player = player;

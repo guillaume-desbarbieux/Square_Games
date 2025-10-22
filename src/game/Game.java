@@ -69,7 +69,7 @@ public class Game {
             if (rule.isMoveValid(board, move)) {
                 rule.playMove(board, move);
                 movesHistory.add(move);
-                currentPlayer = rule.getNextPlayer(board, currentPlayer, players);
+                currentPlayer = rule.getNextPlayer(currentPlayer, players);
             } else {
                 view.displayError("Coup invalide");
             }

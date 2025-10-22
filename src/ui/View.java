@@ -72,18 +72,4 @@ public class View {
         display(RED + "!!  " + error + "  !!" + RESET);
         display(RED + "!!!!" + border + "!!!!" + RESET);
     }
-
-    public void displaySuccess(String success) {
-        String border = "✓".repeat(success.length());
-        display(GREEN + "✓✓✓" + border + "✓✓✓" + RESET);
-        display(GREEN + "✓  " + success + "  ✓" + RESET);
-        display(GREEN + "✓✓✓" + border + "✓✓✓" + RESET);
-    }
-
-    public void displayWarning(String warning) {
-        String border = "⚠".repeat(warning.length());
-        display(YELLOW + "⚠⚠⚠" + border + "⚠⚠⚠" + RESET);
-        display(YELLOW + "⚠  " + warning + "  ⚠" + RESET);
-        display(YELLOW + "⚠⚠⚠" + border + "⚠⚠⚠" + RESET);
-    }
 }
