@@ -15,14 +15,18 @@ import java.util.List;
  */
 public interface MoveAdapter {
     /**
-     * Retrieves a move from a human player based on their input. The method typically
-     **/
+     * Retrieves the next move from a human player based on the current state of the game board.
+     * This method is responsible for interpreting the human player's input to generate a valid game move.
+     * @param board the current state of the game board, which provides the layout and cells
+     *              available for the human player to make a move.
+     * @param player the human player making the move.
+     * @return the move made by the human player, represented as an instance of the {@code Move} class.
+     */
     Move getMoveFromHumanPlayer(Board board, Player player);
 
     /**
      * Retrieves the next move for a player using the provided AI system, based on the current state of the board,
      * the rules of the game, and the states of all participants.
-     *
      * @param board   the current state of the game board, representing the layout of the game at this moment.
      * @param rule    the rules of the game that define valid moves, game-ending conditions, and move constraints.
      * @param player  the player for whom the move is being determined.

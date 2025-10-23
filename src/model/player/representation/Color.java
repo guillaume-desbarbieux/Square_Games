@@ -17,6 +17,11 @@ public enum Color {
     CYAN("\u001B[36m"),
     WHITE("\u001B[37m");
 
+    /**
+     * The ANSI escape code string that represents the terminal color associated with
+     * the specific instance of the Color enum. This value is used to format terminal
+     * outputs with the corresponding color.
+     */
     private final String code;
 
     /**

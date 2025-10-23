@@ -15,6 +15,11 @@ import java.util.List;
  * This class extends {@code Rule} and provides specific implementations for alignment-style games.
  */
 public class AlignementGameRule extends Rule {
+    /**
+     * The number of tokens that need to be aligned consecutively
+     * (horizontally, vertically, or diagonally) for a player to win the game.
+     * This value defines the winning condition of the alignment-based game.
+     */
     protected final int winningLength;
 
     /**

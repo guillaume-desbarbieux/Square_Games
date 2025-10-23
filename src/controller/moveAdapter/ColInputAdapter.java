@@ -25,6 +25,11 @@ import java.util.List;
 public class ColInputAdapter implements MoveAdapter {
     private final View view;
 
+    /**
+     * Constructs a ColInputAdapter instance with a given View object.
+     *
+     * @param view the View instance used to interact with the player for input
+     */
     public ColInputAdapter(View view) {
         this.view = view;
     }
