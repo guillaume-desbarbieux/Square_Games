@@ -224,49 +224,78 @@ The sequence diagram below illustrates a complete turn in TicTacToe between a hu
 ```Mermaid
 sequenceDiagram
     title Tour complet de TicTacToe : Human vs AI
+    autonumber
+participant Main
+participant Square_Games
+participant Cli
+participant View
+participant GameMaster
+participant Rule
+participant AlignementGameRule
+participant TicTacToeRule
+participant PlayerFactory
+participant RepresentationFactory
+participant MoveAdapter
+participant GameDictionary
 
-    participant V as Cli (View)
-    participant H as HumanPlayer
-    participant GM as GameMaster (Controller)
-    participant R as Rule / TicTacToeRule
-    participant B as Board
-    participant AI as MakeAlignementAI
+%% === Lancement du programme ===
+Main->>Square_Games: new Square_Games()
+activate Square_Games
+Square_Games->>Cli: new Cli()
+activate Cli
+Cli-->>Square_Games: instance Cli
+Square_Games->>Square_Games: start()
 
-    %% === TOUR DU JOUEUR HUMAIN ===
-    V->>H: demander entrée utilisateur (ligne, colonne)
-    H-->>GM: Move (coup choisi)
+%% === Démarrage du jeu ===
+Square_Games->>TicTacToeRule: new TicTacToeRule()
+activate Rule
+TicTacToeRule->>AlignementGameRule: super(height, width, nbPlayers, winningLength)
+AlignementGameRule->>Rule: super(height, width, nbPlayers)
+Rule-->>Square_Games: TicTacToeRule
+deactivate Rule
 
-    GM->>R: isMoveValid(Board, Move)
-    R-->>GM: true / false
-    alt coup valide
-        GM->>B: applyMove(Move, HumanPlayer)
-        B-->>GM: board mis à jour
-        GM->>R: isMoveWinning(Board, Move)
-        R-->>GM: false (pas de victoire)
-    else coup invalide
-        GM-->>V: afficher message d’erreur
-        V->>H: redemande saisie
-    end
+%% === Création du GameMaster ===
+Square_Games->>GameMaster: new GameMaster(rule, view, title)
+activate GameMaster
+GameMaster->>PlayerFactory: new PlayerFactory()
+activate PlayerFactory
+PlayerFactory->>RepresentationFactory: new RepresentationFactory(colors, symbols)
+deactivate PlayerFactory
 
-    %% === TOUR DE L'IA ===
-    GM->>AI: getNextMove(Board, Rule, AIPlayer, players)
-    AI->>B: getValidMoves()
-    AI->>R: simulateMove(Board, Move)
-    AI->>AI: evaluateMove(...)  %% calcul heuristique
-    AI-->>GM: meilleur Move sélectionné
+%% === Adaptation de la règle ===
+GameMaster->>MoveAdapter: createAdapterForRule(rule)
+MoveAdapter->>RowColInputAdapter: new(view)
 
-    GM->>R: isMoveValid(Board, Move)
-    R-->>GM: true
-    GM->>B: applyMove(Move, AIPlayer)
-    B-->>GM: board mis à jour
-    GM->>R: isMoveWinning(Board, Move)
-    R-->>GM: true / false
+%% === Lancement de la partie ===
+GameMaster->>GameMaster: start()
+GameMaster->>View: display(GameTitle)
+View->>Cli: display(GameTitle)
+Cli->>GameDictionary: get(GameTitle)
+GameDictionary-->>Cli: String title
+Cli-->>View: affichage titre
 
-    alt victoire IA
-        GM-->>V: afficher "L'IA a gagné !"
-        V-->>H: afficher fin de partie
-    else match non terminé
-        GM-->>V: afficher plateau mis à jour
-        V-->>H: à ton tour
-    end
+%% === Boucle de jeu ===
+loop Tour de jeu
+GameMaster->>View: display(Board)
+GameMaster->>View: getChoice(GameMessage, choices)
+View->>Cli: getChoice(GameMessage, choices)
+Cli->>GameDictionary: get(GameChoice)
+GameDictionary-->>Cli: String choice
+Cli-->>View: choix du joueur
+GameMaster->>Rule: isMoveValid(board, move)
+alt move valide
+GameMaster->>Rule: playMove(board, move)
+else erreur
+GameMaster->>View: display(GameError)
+end
+Rule->>Rule: isGameOver(board, lastMove)
+end
+
+%% === Fin de partie ===
+GameMaster->>View: displayWinningBoard()
+View->>Cli: display(Board)
+Cli-->>GameMaster: affichage final
+deactivate GameMaster
+deactivate Square_Games
+deactivate Cli
 ```
