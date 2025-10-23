@@ -7,7 +7,28 @@ import model.player.Player;
 import model.player.ai.ArtificialIntelligence;
 import java.util.List;
 
+/**
+ * The MoveAdapter interface defines the contract for retrieving moves
+ * for both human and AI players in a game. Implementing classes adapt
+ * the method of obtaining these moves based on their specific requirements
+ * for user interaction or AI logic.
+ */
 public interface MoveAdapter {
+    /**
+     * Retrieves a move from a human player based on their input. The method typically
+     **/
     Move getMoveFromHumanPlayer(Board board, Player player);
+
+    /**
+     * Retrieves the next move for a player using the provided AI system, based on the current state of the board,
+     * the rules of the game, and the states of all participants.
+     *
+     * @param board   the current state of the game board, representing the layout of the game at this moment.
+     * @param rule    the rules of the game that define valid moves, game-ending conditions, and move constraints.
+     * @param player  the player for whom the move is being determined.
+     * @param players the list of all players currently participating in the game.
+     * @param ai      the Artificial Intelligence system used to calculate the next move for the given player.
+     * @return the computed move for the specified player, based on AI logic, game rules, and the current state of the game.
+     */
     Move getMoveFromAI(Board board, Rule rule, Player player, List<Player> players, ArtificialIntelligence ai);
 }

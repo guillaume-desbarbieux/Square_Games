@@ -12,6 +12,13 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * The Cli class represents a Command Line Interface (CLI) implementation of the View interface.
+ * It is responsible for displaying messages, prompts, and data to the user, managing user input,
+ * and rendering game-specific content such as game boards and titles. This implementation uses
+ * escape sequences for styling output, such as coloring or formatting text, and it leverages
+ * a GameDictionary instance to retrieve human-readable messages, errors, titles, or choices.
+ */
 public class Cli implements View {
     private final GameDictionary dictionary = new GameDictionary();
     private final Scanner scanner = new Scanner(System.in);
@@ -21,14 +28,35 @@ public class Cli implements View {
     private static final String BLUE = "\u001B[34m";
     private static final String RED = "\u001B[31m";
 
-
+    /**
+     * Constructs a new instance of the Cli class.
+     * <p>
+     * The Cli class represents a command-line interface implementation
+     * of the View, enabling interaction between the user and the
+     * application. This constructor initializes the Cli instance,
+     * preparing it to handle user input and display output for various
+     * game-related functionalities.
+     */
     public Cli() {
     }
 
+    /**
+     * Displays the provided message to the console.
+     *
+     * @param message the message to be displayed
+     */
     public void display(String message) {
         System.out.println(message);
     }
 
+    /**
+     * Configures the display size based on the provided game choice.
+     * <p>
+     * If the choice is {@code BIG}, the display is set to maximized size.
+     * If the choice is {@code LITTLE}, the display is set to minimized size.
+     *
+     * @param choice the game choice that determines the display size
+     */
     @Override
     public void setSize(GameChoice choice) {
         switch (choice) {
@@ -37,16 +65,45 @@ public class Cli implements View {
         }
     }
 
+    /**
+     * Displays the specified game message to the console.
+     * <p>
+     * This method retrieves the corresponding string representation
+     * of the given {@code GameMessage} and displays it. It delegates
+     * the actual display to another method with an additional parameter
+     * for customization.
+     *
+     * @param message the game message to be displayed
+     */
     @Override
     public void display(GameMessage message) {
         display(message, "");
     }
 
+    /**
+     * Displays the specified game message along with additional information to the console.
+     * <p>
+     * This method retrieves the corresponding string representation of the given
+     * {@code GameMessage} from the dictionary, appends the provided extra string,
+     * and delegates the output to another method for display.
+     *
+     * @param message the game message to be displayed
+     * @param extra additional information to be appended to the message
+     */
     @Override
     public void display(GameMessage message, String extra) {
         display(dictionary.get(message) + " " + extra);
     }
 
+    /**
+     * Displays the specified game title in a formatted manner to the console.
+     * <p>
+     * This method retrieves the corresponding string representation of the given
+     * {@code GameTitle} from the dictionary. It then formats the title with a
+     * decorative border and outputs the styled result to the console.
+     *
+     * @param key the game title to be displayed
+     */
     @Override
     public void display(GameTitle key) {
         String title = dictionary.get(key);
@@ -56,6 +113,15 @@ public class Cli implements View {
         display(BLUE + "╚══" + border + "══╝" + RESET);
     }
 
+    /**
+     * Displays the specified game error in a formatted manner to the console.
+     * <p>
+     * This method retrieves the corresponding string representation of the
+     * given {@code GameError} from the dictionary, formats it with a decorative
+     * border, and outputs the styled result to the console.
+     *
+     * @param key the game error to be displayed
+     */
     @Override
     public void display(GameError key) {
         String error = dictionary.get(key);
@@ -65,6 +131,16 @@ public class Cli implements View {
         display(RED + "!!!!" + border + "!!!!" + RESET);
     }
 
+    /**
+     * Reads an integer input from the user through the scanner.
+     * <p>
+     * This method continuously prompts the user to provide valid integer input.
+     * If the user enters invalid input (e.g., non-integer values), it catches the
+     * {@code InputMismatchException}, indicates the error using {@code GameError.IS_NOT_INT},
+     * and prompts the user again until a valid integer is provided.
+     *
+     * @return the integer value entered by the user
+     */
     private int getInt() {
         while (true) {
             try {
@@ -76,12 +152,35 @@ public class Cli implements View {
         }
     }
 
+    /**
+     * Displays the specified game message and prompts the user for an integer input.
+     * <p>
+     * This method first displays the given {@code GameMessage} to the console,
+     * prompting the user for input. It then retrieves the input by delegating
+     * to a private method that ensures the input is a valid integer.
+     *
+     * @param message the game message to be displayed before the input prompt
+     * @return the integer value entered by the user
+     */
     @Override
     public int getInt(GameMessage message) {
         display(message);
         return getInt();
     }
 
+    /**
+     * Prompts the user for an integer input within a specified range.
+     * <p>
+     * This method displays a message to the user along with the acceptable range
+     * (inclusive) and reads an integer input. If the input is outside the specified
+     * range, it displays an error message and recursively prompts for a valid input
+     * until the user provides a value within the range.
+     *
+     * @param message the game message to display as a prompt
+     * @param min the minimum allowable value for the input
+     * @param max the maximum allowable value for the input
+     * @return the integer value provided by the user within the specified range
+     */
     @Override
     public int getInt(GameMessage message, int min, int max) {
         display(message, "[" + min + ".." + max + "]");
@@ -93,6 +192,18 @@ public class Cli implements View {
         return value;
     }
 
+    /**
+     * Retrieves a game choice from the user based on the provided options.
+     * <p>
+     * This method displays a list of choices for the user to select from
+     * using a numbered format. If no choices are available, it displays
+     * an error message and returns null. If the user provides an invalid
+     * choice, it recursively prompts them to enter a valid one.
+     *
+     * @param message the game message to display as a prompt to the user
+     * @param choices the list of game choices available for selection
+     * @return the game choice selected by the user, or null if no choices are available
+     */
     @Override
     public GameChoice getChoice(GameMessage message, List<GameChoice> choices) {
         display(message);
@@ -113,12 +224,32 @@ public class Cli implements View {
         return choices.get(index - 1);
     }
 
+    /**
+     * Prompts the user for a string input corresponding to the given game message.
+     * <p>
+     * This method first displays the specified {@code GameMessage} to the console
+     * by delegating to the {@code display} method. It then retrieves the user's
+     * response as a string from the scanner.
+     *
+     * @param message the game message to display as a prompt to the user
+     * @return the string input provided by the user
+     */
     @Override
     public String getString(GameMessage message) {
         display(message);
         return scanner.nextLine();
     }
 
+    /**
+     * Displays the current state of the board in a formatted manner.
+     * <p>
+     * This method outputs the board's grid structure with indices for rows and columns,
+     * providing a clear and easy-to-read representation of the game's state. It accounts
+     * for different display settings, such as maximized or minimized display, and output
+     * cells formatted according to their rendered representation.
+     *
+     * @param board the game board to be displayed
+     */
     @Override
     public void display(Board board) {
         int indexWidth = String.valueOf(board.height()).length();

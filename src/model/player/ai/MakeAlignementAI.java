@@ -7,10 +7,27 @@ import model.Move;
 
 import java.util.*;
 
+/**
+ * The MakeAlignementAI class implements the ArtificialIntelligence interface,
+ * using a minimax algorithm with alpha-beta pruning to determine the best possible move
+ * in a turn-based game. This AI focuses on alignment-based strategy games and optimizes
+ * decisions by evaluating the game state recursively up to a maximum depth.
+ * <p>
+ * This AI evaluates potential moves to maximize the chances of winning while minimizing
+ * losses. It also avoids immediate losing moves by simulating opponent responses.
+ */
 public class MakeAlignementAI implements ArtificialIntelligence {
     private static final int MAX_DEPTH = 12;
 
-
+    /**
+     * Determines the next move for the given player based on the current board state, rule set, and list of players.
+     *
+     * @param board the current state of the game board
+     * @param rule the rules of the game influencing allowed moves and outcomes
+     * @param player the player for whom the next move is being determined
+     * @param players the list of all players participating in the game
+     * @return the next move to be played for the given player
+     */
     @Override
     public Move getNextMove(Board board, Rule rule, Player player, List<Player> players) {
         Player opponent = getOpponent(player, players);
@@ -34,13 +51,32 @@ public class MakeAlignementAI implements ArtificialIntelligence {
         return bestMoves.get(new Random().nextInt(bestMoves.size()));
     }
 
+    /**
+     * Evaluates the outcome of a move within the context of a game. The method
+     * uses a recursive approach to determine the optimal move based on the current
+     * game state, rules, and turns, incorporating the minimax algorithm with
+     * alpha-beta pruning and some
+     *
+     * @param board the current state of the game board
+     * @param rule the set of rules defining gameplay and valid moves
+     * @param lastMove the move that was last played in the game
+     * @param player the player whose move is to be evaluated
+     * @param opponent the opposing player
+     * @param depth the remaining depth to explore in the game tree
+     * @param isPlayerTurn true if it is the turn of the player, false otherwise
+     * @param alpha the best score that the maximizing player can guarantee
+     * @param beta the best score that the minimizing player can guarantee
+     * @return an integer representing the evaluation score of the move
+     */
     private int evaluateMove(Board board, Rule rule, Move lastMove, Player player, Player opponent, int depth, boolean isPlayerTurn, int alpha, int beta) {
         if (rule.isMoveWinning(board, lastMove))
             return isPlayerTurn ? 1000 + depth : - 1000 - depth;
 
         if (rule.isBoardFull(board) || depth == 0)
-            //return evaluateBoard(_old.board, rule, model.player, opponent, isPlayerTurn);
             return 0;
+        //TODO
+        // évaluer plutôt que retour = 0
+        // return evaluateBoard(_old.board, rule, model.player, opponent, isPlayerTurn);
 
         List<Move> moves = rule.getValidMoves(board, isPlayerTurn ? player : opponent);
 
@@ -83,11 +119,20 @@ public class MakeAlignementAI implements ArtificialIntelligence {
         }
         return bestEval;
     }
-    /*
-    private int evaluateBoard(Board _old.board, Rule rule, Player model.player, Player opponent, boolean isPlayerTurn) {
-        return 0;
-    }
-    */
+
+    //TODO
+    // Heuristique d'évaluation des boards après avoir atteint MAX_DEPTH :
+    // private int evaluateBoard(Board _old.board, Rule rule, Player model.player, Player opponent, boolean isPlayerTurn) {}
+    //
+
+
+    /**
+     * Retrieves the opponent of the specified player from a list of players.
+     *
+     * @param player the player whose opponent is to be found
+     * @param players the list of all players participating in the game
+     * @return the opponent of the specified player, or null if no opponent is found
+     */
     private Player getOpponent(Player player, List<Player> players) {
         for (Player p : players)
             if (p.getId() != player.getId())

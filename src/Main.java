@@ -1,30 +1,24 @@
-import controller.GameMaster;
-import view.dictionary.GameChoice;
-import view.dictionary.GameMessage;
-import view.dictionary.GameTitle;
-import model.rule.Connect4Rule;
-import model.rule.GomokuRule;
-import model.rule.TicTacToeRule;
-import view.View;
-import view.cli.Cli;
+import controller.Square_Games;
 
-import java.util.List;
-
+/**
+ * The Main class serves as the entry point for the application.
+ * It is responsible for invoking the start process of the Square_Games class,
+ * which manages the game's interactive command-line interface and game options.
+ * <p>
+ * This class contains the static `main` method, which initializes and launches
+ * the Square_Games application, allowing users to select and play various board games
+ * or exit the application.
+ */
 public class Main {
+    /**
+     * The main method serves as the entry point for the Square_Games application.
+     * This method creates an instance of the Square_Games class and starts the
+     * game selection and management process.
+     *
+     * @param args Command-line arguments passed to the application. These are
+     *             not used in this implementation.
+     */
     public static void main(String[] args) {
-        View view = new Cli();
-        GameChoice choice = null;
-
-        while (choice != GameChoice.QUIT) {
-            view.display(GameTitle.SQUARE_GAMES);
-            choice = view.getChoice(GameMessage.GET_GAME, List.of(GameChoice.TIC_TAC_TOE, GameChoice.GOMOKU, GameChoice.CONNECT4, GameChoice.QUIT));
-
-            switch (choice) {
-                case TIC_TAC_TOE -> new GameMaster(new TicTacToeRule(), view, GameTitle.TIC_TAC_TOE).start();
-                case GOMOKU -> new GameMaster(new GomokuRule(), view, GameTitle.GOMOKU).start();
-                case CONNECT4 -> new GameMaster(new Connect4Rule(), view, GameTitle.CONNECT4).start();
-            }
-        }
-        view.display(GameMessage.SEE_YOU);
+        new Square_Games().start();
     }
 }
