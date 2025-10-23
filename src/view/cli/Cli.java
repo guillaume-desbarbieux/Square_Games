@@ -1,14 +1,13 @@
 package view.cli;
 
-import controller.GameChoice;
-import controller.GameError;
-import controller.GameMessage;
-import controller.GameTitle;
+import view.dictionary.GameChoice;
+import view.dictionary.GameError;
+import view.dictionary.GameMessage;
+import view.dictionary.GameTitle;
 import model.Board;
-import view.GameDictionary;
+import view.dictionary.GameDictionary;
 import view.View;
 
-import java.awt.*;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;

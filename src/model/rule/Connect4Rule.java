@@ -1,12 +1,11 @@
 package model.rule;
 
-import controller.GameTitle;
 import model.Board;
 import model.Move;
 
 public class Connect4Rule extends AlignementGameRule {
     public Connect4Rule() {
-        super(GameTitle.CONNECT4, 6, 7, 2, 4);
+        super(6, 7, 2, 4);
     }
 
     @Override

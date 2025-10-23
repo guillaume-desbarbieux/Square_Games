@@ -1,6 +1,6 @@
 package controller.moveAdapter;
 
-import controller.GameMessage;
+import view.dictionary.GameMessage;
 import model.Board;
 import model.rule.Rule;
 import model.Move;

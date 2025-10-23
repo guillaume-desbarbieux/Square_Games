@@ -1,10 +1,11 @@
 package view;
 
-import controller.GameChoice;
-import controller.GameError;
-import controller.GameMessage;
-import controller.GameTitle;
 import model.Board;
+import view.dictionary.GameChoice;
+import view.dictionary.GameError;
+import view.dictionary.GameMessage;
+import view.dictionary.GameTitle;
+
 import java.util.List;
 
 public interface View {

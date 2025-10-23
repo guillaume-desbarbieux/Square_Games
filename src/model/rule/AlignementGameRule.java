@@ -1,6 +1,5 @@
 package model.rule;
 
-import controller.GameTitle;
 import model.Board;
 import model.Move;
 import model.player.Player;
@@ -13,8 +12,8 @@ import java.util.List;
 public class AlignementGameRule extends Rule {
     protected final int winningLength;
 
-    public AlignementGameRule(GameTitle title, int height, int width, int defaultNbPlayers, int winningLength) {
-        super(title, height, width, defaultNbPlayers);
+    public AlignementGameRule(int height, int width, int defaultNbPlayers, int winningLength) {
+        super(height, width, defaultNbPlayers);
         this.winningLength = winningLength;
     }
 

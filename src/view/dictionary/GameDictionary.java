@@ -1,9 +1,4 @@
-package view;
-
-import controller.GameChoice;
-import controller.GameError;
-import controller.GameMessage;
-import controller.GameTitle;
+package view.dictionary;
 
 import java.util.HashMap;
 import java.util.Map;

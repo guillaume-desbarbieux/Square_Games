@@ -1,4 +1,4 @@
-package controller;
+package view.dictionary;
 
 public enum GameTitle {
     SQUARE_GAMES,

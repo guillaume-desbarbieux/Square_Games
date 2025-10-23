@@ -11,18 +11,23 @@ import model.rule.Rule;
 import model.Board;
 import model.Move;
 import model.rule.TicTacToeRule;
-import view.View;
+import view.*;
 import model.player.Player;
 import model.player.factory.PlayerFactory;
+import view.dictionary.GameChoice;
+import view.dictionary.GameError;
+import view.dictionary.GameMessage;
+import view.dictionary.GameTitle;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Game {
+public class GameMaster {
     protected final Rule rule;
     protected final View view;
     protected final PlayerFactory playerFactory;
     protected final MoveAdapter adapter;
+    protected final GameTitle title;
 
     protected final Board board;
     protected List<Player> players;
@@ -30,8 +35,9 @@ public class Game {
     protected final List<Move> movesHistory;
 
 
-    public Game(Rule rule, View view) {
+    public GameMaster(Rule rule, View view, GameTitle title) {
         this.rule = rule;
+        this.title = title;
         this.view = view;
         this.playerFactory = new PlayerFactory();
         this.adapter = createAdapterForRule(rule);
@@ -50,7 +56,7 @@ public class Game {
     }
 
     public void start() {
-        view.display(rule.getTitle());
+        view.display(title);
         GameChoice choice = view.getChoice(GameMessage.WELCOME, List.of(GameChoice.QUICK_START, GameChoice.SETTINGS));
         switch (choice) {
             case QUICK_START -> initPlayers(1, rule.getDefaultNbPlayers() - 1);
