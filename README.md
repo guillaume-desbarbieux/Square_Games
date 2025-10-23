@@ -1,7 +1,36 @@
-#ClassDiagram
+# Square Games Framework
+
+A Java-based framework for implementing square grid board games like TicTacToe, Connect4 and Gomoku.
+The framework provides a flexible architecture that allows easy implementation of new games while reusing common components.
+
+## Installation
+
+1. Clone the repository
+2. Ensure you have Java JDK 25 or higher installed
+3. Build the project using your preferred IDE or build tool
+
+## Usage
+
+Run the Main class to start the application. The game will present a menu where you can:
+
+1. Choose a game type (TicTacToe, Connect4, Gomoku)
+2. Select number of human/AI players
+3. Configure board size
+4. Play the game using console commands
+
+## Project Structure
+
+The project follows a Model-View-Controller architecture:
+
+- **Model**: Contains game logic classes (Board, Cell, Player)
+- **View**: Handles user interface and display (View, InteractionUser)
+- **Controller**: Manages game flow and rules (Game, Connect4, TicTacToe)
+
+## Class Diagram
+
+The following class diagram shows the relationship between major components:
 
 ```Mermaid
-
 classDiagram
 
    class ArtificialIntelligence {
@@ -186,5 +215,58 @@ TicTacToeBoard  -->  Board
 TicTacToeInputAdapter "1" *--> "interact 1" InteractionUser
 TicTacToeInputAdapter  ..>  MoveInputAdapter
 TicTacToeMove  -->  Move 
+```
+
+# Game Flow Sequence
+
+The sequence diagram below illustrates a complete turn in TicTacToe between a human player and AI:
 
 ```Mermaid
+sequenceDiagram
+    title Tour complet de TicTacToe : Human vs AI
+
+    participant V as Cli (View)
+    participant H as HumanPlayer
+    participant GM as GameMaster (Controller)
+    participant R as Rule / TicTacToeRule
+    participant B as Board
+    participant AI as MakeAlignementAI
+
+    %% === TOUR DU JOUEUR HUMAIN ===
+    V->>H: demander entrée utilisateur (ligne, colonne)
+    H-->>GM: Move (coup choisi)
+
+    GM->>R: isMoveValid(Board, Move)
+    R-->>GM: true / false
+    alt coup valide
+        GM->>B: applyMove(Move, HumanPlayer)
+        B-->>GM: board mis à jour
+        GM->>R: isMoveWinning(Board, Move)
+        R-->>GM: false (pas de victoire)
+    else coup invalide
+        GM-->>V: afficher message d’erreur
+        V->>H: redemande saisie
+    end
+
+    %% === TOUR DE L'IA ===
+    GM->>AI: getNextMove(Board, Rule, AIPlayer, players)
+    AI->>B: getValidMoves()
+    AI->>R: simulateMove(Board, Move)
+    AI->>AI: evaluateMove(...)  %% calcul heuristique
+    AI-->>GM: meilleur Move sélectionné
+
+    GM->>R: isMoveValid(Board, Move)
+    R-->>GM: true
+    GM->>B: applyMove(Move, AIPlayer)
+    B-->>GM: board mis à jour
+    GM->>R: isMoveWinning(Board, Move)
+    R-->>GM: true / false
+
+    alt victoire IA
+        GM-->>V: afficher "L'IA a gagné !"
+        V-->>H: afficher fin de partie
+    else match non terminé
+        GM-->>V: afficher plateau mis à jour
+        V-->>H: à ton tour
+    end
+```
