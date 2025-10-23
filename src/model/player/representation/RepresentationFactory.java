@@ -23,7 +23,7 @@ public class RepresentationFactory {
     public Representation getRepresentation() {
         Color color = this.colors.get(random.nextInt(colors.size()));
         Character symbol = this.symbols.get(random.nextInt(symbols.size()));
-        return getRepresentation(color,symbol,highlight);
+        return getRepresentation(color, symbol, highlight);
     }
 
     public Representation getRepresentation(Color color, Character symbol, Character highlight) {

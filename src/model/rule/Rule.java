@@ -1,5 +1,6 @@
 package model.rule;
 
+import controller.GameTitle;
 import model.Board;
 import model.Move;
 import model.player.Player;
@@ -7,24 +8,24 @@ import model.player.Player;
 import java.util.List;
 
 public abstract class Rule {
-    protected final String name;
+    protected final GameTitle title;
     protected final int height;
     protected final int width;
     protected final int defaultNbPlayers;
 
-    public Rule(String name, int height, int width, int defaultNbPlayers) {
-        this.name = name;
+    public Rule(GameTitle title, int height, int width, int defaultNbPlayers) {
+        this.title = title;
         this.height = height;
         this.width = width;
         this.defaultNbPlayers = defaultNbPlayers;
     }
 
-    public String getName() {
-        return this.name;
+    public GameTitle getTitle() {
+        return title;
     }
 
     public int getDefaultNbPlayers() {
-        return this.defaultNbPlayers;
+        return defaultNbPlayers;
     }
 
     public abstract Board getInitialBoard();

@@ -30,9 +30,9 @@ public class Game {
     protected final List<Move> movesHistory;
 
 
-    public Game(Rule rule) {
+    public Game(Rule rule, View view) {
         this.rule = rule;
-        this.view = View.getInstance();
+        this.view = view;
         this.playerFactory = new PlayerFactory();
         this.adapter = createAdapterForRule(rule);
         this.board = rule.getInitialBoard();
@@ -41,31 +41,30 @@ public class Game {
 
     private MoveAdapter createAdapterForRule(Rule rule) {
         if (rule instanceof Connect4Rule) {
-            return new ColInputAdapter();
+            return new ColInputAdapter(view);
         } else if (rule instanceof GomokuRule || rule instanceof TicTacToeRule) {
-            return new RowColInputAdapter();
+            return new RowColInputAdapter(view);
         }
         // Par défaut
-        return new RowColInputAdapter();
+        return new RowColInputAdapter(view);
     }
 
     public void start() {
-        view.displayTitle(rule.getName());
-        int choice = view.getChoice("Bienvenue !", new String[]{"Partie Rapide", "Paramètres avancés"});
-        if (choice == 1) {
-            initPlayers(1, rule.getDefaultNbPlayers() - 1);
-        } else {
-            menu();
+        view.display(rule.getTitle());
+        GameChoice choice = view.getChoice(GameMessage.WELCOME, List.of(GameChoice.QUICK_START, GameChoice.SETTINGS));
+        switch (choice) {
+            case QUICK_START -> initPlayers(1, rule.getDefaultNbPlayers() - 1);
+            case SETTINGS -> menu();
         }
         play();
     }
 
     protected void menu() {
-        view.displayTitle("Menu Principal");
-        int nbHumanPlayers = view.getInt("nb Joueurs Humains", 0, rule.getDefaultNbPlayers());
+        view.display(GameTitle.SETTINGS);
+        int nbHumanPlayers = view.getInt(GameMessage.GET_NB_HUMAN_PLAYERS, 0, rule.getDefaultNbPlayers());
         int nbArtificialPlayers = rule.getDefaultNbPlayers() - nbHumanPlayers;
-        int choice = view.getChoice("Affichage du plateau", new String[]{"Petit", "Grand"});
-        view.setMaximize(choice == 2);
+        GameChoice choice = view.getChoice(GameMessage.GET_BOARD_SIZE, List.of(GameChoice.LITTLE, GameChoice.BIG));
+        view.setSize(choice);
         initPlayers(nbHumanPlayers, nbArtificialPlayers);
     }
 
@@ -78,15 +77,15 @@ public class Game {
         currentPlayer = rule.getFirstPlayer(players);
 
         do {
-            view.displayBoard(board);
-            view.display("=== Joueur " + currentPlayer.render() + " ===");
+            view.display(board);
+            view.display(GameMessage.PLAYER_TURN, currentPlayer.render());
             Move move = getNextMove(currentPlayer);
             if (rule.isMoveValid(board, move)) {
                 rule.playMove(board, move);
                 movesHistory.add(move);
                 currentPlayer = rule.getNextPlayer(currentPlayer, players);
             } else {
-                view.displayError("Coup invalide");
+                view.display(GameError.INVALID_MOVE);
             }
 
         } while (!rule.isGameOver(board, movesHistory.getLast()));
@@ -94,11 +93,11 @@ public class Game {
         Move lastMove = movesHistory.getLast();
         if (rule.isMoveWinning(board, lastMove)) {
             displayWinningBoard();
-            view.displayBoard(board);
-            view.display("Victoire du joueur " + lastMove.getPlayer().render());
+            view.display(board);
+            view.display(GameMessage.GAME_OVER_WIN, lastMove.getPlayer().render());
         } else {
-            view.displayBoard(board);
-            view.display("Match Nul");
+            view.display(board);
+            view.display(GameMessage.GAME_OVER_DRAW);
         }
     }
 
@@ -108,7 +107,7 @@ public class Game {
         } else if (player instanceof ArtificialPlayer aiPlayer) {
             return adapter.getMoveFromAI(board, rule, player, players, aiPlayer.getAi());
         }
-        throw new IllegalStateException("Type de joueur inconnu");
+        return null;
     }
 
     private void displayWinningBoard() {

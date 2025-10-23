@@ -1,5 +1,6 @@
 package controller.moveAdapter;
 
+import controller.GameMessage;
 import model.Board;
 import model.rule.Rule;
 import model.Move;
@@ -12,14 +13,14 @@ import java.util.List;
 public class RowColInputAdapter implements MoveAdapter {
     private final View view;
 
-    public RowColInputAdapter() {
-        this.view = View.getInstance();
+    public RowColInputAdapter(View view) {
+        this.view = view;
     }
 
     @Override
     public Move getMoveFromHumanPlayer(Board board, Player player) {
-        int row = view.getInt("ligne ?", 1, board.height()) - 1;
-        int col = view.getInt("colonne ?", 1, board.width()) - 1;
+        int row = view.getInt(GameMessage.GET_ROW, 1, board.height()) - 1;
+        int col = view.getInt(GameMessage.GET_COL, 1, board.width()) - 1;
         return new Move(player, row, col);
     }
 

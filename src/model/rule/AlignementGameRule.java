@@ -1,5 +1,6 @@
 package model.rule;
 
+import controller.GameTitle;
 import model.Board;
 import model.Move;
 import model.player.Player;
@@ -12,8 +13,8 @@ import java.util.List;
 public class AlignementGameRule extends Rule {
     protected final int winningLength;
 
-    public AlignementGameRule(String name, int height, int width, int defaultNbPlayers, int winningLength) {
-        super(name, height, width, defaultNbPlayers);
+    public AlignementGameRule(GameTitle title, int height, int width, int defaultNbPlayers, int winningLength) {
+        super(title, height, width, defaultNbPlayers);
         this.winningLength = winningLength;
     }
 
@@ -30,9 +31,8 @@ public class AlignementGameRule extends Rule {
     @Override
     public String toString() {
         return String.format("""
-                %s sur grille %dx%d pour %d joueurs.
                 Alignez %d jetons pour gagner...
-                %50s""", name, height, width, defaultNbPlayers, winningLength, "Bonne chance !");
+                %50s""", winningLength, "Bonne chance !");
     }
 
     @Override
