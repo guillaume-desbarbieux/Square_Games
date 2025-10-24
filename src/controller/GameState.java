@@ -1,5 +1,16 @@
 package controller;
 
 public enum GameState {
-    WELCOME, SETTINGS, PLAY, INVALIDE_MOVE, WIN, DRAW
+    WELCOME,
+    SETTINGS,
+    QUICK_START,
+    INIT_GAME,
+    TURN,
+    PLAY_MOVE,
+    CHECK_IF_ENDED,
+    NEXT_PLAYER,
+    WIN,
+    DRAW,
+    QUIT,
 }
+

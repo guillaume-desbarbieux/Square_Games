@@ -24,8 +24,10 @@ import java.util.List;
 import static controller.GameState.*;
 
 /**
- * Manages the execution of a game by handling game rules, players, moves, and interactions with the display view.
- * The GameMaster class serves as the central controller for the game session, coordinating all components.
+ * The GameMaster class manages the flow of a game using the provided rule set,
+ * user interface view, and player configurations. It serves as the main controller
+ * that orchestrates game initialization, player turns, and win/draw logic while ensuring
+ * adherence to game rules.
  */
 public class GameMaster {
     private final Rule rule;
@@ -33,20 +35,24 @@ public class GameMaster {
     private final PlayerFactory playerFactory;
     private final MoveAdapter adapter;
     private final GameTitle title;
-    private final GameState gameState;
+    private GameState gameState;
 
     private final Board board;
     private List<Player> players;
+    private List<Integer> listIds;
     private Player currentPlayer;
+    private Move currentMove;
+
     private final List<Move> movesHistory;
     private List<String> representations;
     private List<String> highlights;
 
+
     /**
      * Constructs a new GameMaster instance that manages the game's execution.
      *
-     * @param rule the ruleset that dictates the game logic, including valid moves and victory conditions
-     * @param view the view used for displaying messages, boards, and receiving user input
+     * @param rule  the ruleset that dictates the game logic, including valid moves and victory conditions
+     * @param view  the view used for displaying messages, boards, and receiving user input
      * @param title the title of the game being played
      */
     public GameMaster(Rule rule, Viewable view, GameTitle title) {
@@ -57,18 +63,8 @@ public class GameMaster {
         this.adapter = createAdapterForRule(rule);
         this.board = rule.getInitialBoard();
         this.movesHistory = new ArrayList<>();
-        this.gameState = WELCOME;
     }
 
-    /**
-     * Creates a specific {@link MoveAdapter} instance based on the type of the provided {@link Rule}.
-     *
-     * @param rule the game's rule, which determines the logic for valid moves and gameplay behavior
-     * @return a {@link MoveAdapter} object appropriate for the given rule;
-     *         returns {@link ColInputAdapter} if the rule is an instance of {@link Connect4Rule},
-     *         and {@link RowColInputAdapter} for {@link GomokuRule} or {@link TicTacToeRule},
-     *         or by default a {@link RowColInputAdapter}
-     */
     private MoveAdapter createAdapterForRule(Rule rule) {
         if (rule instanceof Connect4Rule) {
             return new ColInputAdapter(view);
@@ -79,57 +75,45 @@ public class GameMaster {
         return new RowColInputAdapter(view);
     }
 
-    private void stateMachine(){
-        switch (gameState){
-            case WELCOME -> this.start();
-            case SETTINGS -> this.settings();
-            case PLAY -> this.play();
-            case INVALIDE_MOVE -> this.invalidMove();
-            case WIN -> this.gameWon();
-            case DRAW -> this.gameDraw();
-        }
-    }
-
-    private void gameDraw() {
-    }
-
-    private void gameWon() {
-        
-    }
-
-    private void invalidMove() {
-        
-    }
-
     /**
-     * Initiates the game sequence for the GameMaster.
-     * Displays the game title and provides the player with an initial choice
-     * to either start the game quickly with default settings or to open the settings menu.
-     * <p>
-     * Once the player's choice is processed, the main gameplay execution is handed
-     * over to the play method.
+     * Starts the game execution by initializing the game's state and invoking the state machine mechanism.
      */
     public void start() {
+        this.gameState = GameState.WELCOME;
+        stateMachine();
+    }
+
+    private void stateMachine() {
+        switch (gameState) {
+            case WELCOME -> welcome();
+            case QUICK_START -> initPlayers(1, rule.getDefaultNbPlayers() - 1);
+            case SETTINGS -> settings();
+            case INIT_GAME -> initGame();
+            case TURN -> askForMove();
+            case PLAY_MOVE -> playMove();
+            case CHECK_IF_ENDED -> checkIfEnded();
+            case NEXT_PLAYER -> getNextPlayer();
+            case WIN -> gameWon();
+            case DRAW -> gameDraw();
+            case QUIT -> quit();
+        }
+        if (gameState != QUIT)
+            stateMachine();
+    }
+
+    private void quit() {
+        view.display(GameMessage.SEE_YOU);
+    }
+
+    private void welcome() {
         view.display(title);
         GameChoice choice = view.getChoice(GameMessage.WELCOME, List.of(GameChoice.QUICK_START, GameChoice.SETTINGS));
         switch (choice) {
-            case QUICK_START -> initPlayers(1, rule.getDefaultNbPlayers() - 1);
-            case SETTINGS -> settings();
+            case QUICK_START -> gameState = QUICK_START;
+            case SETTINGS -> gameState = SETTINGS;
         }
-        play();
     }
 
-    /**
-     * Configures the game settings and initializes players.
-     * <p>
-     * This method allows the user to configure the game before it starts. It performs the following steps:
-     * 1. Displays the settings menu in the view.
-     * 2. Prompts the user to input the number of human players, with a minimum of 0 and maximum defined by the rule's default number of players.
-     * 3. Computes the number of artificial players based on the default number of players and the number of human players.
-     * 4. Allows the user to choose the board size by selecting an option from a predefined list (LITTLE or BIG).
-     * 5. Configures the board size in the view based on the chosen option.
-     * 6. Initializes players, including both human and artificial players.
-     */
     private void settings() {
         view.display(GameTitle.SETTINGS);
         int nbHumanPlayers = view.getInt(GameMessage.GET_NB_HUMAN_PLAYERS, 0, rule.getDefaultNbPlayers());
@@ -137,89 +121,79 @@ public class GameMaster {
         GameChoice choice = view.getChoice(GameMessage.GET_BOARD_SIZE, List.of(GameChoice.LITTLE, GameChoice.BIG));
         view.setSize(choice);
         initPlayers(nbHumanPlayers, nbArtificialPlayers);
+        gameState = INIT_GAME;
     }
 
-    /**
-     * Initializes the players for the game, creating both human and artificial players.
-     * <p>
-     * This method uses the player factory to generate the required number of players
-     * based on the specified counts of human and artificial players.
-     *
-     * @param nbHumanPlayers      the number of human players to be initialized
-     * @param nbArtificialPlayers the number of artificial players to be initialized
-     */
     private void initPlayers(int nbHumanPlayers, int nbArtificialPlayers) {
         players = playerFactory.createPlayers(nbHumanPlayers, nbArtificialPlayers);
         representations = new ArrayList<>();
         highlights = new ArrayList<>();
-        for (Player player : players){
+        listIds = new ArrayList<>();
+        for (Player player : players) {
             representations.add(player.getRepresentation().render(false));
             highlights.add(player.getRepresentation().render(true));
-        }
-    }
-
-    /**
-     * Executes the main gameplay loop for the game.
-     * <p>
-     * This method initiates the game by displaying the rules, determining the first player,
-     * and initializing the gameplay loop. Within the loop, it handles player turns by
-     * getting moves, validating them, and applying them to the board if valid.
-     * If the move is invalid, an appropriate error message is displayed.
-     * <p>
-     * The loop continues until a game-over condition is detected. Upon completion,
-     * it checks if the last move is a winning move or if the game ends in a draw.
-     * The final game state, including the board and outcome message, is displayed.
-     */
-    private void play() {
-        view.display(rule.toString());
-        List<Integer> listIds = new ArrayList<>();
-        for (Player player : players)
             listIds.add(player.getId());
-
-        currentPlayer = players.get(rule.getFirstPlayerId(listIds));
-
-        do {
-            view.display(board, representations, highlights);
-            view.display(GameMessage.PLAYER_TURN, currentPlayer.render());
-            Move move = getNextMove(currentPlayer);
-            if (rule.isMoveValid(board, move)) {
-                rule.playMove(board, move);
-                movesHistory.add(move);
-
-                currentPlayer = players.get(rule.getNextPlayerId(currentPlayer.getId(), listIds));
-            } else {
-                view.display(GameError.INVALID_MOVE);
-            }
-
-        } while (!rule.isGameOver(board, movesHistory.getLast()));
-
-        Move lastMove = movesHistory.getLast();
-        if (rule.isMoveWinning(board, lastMove)) {
-            if (rule instanceof AlignementGameRule agRule) {
-                List<Cell> winningCells = agRule.getWinningCells(movesHistory, board);
-                board.highlight(winningCells);
-            }
-            view.display(board, representations, highlights );
-            String representation = players.get(lastMove.getPlayerId()).render();
-            view.display(GameMessage.GAME_OVER_WIN, representation);
-        } else {
-            view.display(board, representations, highlights);
-            view.display(GameMessage.GAME_OVER_DRAW);
         }
+        gameState = INIT_GAME;
     }
 
-    /**
-     * Determines the next move for the given player based on their type.
-     * <p>
-     * If the player is a human player, it fetches the move via the adapter from the human player.
-     * If the player is an artificial player, it calculates the move using the AI associated
-     * with the artificial player.
-     *
-     * @param player the player for whom the next move needs to be determined; it could be
-     *               either a human player or an artificial player
-     * @return a {@link Move} object containing the details of the player's next move;
-     *         null if the player type is unsupported
-     */
+    private void initGame() {
+        view.display(rule.toString());
+        currentPlayer = players.get(rule.getFirstPlayerId(listIds));
+        gameState = TURN;
+    }
+
+    private void askForMove() {
+        view.display(board, representations, highlights);
+        view.display(GameMessage.PLAYER_TURN, currentPlayer.render());
+        Move move = getNextMove(currentPlayer);
+
+        if (rule.isMoveValid(board, move)) {
+            currentMove = move;
+            gameState = PLAY_MOVE;
+        } else
+            view.display(GameError.INVALID_MOVE);
+    }
+
+    private void playMove() {
+        rule.playMove(board, currentMove);
+        movesHistory.add(currentMove);
+        gameState = CHECK_IF_ENDED;
+    }
+
+    private void checkIfEnded() {
+        if (rule.isMoveWinning(board, currentMove))
+            gameState = WIN;
+        else if (rule.isBoardFull(board))
+            gameState = DRAW;
+        else
+            gameState = NEXT_PLAYER;
+    }
+
+    private void getNextPlayer() {
+        currentPlayer = players.get(rule.getNextPlayerId(currentPlayer.getId(), listIds));
+        gameState = TURN;
+    }
+
+
+    private void gameDraw() {
+        view.display(board, representations, highlights);
+        view.display(GameMessage.GAME_OVER_DRAW);
+        gameState = QUIT;
+    }
+
+    private void gameWon() {
+        if (rule instanceof AlignementGameRule agRule) {
+            List<Cell> winningCells = agRule.getWinningCells(movesHistory, board);
+            board.highlight(winningCells);
+        }
+        view.display(board, representations, highlights);
+        String representation = players.get(currentMove.getPlayerId()).render();
+        view.display(GameMessage.GAME_OVER_WIN, representation);
+
+        gameState = QUIT;
+    }
+
     private Move getNextMove(Player player) {
         if (player instanceof HumanPlayer) {
             return adapter.getMoveFromHumanPlayer(board, player);
@@ -228,5 +202,4 @@ public class GameMaster {
         }
         return null;
     }
-
 }

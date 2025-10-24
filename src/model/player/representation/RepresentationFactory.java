@@ -34,19 +34,6 @@ public class RepresentationFactory {
     }
 
     /**
-     * Generates a random Representation object by selecting a random color and symbol
-     * from the available lists, along with a predefined highlight character.
-     * The Representation encapsulates the standard visual format and a highlighted format.
-     *
-     * @return a Representation object with randomly selected attributes.
-     */
-    public Representation getRepresentation() {
-        Color color = this.colors.get(random.nextInt(colors.size()));
-        Character symbol = this.symbols.get(random.nextInt(symbols.size()));
-        return getRepresentation(color, symbol, highlight);
-    }
-
-    /**
      * Creates a new Representation object using the provided color, symbol, and highlight.
      * The Representation object encapsulates the standard visual format and a highlighted format.
      *
