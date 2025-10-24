@@ -30,7 +30,7 @@ The project follows a Model-View-Controller architecture:
 
 The following class diagram shows the relationship between major components:
 
-```Mermaid
+```mermaid
 classDiagram
 
    class ArtificialIntelligence {
@@ -221,7 +221,7 @@ classDiagram
 
 The sequence diagram below illustrates a complete turn in TicTacToe between a human player and AI:
 
-```Mermaid
+```mermaid
 sequenceDiagram
     title Tour complet de TicTacToe : Human vs AI
     autonumber
