@@ -5,8 +5,8 @@ import model.Board;
 import model.Rule;
 import model.Move;
 import model.player.Player;
-import model.player.ai.ArtificialIntelligence;
-import view.View;
+import model.player.ai.Playable;
+import view.Viewable;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ import java.util.List;
  * move generation to the provided ArtificialIntelligence instance.
  */
 public class RowColInputAdapter implements MoveAdapter {
-    private final View view;
+    private final Viewable view;
 
     /**
      * Constructs a RowColInputAdapter with the specified View instance.
@@ -30,7 +30,7 @@ public class RowColInputAdapter implements MoveAdapter {
      *
      * @param view the View instance responsible for handling user input and display output
      */
-    public RowColInputAdapter(View view) {
+    public RowColInputAdapter(Viewable view) {
         this.view = view;
     }
 
@@ -61,7 +61,7 @@ public class RowColInputAdapter implements MoveAdapter {
      * @return the move decided by the AI player
      */
     @Override
-    public Move getMoveFromAI(Board board, Rule rule, Player player, List<Player> players, ArtificialIntelligence ai) {
+    public Move getMoveFromAI(Board board, Rule rule, Player player, List<Player> players, Playable ai) {
         return ai.getNextMove(board, rule, player, players);
     }
 }

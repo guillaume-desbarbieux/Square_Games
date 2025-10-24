@@ -12,7 +12,7 @@ import java.util.List;
  * Implementations of this interface define the logic for determining the next move
  * of a player in a turn-based game.
  */
-public interface ArtificialIntelligence {
+public interface Playable {
     /**
      * Determines the next move for a player in a turn-based game based on the current
      * state of the board, applicable rules, and other players' states.

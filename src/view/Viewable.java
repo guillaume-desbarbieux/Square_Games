@@ -17,7 +17,7 @@ import java.util.List;
  * interface are responsible for handling interaction between the game
  * logic and the user interface.
  */
-public interface View {
+public interface Viewable {
     /**
      * Displays a message to the user.
      *

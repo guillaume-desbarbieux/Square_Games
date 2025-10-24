@@ -16,7 +16,7 @@ import java.util.*;
  * This AI evaluates potential moves to maximize the chances of winning while minimizing
  * losses. It also avoids immediate losing moves by simulating opponent responses.
  */
-public class MakeAlignementAI implements ArtificialIntelligence {
+public class MakeAlignementAI implements Playable {
     private static final int MAX_DEPTH = 5;
 
     /**

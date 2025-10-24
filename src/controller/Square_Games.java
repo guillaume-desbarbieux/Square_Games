@@ -3,7 +3,7 @@ package controller;
 import model.rule.Connect4Rule;
 import model.rule.GomokuRule;
 import model.rule.TicTacToeRule;
-import view.View;
+import view.Viewable;
 import view.cli.Cli;
 import view.dictionary.GameChoice;
 import view.dictionary.GameMessage;
@@ -27,7 +27,7 @@ import java.util.List;
  * Each game is managed by the GameMaster class, which handles the game logic and player interactions.
  */
 public class Square_Games {
-    private final View view;
+    private final Viewable view;
 
     /**
      * Constructs a new instance of the Square_Games class.

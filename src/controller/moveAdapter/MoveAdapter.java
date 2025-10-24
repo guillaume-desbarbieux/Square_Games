@@ -4,7 +4,7 @@ import model.Board;
 import model.Rule;
 import model.Move;
 import model.player.Player;
-import model.player.ai.ArtificialIntelligence;
+import model.player.ai.Playable;
 import java.util.List;
 
 /**
@@ -34,5 +34,5 @@ public interface MoveAdapter {
      * @param ai      the Artificial Intelligence system used to calculate the next move for the given player.
      * @return the computed move for the specified player, based on AI logic, game rules, and the current state of the game.
      */
-    Move getMoveFromAI(Board board, Rule rule, Player player, List<Player> players, ArtificialIntelligence ai);
+    Move getMoveFromAI(Board board, Rule rule, Player player, List<Player> players, Playable ai);
 }

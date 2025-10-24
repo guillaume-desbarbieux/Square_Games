@@ -5,8 +5,8 @@ import model.Board;
 import model.Rule;
 import model.Move;
 import model.player.Player;
-import model.player.ai.ArtificialIntelligence;
-import view.View;
+import model.player.ai.Playable;
+import view.Viewable;
 
 import java.util.List;
 
@@ -23,14 +23,14 @@ import java.util.List;
  * - Retrieves moves for an AI player by delegating the computation to an ArtificialIntelligence instance.
  */
 public class ColInputAdapter implements MoveAdapter {
-    private final View view;
+    private final Viewable view;
 
     /**
      * Constructs a ColInputAdapter instance with a given View object.
      *
      * @param view the View instance used to interact with the player for input
      */
-    public ColInputAdapter(View view) {
+    public ColInputAdapter(Viewable view) {
         this.view = view;
     }
 
@@ -75,7 +75,7 @@ public class ColInputAdapter implements MoveAdapter {
      * @return a Move instance representing the AI player's computed move
      */
     @Override
-    public Move getMoveFromAI(Board board, Rule rule, Player player, List<Player> players, ArtificialIntelligence ai) {
+    public Move getMoveFromAI(Board board, Rule rule, Player player, List<Player> players, Playable ai) {
        return ai.getNextMove(board, rule, player, players);
     }
 }

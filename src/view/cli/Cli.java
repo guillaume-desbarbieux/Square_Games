@@ -7,7 +7,7 @@ import view.dictionary.GameMessage;
 import view.dictionary.GameTitle;
 import model.Board;
 import view.dictionary.GameDictionary;
-import view.View;
+import view.Viewable;
 
 import java.util.InputMismatchException;
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.Scanner;
  * escape sequences for styling output, such as coloring or formatting text, and it leverages
  * a GameDictionary instance to retrieve human-readable messages, errors, titles, or choices.
  */
-public class Cli implements View {
+public class Cli implements Viewable {
     private final GameDictionary dictionary = new GameDictionary();
     private final Scanner scanner = new Scanner(System.in);
     private boolean maximize = false;

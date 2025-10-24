@@ -21,16 +21,19 @@ import view.dictionary.GameTitle;
 import java.util.ArrayList;
 import java.util.List;
 
+import static controller.GameState.*;
+
 /**
  * Manages the execution of a game by handling game rules, players, moves, and interactions with the display view.
  * The GameMaster class serves as the central controller for the game session, coordinating all components.
  */
 public class GameMaster {
     private final Rule rule;
-    private final View view;
+    private final Viewable view;
     private final PlayerFactory playerFactory;
     private final MoveAdapter adapter;
     private final GameTitle title;
+    private final GameState gameState;
 
     private final Board board;
     private List<Player> players;
@@ -46,7 +49,7 @@ public class GameMaster {
      * @param view the view used for displaying messages, boards, and receiving user input
      * @param title the title of the game being played
      */
-    public GameMaster(Rule rule, View view, GameTitle title) {
+    public GameMaster(Rule rule, Viewable view, GameTitle title) {
         this.rule = rule;
         this.title = title;
         this.view = view;
@@ -54,6 +57,7 @@ public class GameMaster {
         this.adapter = createAdapterForRule(rule);
         this.board = rule.getInitialBoard();
         this.movesHistory = new ArrayList<>();
+        this.gameState = WELCOME;
     }
 
     /**
@@ -75,6 +79,28 @@ public class GameMaster {
         return new RowColInputAdapter(view);
     }
 
+    private void stateMachine(){
+        switch (gameState){
+            case WELCOME -> this.start();
+            case SETTINGS -> this.settings();
+            case PLAY -> this.play();
+            case INVALIDE_MOVE -> this.invalidMove();
+            case WIN -> this.gameWon();
+            case DRAW -> this.gameDraw();
+        }
+    }
+
+    private void gameDraw() {
+    }
+
+    private void gameWon() {
+        
+    }
+
+    private void invalidMove() {
+        
+    }
+
     /**
      * Initiates the game sequence for the GameMaster.
      * Displays the game title and provides the player with an initial choice
@@ -88,7 +114,7 @@ public class GameMaster {
         GameChoice choice = view.getChoice(GameMessage.WELCOME, List.of(GameChoice.QUICK_START, GameChoice.SETTINGS));
         switch (choice) {
             case QUICK_START -> initPlayers(1, rule.getDefaultNbPlayers() - 1);
-            case SETTINGS -> menu();
+            case SETTINGS -> settings();
         }
         play();
     }
@@ -104,7 +130,7 @@ public class GameMaster {
      * 5. Configures the board size in the view based on the chosen option.
      * 6. Initializes players, including both human and artificial players.
      */
-    private void menu() {
+    private void settings() {
         view.display(GameTitle.SETTINGS);
         int nbHumanPlayers = view.getInt(GameMessage.GET_NB_HUMAN_PLAYERS, 0, rule.getDefaultNbPlayers());
         int nbArtificialPlayers = rule.getDefaultNbPlayers() - nbHumanPlayers;
