@@ -272,29 +272,44 @@ sequenceDiagram
     View->>Cli: display(GameTitle)
     Cli->>GameDictionary: get(GameTitle)
     GameDictionary-->>Cli: String title
-    Cli-->>View: affichage titre
     
     %% === Boucle de jeu ===
     loop Tour de jeu
     GameMaster->>View: display(Board)
+    View->> Cli: display(Board)
     GameMaster->>View: getChoice(GameMessage, choices)
     View->>Cli: getChoice(GameMessage, choices)
     Cli->>GameDictionary: get(GameChoice)
     GameDictionary-->>Cli: String choice
     Cli-->>View: choix du joueur
+    View-->> GameMaster: choix du joueur
     GameMaster->>Rule: isMoveValid(board, move)
     alt move valide
     GameMaster->>Rule: playMove(board, move)
     else erreur
     GameMaster->>View: display(GameError)
+    View->>Cli: display(GameError)
+
     end
-    Rule->>Rule: isGameOver(board, lastMove)
+    GameMaster->>Rule: isGameOver(board, lastMove)
     end
     
     %% === Fin de partie ===
-    GameMaster->>View: displayWinningBoard()
+    alt player is winning
+    GameMaster->>Rule: getWinningCells(List<Move>, Board)
+    Rule-->>GameMaster: List<Cell> winningCells
+    GameMaster->>Board: highlight(List<Cell>)
+    GameMaster->>View: display(Board)
     View->>Cli: display(Board)
-    Cli-->>GameMaster: affichage final
+    GameMaster->>View: display(WinningMessage)
+    View->>Cli: display(WinningMessage)
+    else board is full
+    GameMaster->>View: display(Board)
+    View->>Cli: display(Board)
+    GameMaster->>View: display(DrawMessage)
+    View->>Cli: display(DrawMessage)
+
+    end
     deactivate GameMaster
     deactivate Square_Games
     deactivate Cli

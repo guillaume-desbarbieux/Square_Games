@@ -109,7 +109,7 @@ public class Cli implements View {
         String title = dictionary.get(key);
         String border = "═".repeat(title.length());
         display(BLUE + "╔══" + border + "══╗" + RESET);
-        display(BLUE + "║  " + title + "  ║" + RESET);
+        display(BLUE + "║  " + title  + "  ║" + RESET);
         display(BLUE + "╚══" + border + "══╝" + RESET);
     }
 

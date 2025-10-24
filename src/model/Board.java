@@ -2,6 +2,8 @@ package model;
 
 import model.player.representation.RepresentationFactory;
 
+import java.util.List;
+
 /**
  * The Board class represents a grid or board consisting of cells.
  * Each cell within the board is initialized with a representation
@@ -16,7 +18,6 @@ public class Board {
      * a specific position on the board. The array structure reflects the rows
      * and columns of the board, allowing interaction with individual cells
      * based on their indices.
-     *
      * This field is marked as {@code protected} to allow access from subclasses,
      * and {@code final} to ensure the grid structure itself cannot be reassigned
      * after initialization.
@@ -104,5 +105,10 @@ public class Board {
             }
         }
         return new Board(clonedCells);
+    }
+
+    public void highlight(List<Cell> winningCells) {
+        for (Cell cell : winningCells)
+            cell.highlight();
     }
 }

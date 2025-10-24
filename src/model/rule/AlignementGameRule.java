@@ -1,6 +1,7 @@
 package model.rule;
 
 import model.Board;
+import model.Cell;
 import model.Move;
 import model.player.Player;
 import model.player.representation.Color;
@@ -26,10 +27,10 @@ public class AlignementGameRule extends Rule {
      * Constructs an alignment-based game rule with the specified board dimensions,
      * default number of players, and the required length of tokens in alignment to win.
      *
-     * @param height the height of the game board
-     * @param width the width of the game board
+     * @param height           the height of the game board
+     * @param width            the width of the game board
      * @param defaultNbPlayers the default number of players in the game
-     * @param winningLength the number of tokens that need to be aligned (horizontally, vertically, or diagonally) to win the game
+     * @param winningLength    the number of tokens that need to be aligned (horizontally, vertically, or diagonally) to win the game
      */
     public AlignementGameRule(int height, int width, int defaultNbPlayers, int winningLength) {
         super(height, width, defaultNbPlayers);
@@ -53,7 +54,7 @@ public class AlignementGameRule extends Rule {
      * based on the move's row, column, and player.
      *
      * @param board the game board on which the move is played
-     * @param move the move containing the player and the row and column of the cell being updated
+     * @param move  the move containing the player and the row and column of the cell being updated
      */
     @Override
     public void playMove(Board board, Move move) {
@@ -78,7 +79,7 @@ public class AlignementGameRule extends Rule {
      * and the last move played. The game is considered over if the last move
      * results in a winning alignment or if the board is completely full.
      *
-     * @param board the game board to check for game-over conditions
+     * @param board    the game board to check for game-over conditions
      * @param lastMove the move most recently played that may have caused the game to end
      * @return true if the game is over, either due to a win or a full board, false otherwise
      */
@@ -108,7 +109,7 @@ public class AlignementGameRule extends Rule {
      * A move is considered valid if it resides within the boundaries of the board
      * and the targeted cell is empty.
      *
-     * @param board the game board on which the validity of moves is determined
+     * @param board  the game board on which the validity of moves is determined
      * @param player the player for whom the valid moves are being calculated
      * @return a list of valid moves the player can make on the given board
      */
@@ -131,7 +132,7 @@ public class AlignementGameRule extends Rule {
      * by advancing the index of the current player.
      *
      * @param currentPlayer the player whose turn is currently active
-     * @param players the list of all players participating in the game
+     * @param players       the list of all players participating in the game
      * @return the next player in the sequence
      */
     @Override
@@ -156,7 +157,7 @@ public class AlignementGameRule extends Rule {
      * and the targeted cell is empty.
      *
      * @param board the game board on which the move is being evaluated
-     * @param move the move to be checked, including the row, column, and player information
+     * @param move  the move to be checked, including the row, column, and player information
      * @return true if the move is valid (within board boundaries and targeting an empty cell), false otherwise
      */
     @Override
@@ -173,7 +174,7 @@ public class AlignementGameRule extends Rule {
      * A move is considered winning if it results in an alignment of tokens
      * meeting the required winning length condition defined in the game rules.
      *
-     * @param board the game board on which the move was played
+     * @param board    the game board on which the move was played
      * @param lastMove the most recent move to evaluate for a winning condition
      * @return true if the move results in a winning alignment, false otherwise
      */
@@ -188,7 +189,7 @@ public class AlignementGameRule extends Rule {
      * horizontal, vertical, or diagonal.
      *
      * @param board the game board on which the move was made
-     * @param move the move to evaluate, containing the player and the position of the move
+     * @param move  the move to evaluate, containing the player and the position of the move
      * @return true if the move creates a winning alignment, false otherwise
      */
     protected boolean makeAlignment(Board board, Move move) {
@@ -216,11 +217,11 @@ public class AlignementGameRule extends Rule {
      * Counts the number of consecutive cells in a given direction from a starting cell
      * on the board that are owned by the same player.
      *
-     * @param board the game board to evaluate
-     * @param row the starting row position of the cell
-     * @param col the starting column position of the cell
-     * @param dRow the row direction to move for the count (e.g., -1, 0, 1)
-     * @param dCol the column direction to move for the count (e.g., -1, 0, 1)
+     * @param board    the game board to evaluate
+     * @param row      the starting row position of the cell
+     * @param col      the starting column position of the cell
+     * @param dRow     the row direction to move for the count (e.g., -1, 0, 1)
+     * @param dCol     the column direction to move for the count (e.g., -1, 0, 1)
      * @param playerId the ID of the player whose tokens are being counted
      * @return the number of consecutive cells owned by the specified player in the given direction
      */
@@ -237,5 +238,13 @@ public class AlignementGameRule extends Rule {
             c += dCol;
         }
         return count;
+    }
+
+    public List<Cell> getWinningCells(List<Move> movesHistory, Board board) {
+        List<Cell> winningCells = new ArrayList<>();
+        for (Move move : movesHistory)
+            if (isMoveWinning(board, move))
+                winningCells.add(board.getCell(move.getRow(), move.getCol()));
+        return winningCells;
     }
 }

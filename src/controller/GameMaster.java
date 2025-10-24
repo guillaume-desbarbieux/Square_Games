@@ -3,14 +3,12 @@ package controller;
 import controller.moveAdapter.ColInputAdapter;
 import controller.moveAdapter.MoveAdapter;
 import controller.moveAdapter.RowColInputAdapter;
+import model.Cell;
 import model.player.ai.ArtificialPlayer;
 import model.player.HumanPlayer;
-import model.rule.Connect4Rule;
-import model.rule.GomokuRule;
-import model.rule.Rule;
+import model.rule.*;
 import model.Board;
 import model.Move;
-import model.rule.TicTacToeRule;
 import view.*;
 import model.player.Player;
 import model.player.factory.PlayerFactory;
@@ -157,7 +155,10 @@ public class GameMaster {
 
         Move lastMove = movesHistory.getLast();
         if (rule.isMoveWinning(board, lastMove)) {
-            displayWinningBoard();
+            if (rule instanceof AlignementGameRule agRule) {
+                List<Cell> winningCells = agRule.getWinningCells(movesHistory, board);
+                board.highlight(winningCells);
+            }
             view.display(board);
             view.display(GameMessage.GAME_OVER_WIN, lastMove.getPlayer().render());
         } else {
@@ -187,25 +188,4 @@ public class GameMaster {
         return null;
     }
 
-    /**
-     * Highlights the cells on the board that are part of a winning sequence.
-     * <p>
-     * This method iterates through the game's move history and checks each move
-     * to determine if it is part of the winning sequence, based on the game's rule set.
-     * If a move is determined to be part of a winning sequence, the corresponding
-     * board cell is highlighted.
-     * <p>
-     * The method relies on the following components:
-     * - The move history, which contains all moves made during the game.
-     * - The rule set, which determines whether a specific move constitutes a winning move.
-     * - The board, which provides the ability to access and manipulate cells
-     *   based on move coordinates.
-     */
-    private void displayWinningBoard() {
-        for (Move move : movesHistory) {
-            if (rule.isMoveWinning(board, move)) {
-                board.getCell(move.getRow(), move.getCol()).highlight();
-            }
-        }
-    }
 }
