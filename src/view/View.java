@@ -96,7 +96,7 @@ public interface View {
      *              containing the current state of the game, including
      *              cell representations and their ownership (if any)
      */
-    void display(Board board);
+    void display(Board board, List<String> representations, List<String> highlights);
 
     /**
      * Configures the size of the board or game configuration based on the specified {@code GameChoice}.

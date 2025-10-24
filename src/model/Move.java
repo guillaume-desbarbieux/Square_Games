@@ -1,7 +1,5 @@
 package model;
 
-import model.player.Player;
-
 /**
  * The Move class represents a single action taken by a player in a game.
  * A move comprises the player making the move, and the row and column
@@ -11,20 +9,21 @@ import model.player.Player;
  * be modified once the object is created.
  */
 public class Move {
-    private final Player player;
+    private final int playerId;
     private final int row;
     private final int col;
 
     /**
-     * Constructs a Move object to represent an action taken by a player on a specific
-     * position on the game board.
+     * Constructs a Move instance representing a player's action on the game board.
+     * Each Move specifies the player making the move and the row and column
+     * indices of the board where the move is applied.
      *
-     * @param player the player making the move
-     * @param row the row index of the game board where the move is made
-     * @param col the column index of the game board where the move is made
+     * @param playerId the unique identifier of the player making this move
+     * @param row the row index on the game board where the move is made
+     * @param col the column index on the game board where the move is made
      */
-    public Move (Player player, int row, int col){
-        this.player = player;
+    public Move (int playerId, int row, int col){
+        this.playerId = playerId;
         this.row = row;
         this.col = col;
     }
@@ -34,8 +33,8 @@ public class Move {
      *
      * @return the {@code Player} who made this move
      */
-    public Player getPlayer() {
-        return this.player;
+    public int getPlayerId() {
+        return this.playerId;
     }
 
     /**

@@ -4,9 +4,6 @@ import model.Board;
 import model.Cell;
 import model.Move;
 import model.Rule;
-import model.player.Player;
-import model.player.representation.Color;
-import model.player.representation.RepresentationFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +44,7 @@ public class AlignementGameRule extends Rule {
      */
     @Override
     public Board getInitialBoard() {
-        return new Board(getHeight(), getWidth(), new RepresentationFactory(List.of(Color.WHITE), List.of('·')));
+        return new Board(getHeight(), getWidth());
     }
 
     /**
@@ -59,8 +56,8 @@ public class AlignementGameRule extends Rule {
      */
     @Override
     public void playMove(Board board, Move move) {
-        Player player = move.getPlayer();
-        board.getCell(move.getRow(), move.getCol()).setOwner(player.getId(), player.getRepresentation());
+        int playerId = move.getPlayerId();
+        board.getCell(move.getRow(), move.getCol()).setOwnerId(playerId);
     }
 
     /**
@@ -106,21 +103,13 @@ public class AlignementGameRule extends Rule {
         return true;
     }
 
-    /**
-     * Retrieves all valid moves for a given player on the specified game board.
-     * A move is considered valid if it resides within the boundaries of the board
-     * and the targeted cell is empty.
-     *
-     * @param board  the game board on which the validity of moves is determined
-     * @param player the player for whom the valid moves are being calculated
-     * @return a list of valid moves the player can make on the given board
-     */
+
     @Override
-    public List<Move> getValidMoves(Board board, Player player) {
+    public List<Move> getValidMoves(Board board, int playerId) {
         List<Move> listValidMoves = new ArrayList<>();
         for (int row = 0; row < getHeight(); row++) {
             for (int col = 0; col < getWidth(); col++) {
-                Move move = new Move(player, row, col);
+                Move move = new Move(playerId, row, col);
                 if (isMoveValid(board, move))
                     listValidMoves.add(move);
             }
@@ -129,28 +118,22 @@ public class AlignementGameRule extends Rule {
     }
 
     /**
-     * Determines and retrieves the next player in the sequence based on the current player.
-     * The method assumes a circular order in the list of players and computes the next player
-     * by advancing the index of the current player.
+     * Determines and returns the ID of the next player based on the current player's ID
+     * and a list of all player IDs. The next player ID is calculated in a cyclic manner,
+     * wrapping back to the start of the list after the last player.
      *
-     * @param currentPlayer the player whose turn is currently active
-     * @param players       the list of all players participating in the game
-     * @return the next player in the sequence
+     * @param playerId the ID of the current player
+     * @param listId the list of all player IDs in the game
+     * @return the ID of the next player in the sequence
      */
     @Override
-    public Player getNextPlayer(Player currentPlayer, List<Player> players) {
-        return players.get((currentPlayer.getId() + 1) % players.size());
+    public int getNextPlayerId(int playerId, List<Integer> listId) {
+        return listId.get(((playerId + 1) % listId.size()));
     }
 
-    /**
-     * Retrieves the first player from the provided list of players.
-     *
-     * @param players the list of players participating in the game
-     * @return the first player in the provided list
-     */
     @Override
-    public Player getFirstPlayer(List<Player> players) {
-        return players.getFirst();
+    public int getFirstPlayerId(List<Integer> listId) {
+        return listId.getFirst();
     }
 
     /**
@@ -197,7 +180,7 @@ public class AlignementGameRule extends Rule {
     private boolean makeAlignment(Board board, Move move) {
         int row = move.getRow();
         int col = move.getCol();
-        int playerId = move.getPlayer().getId();
+        int playerId = move.getPlayerId();
 
         int[][] directions = {
                 {0, 1}, // horizontally

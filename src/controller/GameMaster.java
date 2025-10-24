@@ -36,6 +36,8 @@ public class GameMaster {
     private List<Player> players;
     private Player currentPlayer;
     private final List<Move> movesHistory;
+    private List<String> representations;
+    private List<String> highlights;
 
     /**
      * Constructs a new GameMaster instance that manages the game's execution.
@@ -121,7 +123,13 @@ public class GameMaster {
      * @param nbArtificialPlayers the number of artificial players to be initialized
      */
     private void initPlayers(int nbHumanPlayers, int nbArtificialPlayers) {
-        this.players = playerFactory.createPlayers(nbHumanPlayers, nbArtificialPlayers);
+        players = playerFactory.createPlayers(nbHumanPlayers, nbArtificialPlayers);
+        representations = new ArrayList<>();
+        highlights = new ArrayList<>();
+        for (Player player : players){
+            representations.add(player.getRepresentation().render(false));
+            highlights.add(player.getRepresentation().render(true));
+        }
     }
 
     /**
@@ -138,16 +146,21 @@ public class GameMaster {
      */
     private void play() {
         view.display(rule.toString());
-        currentPlayer = rule.getFirstPlayer(players);
+        List<Integer> listIds = new ArrayList<>();
+        for (Player player : players)
+            listIds.add(player.getId());
+
+        currentPlayer = players.get(rule.getFirstPlayerId(listIds));
 
         do {
-            view.display(board);
+            view.display(board, representations, highlights);
             view.display(GameMessage.PLAYER_TURN, currentPlayer.render());
             Move move = getNextMove(currentPlayer);
             if (rule.isMoveValid(board, move)) {
                 rule.playMove(board, move);
                 movesHistory.add(move);
-                currentPlayer = rule.getNextPlayer(currentPlayer, players);
+
+                currentPlayer = players.get(rule.getNextPlayerId(currentPlayer.getId(), listIds));
             } else {
                 view.display(GameError.INVALID_MOVE);
             }
@@ -160,10 +173,11 @@ public class GameMaster {
                 List<Cell> winningCells = agRule.getWinningCells(movesHistory, board);
                 board.highlight(winningCells);
             }
-            view.display(board);
-            view.display(GameMessage.GAME_OVER_WIN, lastMove.getPlayer().render());
+            view.display(board, representations, highlights );
+            String representation = players.get(lastMove.getPlayerId()).render();
+            view.display(GameMessage.GAME_OVER_WIN, representation);
         } else {
-            view.display(board);
+            view.display(board, representations, highlights);
             view.display(GameMessage.GAME_OVER_DRAW);
         }
     }

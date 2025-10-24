@@ -17,7 +17,7 @@ import java.util.*;
  * losses. It also avoids immediate losing moves by simulating opponent responses.
  */
 public class MakeAlignementAI implements ArtificialIntelligence {
-    private static final int MAX_DEPTH = 12;
+    private static final int MAX_DEPTH = 5;
 
     /**
      * Determines the next move for the given player based on the current board state, rule set, and list of players.
@@ -31,7 +31,7 @@ public class MakeAlignementAI implements ArtificialIntelligence {
     @Override
     public Move getNextMove(Board board, Rule rule, Player player, List<Player> players) {
         Player opponent = getOpponent(player, players);
-        List<Move> validMoves = rule.getValidMoves(board, player);
+        List<Move> validMoves = rule.getValidMoves(board, player.getId());
 
         List<Integer> scores = new ArrayList<>();
 
@@ -78,7 +78,7 @@ public class MakeAlignementAI implements ArtificialIntelligence {
         // évaluer plutôt que retour = 0
         // return evaluateBoard(_old.board, rule, model.player, opponent, isPlayerTurn);
 
-        List<Move> moves = rule.getValidMoves(board, isPlayerTurn ? player : opponent);
+        List<Move> moves = rule.getValidMoves(board, isPlayerTurn ? player.getId() : opponent.getId());
 
         if (moves.isEmpty())
             return 0;
@@ -92,7 +92,7 @@ public class MakeAlignementAI implements ArtificialIntelligence {
             if (rule.isMoveWinning(clonedBoard, move))
                 return isPlayerTurn ? 900 + depth : -900 - depth;
 
-            List<Move> nextMoves = rule.getValidMoves(clonedBoard, isPlayerTurn ? opponent : player);
+            List<Move> nextMoves = rule.getValidMoves(clonedBoard, isPlayerTurn ? opponent.getId() : player.getId());
             boolean losingMove = false;
             for (Move nextMove : nextMoves) {
                 Board clonedBoard2 = clonedBoard.copy();

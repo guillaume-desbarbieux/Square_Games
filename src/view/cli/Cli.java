@@ -1,5 +1,6 @@
 package view.cli;
 
+import model.Cell;
 import view.dictionary.GameChoice;
 import view.dictionary.GameError;
 import view.dictionary.GameMessage;
@@ -251,7 +252,7 @@ public class Cli implements View {
      * @param board the game board to be displayed
      */
     @Override
-    public void display(Board board) {
+    public void display(Board board, List<String> representations, List<String> highlights) {
         int indexWidth = String.valueOf(board.getHeight()).length();
         String horizontalSeparator = " ";
         String verticalSeparator = "";
@@ -274,7 +275,14 @@ public class Cli implements View {
         for (int i = 0; i < board.getHeight(); i++) {
             message.append(String.format("%" + indexWidth + "d", i + 1)).append(horizontalSeparator);
             for (int j = 0; j < board.getWidth(); j++) {
-                message.append(board.getCell(i, j).render()).append(horizontalSeparator);
+                Cell cell = board.getCell(i,j);
+                String render = "·";
+                if (!cell.isEmpty())
+                    if (cell.isHighlighted())
+                        render = highlights.get(cell.getOwnerId());
+                    else
+                        render = representations.get(cell.getOwnerId());
+                message.append(render).append(horizontalSeparator);
             }
             message.append("\n").append(verticalSeparator);
         }

@@ -46,7 +46,7 @@ public class ColInputAdapter implements MoveAdapter {
     public Move getMoveFromHumanPlayer(Board board, Player player) {
         int col = view.getInt(GameMessage.GET_COL, 1, board.getWidth()) - 1;
         int row = getRowPlaying(board, col);
-        return new Move(player, row, col);
+        return new Move(player.getId(), row, col);
     }
 
     /**

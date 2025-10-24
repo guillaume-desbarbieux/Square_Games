@@ -1,7 +1,5 @@
 package model;
 
-import model.player.representation.RepresentationFactory;
-
 import java.util.List;
 
 /**
@@ -24,20 +22,11 @@ public class Board {
      */
     private final Cell[][] cells;
 
-    /**
-     * Constructs a Board instance with the specified height, width, and cell representations.
-     * Each cell in the board is initialized with a representation provided by the given
-     * RepresentationFactory.
-     *
-     * @param height the number of rows in the board
-     * @param width the number of columns in the board
-     * @param factory the factory used to generate the initial representation for each cell
-     */
-    public Board(int height, int width, RepresentationFactory factory) {
+    public Board(int height, int width) {
         this.cells = new Cell[height][width];
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                cells[i][j] = new Cell(factory.getRepresentation());
+                cells[i][j] = new Cell();
             }
         }
     }
@@ -98,9 +87,9 @@ public class Board {
         for (int row = 0; row < this.getHeight(); row++) {
             for (int col = 0; col < this.getWidth(); col++) {
                 Cell original = this.cells[row][col];
-                Cell copied = new Cell(original.getRepresentation());
+                Cell copied = new Cell();
                 if (!original.isEmpty())
-                    copied.setOwner(original.getOwnerId(), original.getRepresentation());
+                    copied.setOwnerId(original.getOwnerId());
                 clonedCells[row][col] = copied;
             }
         }

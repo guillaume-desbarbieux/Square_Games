@@ -1,7 +1,5 @@
 package model;
 
-import model.player.Player;
-
 import java.util.List;
 
 /**
@@ -69,17 +67,7 @@ public abstract class Rule {
      */
     public abstract boolean isGameOver(Board board, Move lastMove);
 
-    /**
-     * Determines and retrieves the list of valid moves that can be performed
-     * by the specified player on the given game board, based on the rules
-     * of the game. The returned moves should comply with the game's rules
-     * and constraints, ensuring they are legal within the current board state.
-     *
-     * @param board the current state of the game board; used as the basis for determining valid moves
-     * @param player the player for whom valid moves are being determined; affects which moves are legal
-     * @return a list of {@code Move} objects representing all valid moves the specified player can make
-     */
-    public abstract List<Move> getValidMoves(Board board, Player player);
+    public abstract List<Move> getValidMoves(Board board, int playerId);
 
     /**
      * Determines whether the specified move is valid, according to the game's rules.
@@ -115,27 +103,10 @@ public abstract class Rule {
      */
     public abstract boolean isMoveWinning(Board board, Move lastMove);
 
-    /**
-     * Determines the next player in the sequence based on the current player
-     * and the list of players. This method typically ensures cyclic navigation
-     * through the players, adhering to the game rules.
-     *
-     * @param player the current player whose successor is to be determined
-     * @param players the list of all players participating in the game
-     * @return the next player in the sequence, determined by the game's rules
-     */
-    public abstract Player getNextPlayer(Player player, List<Player> players);
 
-    /**
-     * Retrieves the first player from the provided list of players.
-     * This method identifies and returns the player who is set as
-     * the starting player based on the game's rules or initialization logic.
-     *
-     * @param players the list of players participating in the game;
-     *                must not be null or empty
-     * @return the {@code Player} object designated as the first player
-     */
-    public abstract Player getFirstPlayer(List<Player> players);
+    public abstract int getNextPlayerId(int playerId, List<Integer> playersId);
+
+    public abstract int getFirstPlayerId(List<Integer> listIds);
 
     public int getHeight() {
         return height;
