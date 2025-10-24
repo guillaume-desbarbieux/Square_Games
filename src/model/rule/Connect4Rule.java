@@ -35,13 +35,13 @@ public class Connect4Rule extends AlignementGameRule {
         int col = move.getCol();
 
         if (row < 0
-                || row >= board.height()
+                || row >= board.getHeight()
                 || col < 0
-                || col >= board.width()) {
+                || col >= board.getWidth()) {
             return false;
         }
 
-        if (row == board.height() - 1)
+        if (row == board.getHeight() - 1)
             return board.getCell(row, col).isEmpty();
         else
             return board.getCell(row, col).isEmpty() && !board.getCell(row + 1, col).isEmpty();

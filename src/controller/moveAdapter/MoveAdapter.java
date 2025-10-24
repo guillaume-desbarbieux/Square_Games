@@ -1,7 +1,7 @@
 package controller.moveAdapter;
 
 import model.Board;
-import model.rule.Rule;
+import model.Rule;
 import model.Move;
 import model.player.Player;
 import model.player.ai.ArtificialIntelligence;

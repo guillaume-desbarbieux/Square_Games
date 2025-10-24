@@ -18,7 +18,7 @@ import java.util.List;
  * RepresentationFactory to assign unique visual representations to each player.
  */
 public class PlayerFactory {
-    final RepresentationFactory representationFactory;
+    private final RepresentationFactory representationFactory;
 
     /**
      * Constructs a new PlayerFactory used to create players with unique visual representations.
@@ -37,7 +37,7 @@ public class PlayerFactory {
      * @param representation  the visual representation associated with the human player.
      * @return a new instance of HumanPlayer configured with the specified ID and representation.
      */
-    public Player createHumanPlayer(int id, Representation representation) {
+    private Player createHumanPlayer(int id, Representation representation) {
         return new HumanPlayer(id, representation);
     }
 
@@ -49,7 +49,7 @@ public class PlayerFactory {
      * @param ai              the artificial intelligence system responsible for decision-making during the game.
      * @return a new instance of ArtificialPlayer configured with the specified ID, representation, and AI system.
      */
-    public Player createArtificialPlayer(int id, Representation representation, ArtificialIntelligence ai) {
+    private Player createArtificialPlayer(int id, Representation representation, ArtificialIntelligence ai) {
         return new ArtificialPlayer(id, representation, ai);
     }
 

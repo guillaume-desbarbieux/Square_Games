@@ -22,7 +22,7 @@ public class Board {
      * and {@code final} to ensure the grid structure itself cannot be reassigned
      * after initialization.
      */
-    protected final Cell[][] cells;
+    private final Cell[][] cells;
 
     /**
      * Constructs a Board instance with the specified height, width, and cell representations.
@@ -59,7 +59,7 @@ public class Board {
      *
      * @return the number of rows in the board
      */
-    public int height() {
+    public int getHeight() {
         return this.cells.length;
     }
 
@@ -69,7 +69,7 @@ public class Board {
      *
      * @return the number of columns in the board
      */
-    public int width() {
+    public int getWidth() {
         return this.cells[0].length;
     }
 
@@ -93,14 +93,14 @@ public class Board {
      * @return a new Board instance that is a deep copy of the current Board
      */
     public Board copy() {
-        Cell[][] clonedCells = new Cell[this.height()][this.width()];
+        Cell[][] clonedCells = new Cell[this.getHeight()][this.getWidth()];
 
-        for (int row = 0; row < this.height(); row++) {
-            for (int col = 0; col < this.width(); col++) {
+        for (int row = 0; row < this.getHeight(); row++) {
+            for (int col = 0; col < this.getWidth(); col++) {
                 Cell original = this.cells[row][col];
                 Cell copied = new Cell(original.getRepresentation());
                 if (!original.isEmpty())
-                    copied.setOwner(original.getOwner());
+                    copied.setOwner(original.getOwnerId(), original.getRepresentation());
                 clonedCells[row][col] = copied;
             }
         }

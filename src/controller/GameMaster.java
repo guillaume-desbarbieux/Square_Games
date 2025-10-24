@@ -4,6 +4,7 @@ import controller.moveAdapter.ColInputAdapter;
 import controller.moveAdapter.MoveAdapter;
 import controller.moveAdapter.RowColInputAdapter;
 import model.Cell;
+import model.Rule;
 import model.player.ai.ArtificialPlayer;
 import model.player.HumanPlayer;
 import model.rule.*;
@@ -25,16 +26,16 @@ import java.util.List;
  * The GameMaster class serves as the central controller for the game session, coordinating all components.
  */
 public class GameMaster {
-    protected final Rule rule;
-    protected final View view;
-    protected final PlayerFactory playerFactory;
-    protected final MoveAdapter adapter;
-    protected final GameTitle title;
+    private final Rule rule;
+    private final View view;
+    private final PlayerFactory playerFactory;
+    private final MoveAdapter adapter;
+    private final GameTitle title;
 
-    protected final Board board;
-    protected List<Player> players;
-    protected Player currentPlayer;
-    protected final List<Move> movesHistory;
+    private final Board board;
+    private List<Player> players;
+    private Player currentPlayer;
+    private final List<Move> movesHistory;
 
     /**
      * Constructs a new GameMaster instance that manages the game's execution.
@@ -101,7 +102,7 @@ public class GameMaster {
      * 5. Configures the board size in the view based on the chosen option.
      * 6. Initializes players, including both human and artificial players.
      */
-    protected void menu() {
+    private void menu() {
         view.display(GameTitle.SETTINGS);
         int nbHumanPlayers = view.getInt(GameMessage.GET_NB_HUMAN_PLAYERS, 0, rule.getDefaultNbPlayers());
         int nbArtificialPlayers = rule.getDefaultNbPlayers() - nbHumanPlayers;
@@ -119,7 +120,7 @@ public class GameMaster {
      * @param nbHumanPlayers      the number of human players to be initialized
      * @param nbArtificialPlayers the number of artificial players to be initialized
      */
-    protected void initPlayers(int nbHumanPlayers, int nbArtificialPlayers) {
+    private void initPlayers(int nbHumanPlayers, int nbArtificialPlayers) {
         this.players = playerFactory.createPlayers(nbHumanPlayers, nbArtificialPlayers);
     }
 
@@ -135,7 +136,7 @@ public class GameMaster {
      * it checks if the last move is a winning move or if the game ends in a draw.
      * The final game state, including the board and outcome message, is displayed.
      */
-    protected void play() {
+    private void play() {
         view.display(rule.toString());
         currentPlayer = rule.getFirstPlayer(players);
 

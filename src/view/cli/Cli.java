@@ -252,7 +252,7 @@ public class Cli implements View {
      */
     @Override
     public void display(Board board) {
-        int indexWidth = String.valueOf(board.height()).length();
+        int indexWidth = String.valueOf(board.getHeight()).length();
         String horizontalSeparator = " ";
         String verticalSeparator = "";
         int cellWidth = horizontalSeparator.length() + 1;
@@ -260,20 +260,20 @@ public class Cli implements View {
         if (maximize) {
             horizontalSeparator = " | ";
             cellWidth = horizontalSeparator.length() + 1;
-            verticalSeparator = " ".repeat(indexWidth + cellWidth / 2) + "-".repeat(cellWidth * board.width()) + "\n";
+            verticalSeparator = " ".repeat(indexWidth + cellWidth / 2) + "-".repeat(cellWidth * board.getWidth()) + "\n";
         }
 
         StringBuilder message = new StringBuilder();
         message.append(" ".repeat(indexWidth));
 
-        for (int j = 0; j < board.width(); j++) {
+        for (int j = 0; j < board.getWidth(); j++) {
             message.append(String.format("%" + cellWidth + "d", j + 1));
         }
         message.append("\n").append(verticalSeparator);
 
-        for (int i = 0; i < board.height(); i++) {
+        for (int i = 0; i < board.getHeight(); i++) {
             message.append(String.format("%" + indexWidth + "d", i + 1)).append(horizontalSeparator);
-            for (int j = 0; j < board.width(); j++) {
+            for (int j = 0; j < board.getWidth(); j++) {
                 message.append(board.getCell(i, j).render()).append(horizontalSeparator);
             }
             message.append("\n").append(verticalSeparator);

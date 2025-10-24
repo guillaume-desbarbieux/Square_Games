@@ -2,7 +2,7 @@ package controller.moveAdapter;
 
 import view.dictionary.GameMessage;
 import model.Board;
-import model.rule.Rule;
+import model.Rule;
 import model.Move;
 import model.player.Player;
 import model.player.ai.ArtificialIntelligence;
@@ -44,7 +44,7 @@ public class ColInputAdapter implements MoveAdapter {
      */
     @Override
     public Move getMoveFromHumanPlayer(Board board, Player player) {
-        int col = view.getInt(GameMessage.GET_COL, 1, board.width()) - 1;
+        int col = view.getInt(GameMessage.GET_COL, 1, board.getWidth()) - 1;
         int row = getRowPlaying(board, col);
         return new Move(player, row, col);
     }
@@ -58,7 +58,7 @@ public class ColInputAdapter implements MoveAdapter {
      */
     public int getRowPlaying(Board board, int col) {
         int row = -1;
-        while (row + 1 < board.height() && board.getCell(row + 1, col).isEmpty())
+        while (row + 1 < board.getHeight() && board.getCell(row + 1, col).isEmpty())
             row++;
         return row;
     }

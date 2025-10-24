@@ -3,6 +3,7 @@ package model.rule;
 import model.Board;
 import model.Cell;
 import model.Move;
+import model.Rule;
 import model.player.Player;
 import model.player.representation.Color;
 import model.player.representation.RepresentationFactory;
@@ -12,7 +13,7 @@ import java.util.List;
 
 /**
  * Represents a rule for an alignment-based game where players must align a number
- * of their tokens (horizontally, vertically, or diagonally) in order to win.
+ * of their tokens (horizontally, vertically, or diagonally) to win.
  * This class extends {@code Rule} and provides specific implementations for alignment-style games.
  */
 public class AlignementGameRule extends Rule {
@@ -21,7 +22,7 @@ public class AlignementGameRule extends Rule {
      * (horizontally, vertically, or diagonally) for a player to win the game.
      * This value defines the winning condition of the alignment-based game.
      */
-    protected final int winningLength;
+    private final int winningLength;
 
     /**
      * Constructs an alignment-based game rule with the specified board dimensions,
@@ -46,7 +47,7 @@ public class AlignementGameRule extends Rule {
      */
     @Override
     public Board getInitialBoard() {
-        return new Board(height, width, new RepresentationFactory(List.of(Color.WHITE), List.of('·')));
+        return new Board(getHeight(), getWidth(), new RepresentationFactory(List.of(Color.WHITE), List.of('·')));
     }
 
     /**
@@ -58,7 +59,8 @@ public class AlignementGameRule extends Rule {
      */
     @Override
     public void playMove(Board board, Move move) {
-        board.getCell(move.getRow(), move.getCol()).setOwner(move.getPlayer());
+        Player player = move.getPlayer();
+        board.getCell(move.getRow(), move.getCol()).setOwner(player.getId(), player.getRepresentation());
     }
 
     /**
@@ -96,8 +98,8 @@ public class AlignementGameRule extends Rule {
      */
     @Override
     public boolean isBoardFull(Board board) {
-        for (int row = 0; row < height; row++)
-            for (int col = 0; col < width; col++)
+        for (int row = 0; row < getHeight(); row++)
+            for (int col = 0; col < getWidth(); col++)
                 if (board.getCell(row, col).isEmpty())
                     return false;
 
@@ -116,8 +118,8 @@ public class AlignementGameRule extends Rule {
     @Override
     public List<Move> getValidMoves(Board board, Player player) {
         List<Move> listValidMoves = new ArrayList<>();
-        for (int row = 0; row < height; row++) {
-            for (int col = 0; col < width; col++) {
+        for (int row = 0; row < getHeight(); row++) {
+            for (int col = 0; col < getWidth(); col++) {
                 Move move = new Move(player, row, col);
                 if (isMoveValid(board, move))
                     listValidMoves.add(move);
@@ -164,8 +166,8 @@ public class AlignementGameRule extends Rule {
     public boolean isMoveValid(Board board, Move move) {
         int row = move.getRow();
         int col = move.getCol();
-        return row >= 0 && row < board.height()
-                && col >= 0 && col < board.width()
+        return row >= 0 && row < board.getHeight()
+                && col >= 0 && col < board.getWidth()
                 && board.getCell(row, col).isEmpty();
     }
 
@@ -192,7 +194,7 @@ public class AlignementGameRule extends Rule {
      * @param move  the move to evaluate, containing the player and the position of the move
      * @return true if the move creates a winning alignment, false otherwise
      */
-    protected boolean makeAlignment(Board board, Move move) {
+    private boolean makeAlignment(Board board, Move move) {
         int row = move.getRow();
         int col = move.getCol();
         int playerId = move.getPlayer().getId();
@@ -225,14 +227,14 @@ public class AlignementGameRule extends Rule {
      * @param playerId the ID of the player whose tokens are being counted
      * @return the number of consecutive cells owned by the specified player in the given direction
      */
-    protected int countInDirection(Board board, int row, int col, int dRow, int dCol, int playerId) {
+    private int countInDirection(Board board, int row, int col, int dRow, int dCol, int playerId) {
         int count = 0;
         int r = row + dRow;
         int c = col + dCol;
-        while (r >= 0 && r < board.height()
-                && c >= 0 && c < board.width()
+        while (r >= 0 && r < board.getHeight()
+                && c >= 0 && c < board.getWidth()
                 && !board.getCell(r, c).isEmpty()
-                && board.getCell(r, c).getOwner().getId() == playerId) {
+                && board.getCell(r, c).getOwnerId() == playerId) {
             count++;
             r += dRow;
             c += dCol;

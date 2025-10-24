@@ -1,7 +1,5 @@
-package model.rule;
+package model;
 
-import model.Board;
-import model.Move;
 import model.player.Player;
 
 import java.util.List;
@@ -13,9 +11,9 @@ import java.util.List;
  * and handling player turns.
  */
 public abstract class Rule {
-    protected final int height;
-    protected final int width;
-    protected final int defaultNbPlayers;
+    private final int height;
+    private final int width;
+    private final int defaultNbPlayers;
 
     /**
      * Constructs a Rule object with specified board dimensions and a default number of players.
@@ -138,4 +136,12 @@ public abstract class Rule {
      * @return the {@code Player} object designated as the first player
      */
     public abstract Player getFirstPlayer(List<Player> players);
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
 }

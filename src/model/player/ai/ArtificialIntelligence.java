@@ -2,7 +2,7 @@ package model.player.ai;
 
 import model.Board;
 import model.player.Player;
-import model.rule.Rule;
+import model.Rule;
 import model.Move;
 
 import java.util.List;

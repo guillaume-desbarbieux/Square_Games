@@ -1,6 +1,5 @@
 package model;
 
-import model.player.Player;
 import model.player.representation.Representation;
 
 /**
@@ -11,7 +10,7 @@ import model.player.representation.Representation;
 public class Cell {
     private Representation representation;
     private boolean isHighlighted;
-    private Player owner;
+    private int ownerId;
 
     /**
      * Constructs a Cell instance with an initial representation and default parameters.
@@ -23,7 +22,7 @@ public class Cell {
      */
     public Cell(Representation emptyRepresentation) {
         this.representation = emptyRepresentation;
-        this.owner = null;
+        this.ownerId = -1;
         this.isHighlighted = false;
     }
 
@@ -40,15 +39,14 @@ public class Cell {
     }
 
     /**
-     * Sets the owner of the cell to the specified player and updates the cell's representation
-     * to match the visual representation of the player.
+     * Sets the owner of the cell and updates its visual representation.
      *
-     * @param player the Player object that will own this cell; the player's visual representation
-     *               will be used to update the cell's appearance
+     * @param ownerId the unique identifier of the owner to be associated with the cell
+     * @param representation the {@code Representation} object defining the updated visual state of the cell
      */
-    public void setOwner(Player player) {
-        this.representation = player.getRepresentation();
-        this.owner = player;
+    public void setOwner(int ownerId, Representation representation) {
+        this.representation = representation;
+        this.ownerId = ownerId;
     }
 
     /**
@@ -59,8 +57,8 @@ public class Cell {
      * @return the {@code Player} object representing the owner of the cell, or {@code null}
      *         if the cell is unowned
      */
-    public Player getOwner() {
-        return this.owner;
+    public int getOwnerId() {
+        return this.ownerId;
     }
 
     /**
@@ -70,7 +68,7 @@ public class Cell {
      * @return {@code true} if the cell is unowned, otherwise {@code false}
      */
     public boolean isEmpty() {
-        return this.owner == null;
+        return this.ownerId == -1;
     }
 
     /**
