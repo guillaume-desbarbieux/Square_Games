@@ -241,6 +241,12 @@ public class Cli implements Viewable {
         return scanner.nextLine();
     }
 
+    @Override
+    public boolean getBool(GameMessage gameMessage) {
+        GameChoice choice = getChoice(gameMessage, List.of(GameChoice.YES, GameChoice.NO));
+        return choice == GameChoice.YES;
+    }
+
     /**
      * Displays the current state of the board in a formatted manner.
      * <p>

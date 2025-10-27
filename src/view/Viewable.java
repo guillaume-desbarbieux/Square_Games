@@ -172,4 +172,6 @@ public interface Viewable {
      * @return a string representation of the provided {@code GameMessage}
      */
     String getString(GameMessage message);
+
+    boolean getBool(GameMessage gameMessage);
 }

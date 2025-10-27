@@ -31,6 +31,6 @@ public enum GameMessage {
     GET_COL,
     GET_GAME,
     SEE_YOU,
-    GET_ROW
+    WANT_REPLAY, IS_TURN_FINISH, GET_ROW
 }
 
