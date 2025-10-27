@@ -98,6 +98,10 @@ public class Board {
 
     public void highlight(List<Cell> winningCells) {
         for (Cell cell : winningCells)
-            cell.highlight();
+            highlight(cell,true);
+    }
+
+    public void highlight(Cell cell, boolean highlighted) {
+        cell.setHighlighted(highlighted);
     }
 }

@@ -45,8 +45,8 @@ public class Cell {
      * A highlighted cell is typically used to emphasize its importance or distinction,
      * such as being part of a winning sequence in a game.
      */
-    public void highlight() {
-        this.isHighlighted = true;
+    public void setHighlighted(boolean highlighted) {
+        this.isHighlighted = highlighted;
     }
 
     public boolean isHighlighted() {

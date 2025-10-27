@@ -157,6 +157,11 @@ public class GameMaster {
 
     private void playMove() {
         rule.playMove(board, currentMove);
+        if (!movesHistory.isEmpty()) {
+            Move lastMove = movesHistory.getLast();
+            board.highlight(board.getCell(lastMove.getRow(), lastMove.getCol()), false);
+        }
+        board.highlight(board.getCell(currentMove.getRow(), currentMove.getCol()), true);
         movesHistory.add(currentMove);
         gameState = CHECK_IF_ENDED;
     }
