@@ -22,6 +22,7 @@ public class CheckersRule implements RulableStrategy {
         this.playerIdGoingUp = -1;
         this.defaultHeight = 10;
         this.defaultWidth = 10;
+        this.isTurnFinish = true;
     }
 
     @Override
@@ -65,14 +66,10 @@ public class CheckersRule implements RulableStrategy {
             int endCol = cMove.getEnd().getCol();
 
             board.getCell(startRow, startCol).setEmpty();
-            isTurnFinish = true;
-
-
             if (endCol == startCol + 2 || endCol == startCol - 2) {
                 board.getCell((startRow + endRow) / 2, (startCol + endCol) / 2).setEmpty();
                 lastMove = cMove;
-                if (canBeContinue(board, cMove))
-                    isTurnFinish = cMove.isTurnFinish();
+                isTurnFinish = !canBeContinue(board, cMove);
             }
 
             board.getCell(endRow, endCol).setOwnerId(move.getPlayerId());
@@ -114,8 +111,7 @@ public class CheckersRule implements RulableStrategy {
                     Cell eatenCell = board.getCell(move.getEnd().getRow()+1, move.getEnd().getCol()+1);
                     if (!eatenCell.isEmpty() && eatenCell.getOwnerId() != move.getPlayerId()){
                         Cell arrivalCell = board.getCell(move.getEnd().getRow()+2, move.getEnd().getCol()+2);
-                        if (arrivalCell.isEmpty())
-                            return true;
+                        return arrivalCell.isEmpty();
                     }
                 }
             }
@@ -140,7 +136,7 @@ public class CheckersRule implements RulableStrategy {
                 return false;
 
             if (lastMove != null && lastMove.getPlayerId() == move.getPlayerId()) {
-                return isNewMoveValid(board, cMove) && isFollowingMoveValid(board, cMove);
+                return isNewMoveValid(board, cMove) && isFollowingMoveValid(cMove);
             } else
                 return isNewMoveValid(board, cMove);
         } else
@@ -159,7 +155,7 @@ public class CheckersRule implements RulableStrategy {
                 || endCol < 0 || endCol >= board.getWidth());
     }
 
-    private boolean isFollowingMoveValid(Board board, ComplexMove move) {
+    private boolean isFollowingMoveValid(ComplexMove move) {
         if (lastMove.getEnd().getRow() == move.getStart().getRow()
                 && lastMove.getEnd().getCol() == move.getStart().getCol()) {
             return Math.abs(move.getStart().getCol() - move.getEnd().getCol()) == 2;

@@ -24,11 +24,7 @@ public class ComplexMoveAdapter implements MoveAdapter {
         int startCol = view.getInt(GameMessage.GET_COL, 1, board.getWidth()) - 1;
         int endRow = view.getInt(GameMessage.GET_ROW, 1, board.getHeight()) - 1;
         int endCol = view.getInt(GameMessage.GET_COL, 1, board.getWidth()) - 1;
-        boolean isTurnFinish = true;
-        if (Math.abs(startRow-endRow) == 2)
-            isTurnFinish = view.getBool(GameMessage.IS_TURN_FINISH);
-
-        return new ComplexMove(player.getId(), new Coordinates(startRow,startCol), new Coordinates(endRow,endCol), isTurnFinish);
+        return new ComplexMove(player.getId(), new Coordinates(startRow,startCol), new Coordinates(endRow,endCol));
     }
 
     @Override
