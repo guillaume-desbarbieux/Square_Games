@@ -1,5 +1,6 @@
 package controller;
 
+import model.rule.CheckersRule;
 import model.rule.Connect4Rule;
 import model.rule.GomokuRule;
 import model.rule.TicTacToeRule;
@@ -37,7 +38,7 @@ public class Square_Games {
      * their input during the gameplay. The created instance serves as the primary interface for starting and
      * managing available board games provided by the application.
      */
-    public Square_Games(){
+    public Square_Games() {
         this.view = new Cli();
     }
 
@@ -46,12 +47,13 @@ public class Square_Games {
 
         while (choice != GameChoice.QUIT) {
             view.display(GameTitle.SQUARE_GAMES);
-            choice = view.getChoice(GameMessage.GET_GAME, List.of(GameChoice.TIC_TAC_TOE, GameChoice.GOMOKU, GameChoice.CONNECT4, GameChoice.QUIT));
+            choice = view.getChoice(GameMessage.GET_GAME, List.of(GameChoice.TIC_TAC_TOE, GameChoice.GOMOKU, GameChoice.CONNECT4, GameChoice.CHECKERS, GameChoice.QUIT));
 
             switch (choice) {
                 case TIC_TAC_TOE -> new GameMaster(new TicTacToeRule(), view, GameTitle.TIC_TAC_TOE).start();
                 case GOMOKU -> new GameMaster(new GomokuRule(), view, GameTitle.GOMOKU).start();
                 case CONNECT4 -> new GameMaster(new Connect4Rule(), view, GameTitle.CONNECT4).start();
+                case CHECKERS -> new GameMaster(new CheckersRule(), view, GameTitle.CHECKERS).start();
             }
         }
         view.display(GameMessage.SEE_YOU);

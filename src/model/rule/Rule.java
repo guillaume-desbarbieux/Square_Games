@@ -1,4 +1,8 @@
-package model;
+package model.rule;
+
+import model.Board;
+import model.MoveStrategy;
+import model.RulableStrategy;
 
 import java.util.List;
 
@@ -8,7 +12,7 @@ import java.util.List;
  * such as initializing a board, validating moves, determining game state,
  * and handling player turns.
  */
-public abstract class Rule implements Rulable {
+public abstract class Rule implements RulableStrategy {
     private final int height;
     private final int width;
     private final int defaultNbPlayers;
@@ -54,9 +58,9 @@ public abstract class Rule implements Rulable {
      * @param move  the move to be played, containing the player making the move and
      *              the row and column where the piece is to be placed
      */
-    public abstract void playMove(Board board, Move move);
+    public abstract void playMove(Board board, MoveStrategy move);
 
-    public abstract List<Move> getValidMoves(Board board, int playerId);
+    public abstract List<MoveStrategy> getValidMoves(Board board, int playerId);
 
     /**
      * Determines whether the specified move is valid, according to the game's rules.
@@ -69,7 +73,7 @@ public abstract class Rule implements Rulable {
      *              the player, row, and column of the intended action
      * @return true if the move is valid based on the game's rules, false otherwise
      */
-    public abstract boolean isMoveValid(Board board, Move move);
+    public abstract boolean isMoveValid(Board board, MoveStrategy move);
 
     /**
      * Determines whether the current game board is full, meaning that every cell
@@ -78,7 +82,7 @@ public abstract class Rule implements Rulable {
      * @param board the current state of the game board to check for fullness
      * @return true if every cell on the board is occupied, false otherwise
      */
-    public abstract boolean isBoardFull(Board board);
+    public abstract boolean isGameDraw(Board board);
 
     /**
      * Determines whether the last move played on the given board results in a winning condition.
@@ -90,7 +94,7 @@ public abstract class Rule implements Rulable {
      *                 contains the player and position (row and column) of the move
      * @return true if the last move results in a win based on the game's rules, false otherwise
      */
-    public abstract boolean isMoveWinning(Board board, Move lastMove);
+    public abstract boolean isMoveWinning(Board board, MoveStrategy lastMove);
 
 
     public abstract int getNextPlayerId(int playerId, List<Integer> playersId);

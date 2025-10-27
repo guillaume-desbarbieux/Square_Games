@@ -1,6 +1,7 @@
 package controller;
 
 import controller.moveAdapter.ColInputAdapter;
+import controller.moveAdapter.ComplexMoveAdapter;
 import controller.moveAdapter.MoveAdapter;
 import controller.moveAdapter.RowColInputAdapter;
 import model.*;
@@ -27,20 +28,20 @@ import static controller.GameState.*;
  * adherence to game rules.
  */
 public class GameMaster implements GameMasterStrategy{
-    private final Rulable rule;
+    private final RulableStrategy rule;
     private final Viewable view;
     private final PlayerFactory playerFactory;
     private final MoveAdapter adapter;
     private final GameTitle title;
     private GameState gameState;
 
-    private final Board board;
+    private Board board;
     private List<Player> players;
     private List<Integer> listIds;
     private Player currentPlayer;
-    private Move currentMove;
+    private MoveStrategy currentMove;
 
-    private final List<Move> movesHistory;
+    private final List<MoveStrategy> movesHistory;
     private List<String> representations;
     private List<String> highlights;
 
@@ -52,22 +53,22 @@ public class GameMaster implements GameMasterStrategy{
      * @param view  the view used for displaying messages, boards, and receiving user input
      * @param title the title of the game being played
      */
-    public GameMaster(Rulable rule, Viewable view, GameTitle title) {
+    public GameMaster(RulableStrategy rule, Viewable view, GameTitle title) {
         this.rule = rule;
         this.title = title;
         this.view = view;
         this.playerFactory = new PlayerFactory();
         this.adapter = createAdapterForRule(rule);
-        this.board = rule.getInitialBoard();
         this.movesHistory = new ArrayList<>();
     }
 
-    public MoveAdapter createAdapterForRule(Rulable rule) {
+    public MoveAdapter createAdapterForRule(RulableStrategy rule) {
         if (rule instanceof Connect4Rule) {
             return new ColInputAdapter(view);
         } else if (rule instanceof GomokuRule || rule instanceof TicTacToeRule) {
             return new RowColInputAdapter(view);
-        }
+        } else if (rule instanceof CheckersRule)
+            return new ComplexMoveAdapter(view);
         // Par défaut
         return new RowColInputAdapter(view);
     }
@@ -137,13 +138,14 @@ public class GameMaster implements GameMasterStrategy{
     public void initGame() {
         view.display(rule.toString());
         currentPlayer = players.get(rule.getFirstPlayerId(listIds));
+        this.board = rule.getInitialBoard();
         gameState = TURN;
     }
 
     public void askForMove() {
         view.display(board, representations, highlights);
         view.display(GameMessage.PLAYER_TURN, currentPlayer.render());
-        Move move = getNextMove(currentPlayer);
+        MoveStrategy move = getNextMove(currentPlayer);
 
         if (rule.isMoveValid(board, move)) {
             currentMove = move;
@@ -154,11 +156,6 @@ public class GameMaster implements GameMasterStrategy{
 
     public void playMove() {
         rule.playMove(board, currentMove);
-        if (!movesHistory.isEmpty()) {
-            Move lastMove = movesHistory.getLast();
-            board.highlight(board.getCell(lastMove.getRow(), lastMove.getCol()), false);
-        }
-        board.highlight(board.getCell(currentMove.getRow(), currentMove.getCol()), true);
         movesHistory.add(currentMove);
         gameState = CHECK_IF_ENDED;
     }
@@ -166,7 +163,7 @@ public class GameMaster implements GameMasterStrategy{
     public void checkIfEnded() {
         if (rule.isMoveWinning(board, currentMove))
             gameState = WIN;
-        else if (rule.isBoardFull(board))
+        else if (rule.isGameDraw(board))
             gameState = DRAW;
         else
             gameState = NEXT_PLAYER;
@@ -196,7 +193,7 @@ public class GameMaster implements GameMasterStrategy{
         gameState = QUIT;
     }
 
-    public Move getNextMove(Player player) {
+    public MoveStrategy getNextMove(Player player) {
         if (player instanceof HumanPlayer) {
             return adapter.getMoveFromHumanPlayer(board, player);
         } else if (player instanceof ArtificialPlayer aiPlayer) {

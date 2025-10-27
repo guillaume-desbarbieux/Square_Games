@@ -1,8 +1,8 @@
 package model.player.ai;
 
 import model.Board;
-import model.Move;
-import model.Rulable;
+import model.MoveStrategy;
+import model.RulableStrategy;
 import model.player.Player;
 import model.rule.AlignementGameRule;
 
@@ -18,7 +18,7 @@ import java.util.*;
  * losses. It also avoids immediate losing moves by simulating opponent responses.
  */
 public class MakeAlignementAI implements ableToPlayAlone {
-    private static final int MAX_DEPTH = 9;
+    private static final int MAX_DEPTH = 11;
 
     /**
      * Determines the next move for the given player based on the current board state, rule set, and list of players.
@@ -30,21 +30,21 @@ public class MakeAlignementAI implements ableToPlayAlone {
      * @return the next move to be played for the given player
      */
     @Override
-    public Move getNextMove(Board board, Rulable rule, Player player, List<Player> players) {
+    public MoveStrategy getNextMove(Board board, RulableStrategy rule, Player player, List<Player> players) {
         Player opponent = getOpponent(player, players);
-        List<Move> validMoves = rule.getValidMoves(board, player.getId());
+        List<MoveStrategy> validMoves = rule.getValidMoves(board, player.getId());
         if (validMoves.isEmpty())
             return null;
         if (validMoves.size() == 1)
             return validMoves.getFirst();
 
-        for (Move move : validMoves)
+        for (MoveStrategy move : validMoves)
             if (rule.isMoveWinning(board, move))
                 return move;
 
         List<Integer> moveScores = new ArrayList<>();
 
-        for (Move move : validMoves) {
+        for (MoveStrategy move : validMoves) {
             Board clonedBoard = board.copy();
             rule.playMove(clonedBoard, move);
 
@@ -53,7 +53,7 @@ public class MakeAlignementAI implements ableToPlayAlone {
 
         int bestScore = Collections.max(moveScores);
 
-        List<Move> bestMoves = new ArrayList<>();
+        List<MoveStrategy> bestMoves = new ArrayList<>();
         for (int i = 0; i < moveScores.size(); i++) {
             if (moveScores.get(i) == bestScore) {
                 bestMoves.add(validMoves.get(i));
@@ -62,27 +62,27 @@ public class MakeAlignementAI implements ableToPlayAlone {
         return bestMoves.get(new Random().nextInt(bestMoves.size()));
     }
 
-    private int evaluateMove(Board board, Rulable rule, Player player, Player opponent, int depth, boolean wasPlayerMove, int alpha, int beta) {
-        if (rule.isBoardFull(board) || depth == 0)
+    private int evaluateMove(Board board, RulableStrategy rule, Player player, Player opponent, int depth, boolean wasPlayerMove, int alpha, int beta) {
+        if (rule.isGameDraw(board) || depth == 0)
             return evaluateBoard(board, rule, player, opponent);
 
-        List<Move> moves = rule.getValidMoves(board, wasPlayerMove ? opponent.getId() : player.getId());
+        List<MoveStrategy> moves = rule.getValidMoves(board, wasPlayerMove ? opponent.getId() : player.getId());
 
         if (moves.isEmpty())
             return 0;
 
         int bestEval = wasPlayerMove ? Integer.MAX_VALUE : Integer.MIN_VALUE;
 
-        for (Move move : moves) {
+        for (MoveStrategy move : moves) {
             Board clonedBoard = board.copy();
             rule.playMove(clonedBoard, move);
 
             if (rule.isMoveWinning(clonedBoard, move))
                 return wasPlayerMove ? -1000 - depth : 1000 + depth;
 
-            List<Move> nextMoves = rule.getValidMoves(clonedBoard, wasPlayerMove ? player.getId() : opponent.getId());
+            List<MoveStrategy> nextMoves = rule.getValidMoves(clonedBoard, wasPlayerMove ? player.getId() : opponent.getId());
             boolean losingMove = false;
-            for (Move nextMove : nextMoves) {
+            for (MoveStrategy nextMove : nextMoves) {
                 Board clonedBoard2 = clonedBoard.copy();
                 rule.playMove(clonedBoard2, nextMove);
                 if (rule.isMoveWinning(clonedBoard2, nextMove)) {
@@ -109,15 +109,15 @@ public class MakeAlignementAI implements ableToPlayAlone {
         return bestEval;
     }
 
-    private int evaluateBoard(Board board, Rulable rule, Player player, Player opponent) {
+    private int evaluateBoard(Board board, RulableStrategy rule, Player player, Player opponent) {
         int playerScore = 0;
-        for (Move move : rule.getValidMoves(board, player.getId())) {
+        for (MoveStrategy move : rule.getValidMoves(board, player.getId())) {
             List<Integer> alignements = ((AlignementGameRule) rule).countAlignement(board, move, true);
             playerScore += alignements.get(0) + alignements.get(1) + alignements.get(2) + alignements.get(3);
         }
 
         int opponentScore = 0;
-        for (Move move : rule.getValidMoves(board, opponent.getId())) {
+        for (MoveStrategy move : rule.getValidMoves(board, opponent.getId())) {
             List<Integer> alignements = ((AlignementGameRule) rule).countAlignement(board, move, true);
             opponentScore += alignements.get(0) + alignements.get(1) + alignements.get(2) + alignements.get(3);
         }

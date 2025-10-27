@@ -1,9 +1,8 @@
 package model.rule;
 
-import model.Board;
-import model.Cell;
-import model.Move;
-import model.Rule;
+import model.*;
+import model.move.Coordinates;
+import model.move.SimpleMove;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +54,7 @@ public class AlignementGameRule extends Rule {
      * @param move  the move containing the player and the row and column of the cell being updated
      */
     @Override
-    public void playMove(Board board, Move move) {
+    public void playMove(Board board, MoveStrategy move) {
         int playerId = move.getPlayerId();
         board.getCell(move.getRow(), move.getCol()).setOwnerId(playerId);
     }
@@ -80,7 +79,7 @@ public class AlignementGameRule extends Rule {
      * @return true if all cells on the board are occupied, false otherwise
      */
     @Override
-    public boolean isBoardFull(Board board) {
+    public boolean isGameDraw(Board board) {
         for (int row = 0; row < getHeight(); row++)
             for (int col = 0; col < getWidth(); col++)
                 if (board.getCell(row, col).isEmpty())
@@ -91,11 +90,11 @@ public class AlignementGameRule extends Rule {
 
 
     @Override
-    public List<Move> getValidMoves(Board board, int playerId) {
-        List<Move> listValidMoves = new ArrayList<>();
+    public List<MoveStrategy> getValidMoves(Board board, int playerId) {
+        List<MoveStrategy> listValidMoves = new ArrayList<>();
         for (int row = 0; row < getHeight(); row++) {
             for (int col = 0; col < getWidth(); col++) {
-                Move move = new Move(playerId, row, col);
+                SimpleMove move = new SimpleMove(playerId, new Coordinates(row, col));
                 if (isMoveValid(board, move))
                     listValidMoves.add(move);
             }
@@ -132,7 +131,7 @@ public class AlignementGameRule extends Rule {
      * @return true if the move is valid (within board boundaries and targeting an empty cell), false otherwise
      */
     @Override
-    public boolean isMoveValid(Board board, Move move) {
+    public boolean isMoveValid(Board board, MoveStrategy move) {
         int row = move.getRow();
         int col = move.getCol();
         return row >= 0 && row < board.getHeight()
@@ -150,11 +149,11 @@ public class AlignementGameRule extends Rule {
      * @return true if the move results in a winning alignment, false otherwise
      */
     @Override
-    public boolean isMoveWinning(Board board, Move lastMove) {
+    public boolean isMoveWinning(Board board, MoveStrategy lastMove) {
         return makeAlignment(board, lastMove);
     }
 
-    private boolean makeAlignment(Board board, Move move) {
+    private boolean makeAlignment(Board board, MoveStrategy move) {
       List<Integer> alignements = countAlignement(board, move, false);
       for (int count : alignements) {
             if (count >= winningLength) return true;
@@ -169,7 +168,7 @@ public class AlignementGameRule extends Rule {
      * @param countEmptyCells if true, also count empty cells
      * @return a list of alignment counts, orderer as follows: horizontally, vertically, diagonally ↘, diagonally ↙
      */
-    public List<Integer> countAlignement(Board board, Move move, boolean countEmptyCells) {
+    public List<Integer> countAlignement(Board board, MoveStrategy move, boolean countEmptyCells) {
         int row = move.getRow();
         int col = move.getCol();
         int playerId = move.getPlayerId();
@@ -205,9 +204,9 @@ public class AlignementGameRule extends Rule {
         return count;
     }
 
-    public List<Cell> getWinningCells(List<Move> movesHistory, Board board) {
+    public List<Cell> getWinningCells(List<MoveStrategy> movesHistory, Board board) {
         List<Cell> winningCells = new ArrayList<>();
-        for (Move move : movesHistory)
+        for (MoveStrategy move : movesHistory)
             if (isMoveWinning(board, move))
                 winningCells.add(board.getCell(move.getRow(), move.getCol()));
         return winningCells;

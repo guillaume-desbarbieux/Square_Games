@@ -20,5 +20,5 @@ public enum GameTitle {
     GOMOKU,
     MAIN_MENU,
     TIC_TAC_TOE,
-    SETTINGS
+    CHECKERS, SETTINGS
 }

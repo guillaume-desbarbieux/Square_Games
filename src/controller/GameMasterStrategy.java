@@ -1,15 +1,15 @@
 package controller;
 
 import controller.moveAdapter.MoveAdapter;
-import model.Move;
-import model.Rulable;
+import model.MoveStrategy;
+import model.RulableStrategy;
 
 import model.player.Player;
 
 
 public interface GameMasterStrategy {
 
-    MoveAdapter createAdapterForRule(Rulable rule);
+    MoveAdapter createAdapterForRule(RulableStrategy rule);
 
     void start();
 
@@ -37,5 +37,5 @@ public interface GameMasterStrategy {
 
     void gameWon();
 
-    Move getNextMove(Player player);
+    MoveStrategy getNextMove(Player player);
 }

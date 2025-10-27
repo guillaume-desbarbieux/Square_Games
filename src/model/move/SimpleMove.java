@@ -1,4 +1,6 @@
-package model;
+package model.move;
+
+import model.MoveStrategy;
 
 /**
  * The Move class represents a single action taken by a player in a game.
@@ -8,24 +10,14 @@ package model;
  * This class is immutable, ensuring that the properties of a move cannot
  * be modified once the object is created.
  */
-public class Move {
+public class SimpleMove implements MoveStrategy {
     private final int playerId;
-    private final int row;
-    private final int col;
+    private final Coordinates coordinates;
 
-    /**
-     * Constructs a Move instance representing a player's action on the game board.
-     * Each Move specifies the player making the move and the row and column
-     * indices of the board where the move is applied.
-     *
-     * @param playerId the unique identifier of the player making this move
-     * @param row the row index on the game board where the move is made
-     * @param col the column index on the game board where the move is made
-     */
-    public Move (int playerId, int row, int col){
+
+    public SimpleMove(int playerId, Coordinates coordinates){
         this.playerId = playerId;
-        this.row = row;
-        this.col = col;
+        this.coordinates = coordinates;
     }
 
     /**
@@ -43,7 +35,7 @@ public class Move {
      * @return the column index as an integer
      */
     public int getCol() {
-        return col;
+        return coordinates.getCol();
     }
 
     /**
@@ -52,6 +44,6 @@ public class Move {
      * @return the row index as an integer
      */
     public int getRow() {
-        return row;
+        return coordinates.getRow();
     }
 }

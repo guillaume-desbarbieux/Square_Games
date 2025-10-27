@@ -1,7 +1,7 @@
 package model.rule;
 
 import model.Board;
-import model.Move;
+import model.MoveStrategy;
 
 /**
  * This class defines the rules for the Connect Four game. It extends the generic
@@ -30,7 +30,7 @@ public class Connect4Rule extends AlignementGameRule {
      * @return true if the move is valid, false otherwise
      */
     @Override
-    public boolean isMoveValid(Board board, Move move) {
+    public boolean isMoveValid(Board board, MoveStrategy move) {
         int row = move.getRow();
         int col = move.getCol();
 

@@ -1,8 +1,8 @@
 package controller.moveAdapter;
 
 import model.Board;
-import model.Rulable;
-import model.Move;
+import model.MoveStrategy;
+import model.RulableStrategy;
 import model.player.Player;
 import model.player.ai.ableToPlayAlone;
 import java.util.List;
@@ -22,7 +22,7 @@ public interface MoveAdapter {
      * @param player the human player making the move.
      * @return the move made by the human player, represented as an instance of the {@code Move} class.
      */
-    Move getMoveFromHumanPlayer(Board board, Player player);
+    MoveStrategy getMoveFromHumanPlayer(Board board, Player player);
 
     /**
      * Retrieves the next move for a player using the provided AI system, based on the current state of the board,
@@ -34,5 +34,5 @@ public interface MoveAdapter {
      * @param ai      the Artificial Intelligence system used to calculate the next move for the given player.
      * @return the computed move for the specified player, based on AI logic, game rules, and the current state of the game.
      */
-    Move getMoveFromAI(Board board, Rulable rule, Player player, List<Player> players, ableToPlayAlone ai);
+    MoveStrategy getMoveFromAI(Board board, RulableStrategy rule, Player player, List<Player> players, ableToPlayAlone ai);
 }

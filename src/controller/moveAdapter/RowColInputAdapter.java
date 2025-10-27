@@ -1,9 +1,11 @@
 package controller.moveAdapter;
 
-import model.Rulable;
+import model.MoveStrategy;
+import model.RulableStrategy;
+import model.move.Coordinates;
 import view.dictionary.GameMessage;
 import model.Board;
-import model.Move;
+import model.move.SimpleMove;
 import model.player.Player;
 import model.player.ai.ableToPlayAlone;
 import view.Viewable;
@@ -43,10 +45,10 @@ public class RowColInputAdapter implements MoveAdapter {
      * @return the move corresponding to the player's chosen row and column
      */
     @Override
-    public Move getMoveFromHumanPlayer(Board board, Player player) {
+    public MoveStrategy getMoveFromHumanPlayer(Board board, Player player) {
         int row = view.getInt(GameMessage.GET_ROW, 1, board.getHeight()) - 1;
         int col = view.getInt(GameMessage.GET_COL, 1, board.getWidth()) - 1;
-        return new Move(player.getId(), row, col);
+        return new SimpleMove(player.getId(),new Coordinates(row, col));
     }
 
     /**
@@ -61,7 +63,7 @@ public class RowColInputAdapter implements MoveAdapter {
      * @return the move decided by the AI player
      */
     @Override
-    public Move getMoveFromAI(Board board, Rulable rule, Player player, List<Player> players, ableToPlayAlone ai) {
+    public MoveStrategy getMoveFromAI(Board board, RulableStrategy rule, Player player, List<Player> players, ableToPlayAlone ai) {
         return ai.getNextMove(board, rule, player, players);
     }
 }

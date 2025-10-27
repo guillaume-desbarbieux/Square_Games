@@ -1,9 +1,9 @@
 package model.player.ai;
 
 import model.Board;
-import model.Rulable;
+import model.MoveStrategy;
+import model.RulableStrategy;
 import model.player.Player;
-import model.Move;
 
 import java.util.List;
 
@@ -24,5 +24,5 @@ public interface ableToPlayAlone {
      * @return the next move to be played for the specified player, taking into account the game rules
      *         and the state of the board.
      */
-    Move getNextMove(Board board, Rulable rule, Player player, List<Player> players);
+    MoveStrategy getNextMove(Board board, RulableStrategy rule, Player player, List<Player> players);
 }

@@ -40,6 +40,11 @@ public class Cell {
         return this.ownerId == -1;
     }
 
+    public void setEmpty() {
+        ownerId = -1;
+        isHighlighted = false;
+    }
+
     /**
      * Marks the current cell as highlighted by setting its highlighted state to true.
      * A highlighted cell is typically used to emphasize its importance or distinction,
