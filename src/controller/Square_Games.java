@@ -41,28 +41,6 @@ public class Square_Games {
         this.view = new Cli();
     }
 
-    /**
-     * Starts the interactive game selection and management process for the Square_Games application.
-     * <p>
-     * This method displays the main game menu and allows the user to select one of the available games
-     * (Tic Tac Toe, Gomoku, or Connect4) or exit the application. Upon selecting a game, a new instance
-     * of GameMaster is created with the appropriate game rules, and the selected game is started.
-     * The menu continues to be displayed until the user chooses to quit by selecting the "QUIT" option.
-     * <p>
-     * Behavior:
-     * - Displays the game title screen and menu using the provided View instance.
-     * - Prompts the user to choose one of the available options: a game to play or to "QUIT".
-     * - Runs the selected game by instantiating a GameMaster with the corresponding game rules.
-     * - Ensures the application exits cleanly by displaying a farewell message when the user chooses to quit.
-     * <p>
-     * Displayed Games and Options:
-     * - Tic Tac Toe
-     * - Gomoku
-     * - Connect4
-     * - Quit
-     * <p>
-     * Upon quitting, the method displays a goodbye message to the user indicating the end of the application.
-     */
     public void start() {
         GameChoice choice = null;
 

@@ -29,7 +29,7 @@ import static controller.GameState.*;
  * that orchestrates game initialization, player turns, and win/draw logic while ensuring
  * adherence to game rules.
  */
-public class GameMaster {
+public class GameMaster implements GameMasterStrategy{
     private final Rule rule;
     private final Viewable view;
     private final PlayerFactory playerFactory;
@@ -65,7 +65,7 @@ public class GameMaster {
         this.movesHistory = new ArrayList<>();
     }
 
-    private MoveAdapter createAdapterForRule(Rule rule) {
+    public MoveAdapter createAdapterForRule(Rule rule) {
         if (rule instanceof Connect4Rule) {
             return new ColInputAdapter(view);
         } else if (rule instanceof GomokuRule || rule instanceof TicTacToeRule) {
@@ -83,7 +83,7 @@ public class GameMaster {
         stateMachine();
     }
 
-    private void stateMachine() {
+    public void stateMachine() {
         switch (gameState) {
             case WELCOME -> welcome();
             case QUICK_START -> initPlayers(1, rule.getDefaultNbPlayers() - 1);
@@ -101,11 +101,11 @@ public class GameMaster {
             stateMachine();
     }
 
-    private void quit() {
+    public void quit() {
         view.display(GameMessage.SEE_YOU);
     }
 
-    private void welcome() {
+    public void welcome() {
         view.display(title);
         GameChoice choice = view.getChoice(GameMessage.WELCOME, List.of(GameChoice.QUICK_START, GameChoice.SETTINGS));
         switch (choice) {
@@ -114,7 +114,7 @@ public class GameMaster {
         }
     }
 
-    private void settings() {
+    public void settings() {
         view.display(GameTitle.SETTINGS);
         int nbHumanPlayers = view.getInt(GameMessage.GET_NB_HUMAN_PLAYERS, 0, rule.getDefaultNbPlayers());
         int nbArtificialPlayers = rule.getDefaultNbPlayers() - nbHumanPlayers;
@@ -124,7 +124,7 @@ public class GameMaster {
         gameState = INIT_GAME;
     }
 
-    private void initPlayers(int nbHumanPlayers, int nbArtificialPlayers) {
+    public void initPlayers(int nbHumanPlayers, int nbArtificialPlayers) {
         players = playerFactory.createPlayers(nbHumanPlayers, nbArtificialPlayers);
         representations = new ArrayList<>();
         highlights = new ArrayList<>();
@@ -137,13 +137,13 @@ public class GameMaster {
         gameState = INIT_GAME;
     }
 
-    private void initGame() {
+    public void initGame() {
         view.display(rule.toString());
         currentPlayer = players.get(rule.getFirstPlayerId(listIds));
         gameState = TURN;
     }
 
-    private void askForMove() {
+    public void askForMove() {
         view.display(board, representations, highlights);
         view.display(GameMessage.PLAYER_TURN, currentPlayer.render());
         Move move = getNextMove(currentPlayer);
@@ -155,7 +155,7 @@ public class GameMaster {
             view.display(GameError.INVALID_MOVE);
     }
 
-    private void playMove() {
+    public void playMove() {
         rule.playMove(board, currentMove);
         if (!movesHistory.isEmpty()) {
             Move lastMove = movesHistory.getLast();
@@ -166,7 +166,7 @@ public class GameMaster {
         gameState = CHECK_IF_ENDED;
     }
 
-    private void checkIfEnded() {
+    public void checkIfEnded() {
         if (rule.isMoveWinning(board, currentMove))
             gameState = WIN;
         else if (rule.isBoardFull(board))
@@ -175,19 +175,19 @@ public class GameMaster {
             gameState = NEXT_PLAYER;
     }
 
-    private void getNextPlayer() {
+    public void getNextPlayer() {
         currentPlayer = players.get(rule.getNextPlayerId(currentPlayer.getId(), listIds));
         gameState = TURN;
     }
 
 
-    private void gameDraw() {
+    public void gameDraw() {
         view.display(board, representations, highlights);
         view.display(GameMessage.GAME_OVER_DRAW);
         gameState = QUIT;
     }
 
-    private void gameWon() {
+    public void gameWon() {
         if (rule instanceof AlignementGameRule agRule) {
             List<Cell> winningCells = agRule.getWinningCells(movesHistory, board);
             board.highlight(winningCells);
@@ -199,7 +199,7 @@ public class GameMaster {
         gameState = QUIT;
     }
 
-    private Move getNextMove(Player player) {
+    public Move getNextMove(Player player) {
         if (player instanceof HumanPlayer) {
             return adapter.getMoveFromHumanPlayer(board, player);
         } else if (player instanceof ArtificialPlayer aiPlayer) {
