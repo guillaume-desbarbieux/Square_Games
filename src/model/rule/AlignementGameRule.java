@@ -123,7 +123,7 @@ public class AlignementGameRule extends Rule {
      * wrapping back to the start of the list after the last player.
      *
      * @param playerId the ID of the current player
-     * @param listId the list of all player IDs in the game
+     * @param listId   the list of all player IDs in the game
      * @return the ID of the next player in the sequence
      */
     @Override
@@ -168,20 +168,26 @@ public class AlignementGameRule extends Rule {
         return makeAlignment(board, lastMove);
     }
 
-    /**
-     * Evaluates if a move results in a winning alignment on the game board. A winning alignment
-     * occurs when a specified number of consecutive tokens belong to the same player in any direction:
-     * horizontal, vertical, or diagonal.
-     *
-     * @param board the game board on which the move was made
-     * @param move  the move to evaluate, containing the player and the position of the move
-     * @return true if the move creates a winning alignment, false otherwise
-     */
     private boolean makeAlignment(Board board, Move move) {
+      List<Integer> alignements = countAlignement(board, move, false);
+      for (int count : alignements) {
+            if (count >= winningLength) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Counts the number of tokens in each alignment (horizontally, vertically, or diagonally) for a given move.
+     * @param board the game board on which the move was played
+     * @param move the move to be evaluated (containing the playerId and the row and column of the cell being updated)
+     * @param countEmptyCells if true, also count empty cells
+     * @return a list of alignment counts, orderer as follows: horizontally, vertically, diagonally ↘, diagonally ↙
+     */
+    public List<Integer> countAlignement(Board board, Move move, boolean countEmptyCells) {
         int row = move.getRow();
         int col = move.getCol();
         int playerId = move.getPlayerId();
-
+        List<Integer> alignements = new ArrayList<>();
         int[][] directions = {
                 {0, 1}, // horizontally
                 {1, 0}, // vertically
@@ -191,33 +197,21 @@ public class AlignementGameRule extends Rule {
 
         for (int[] dir : directions) {
             int count = 1;
-            count += countInDirection(board, row, col, dir[0], dir[1], playerId);
-            count += countInDirection(board, row, col, -dir[0], -dir[1], playerId);
-            if (count >= winningLength) return true;
+            count += countInDirection(board, row, col, dir[0], dir[1], playerId, countEmptyCells);
+            count += countInDirection(board, row, col, -dir[0], -dir[1], playerId, countEmptyCells);
+            alignements.add(count);
         }
-        return false;
+        return alignements;
     }
 
-    /**
-     * Counts the number of consecutive cells in a given direction from a starting cell
-     * on the board that are owned by the same player.
-     *
-     * @param board    the game board to evaluate
-     * @param row      the starting row position of the cell
-     * @param col      the starting column position of the cell
-     * @param dRow     the row direction to move for the count (e.g., -1, 0, 1)
-     * @param dCol     the column direction to move for the count (e.g., -1, 0, 1)
-     * @param playerId the ID of the player whose tokens are being counted
-     * @return the number of consecutive cells owned by the specified player in the given direction
-     */
-    private int countInDirection(Board board, int row, int col, int dRow, int dCol, int playerId) {
+    private int countInDirection(Board board, int row, int col, int dRow, int dCol, int playerId, boolean countEmptyCells) {
         int count = 0;
         int r = row + dRow;
         int c = col + dCol;
         while (r >= 0 && r < board.getHeight()
                 && c >= 0 && c < board.getWidth()
-                && !board.getCell(r, c).isEmpty()
-                && board.getCell(r, c).getOwnerId() == playerId) {
+                && (board.getCell(r, c).getOwnerId() == playerId
+                || (countEmptyCells && board.getCell(r, c).isEmpty()))) {
             count++;
             r += dRow;
             c += dCol;
