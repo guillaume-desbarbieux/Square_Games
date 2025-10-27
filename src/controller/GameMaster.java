@@ -3,13 +3,10 @@ package controller;
 import controller.moveAdapter.ColInputAdapter;
 import controller.moveAdapter.MoveAdapter;
 import controller.moveAdapter.RowColInputAdapter;
-import model.Cell;
-import model.Rule;
+import model.*;
 import model.player.ai.ArtificialPlayer;
 import model.player.HumanPlayer;
 import model.rule.*;
-import model.Board;
-import model.Move;
 import view.*;
 import model.player.Player;
 import model.player.factory.PlayerFactory;
@@ -30,7 +27,7 @@ import static controller.GameState.*;
  * adherence to game rules.
  */
 public class GameMaster implements GameMasterStrategy{
-    private final Rule rule;
+    private final Rulable rule;
     private final Viewable view;
     private final PlayerFactory playerFactory;
     private final MoveAdapter adapter;
@@ -55,7 +52,7 @@ public class GameMaster implements GameMasterStrategy{
      * @param view  the view used for displaying messages, boards, and receiving user input
      * @param title the title of the game being played
      */
-    public GameMaster(Rule rule, Viewable view, GameTitle title) {
+    public GameMaster(Rulable rule, Viewable view, GameTitle title) {
         this.rule = rule;
         this.title = title;
         this.view = view;
@@ -65,7 +62,7 @@ public class GameMaster implements GameMasterStrategy{
         this.movesHistory = new ArrayList<>();
     }
 
-    public MoveAdapter createAdapterForRule(Rule rule) {
+    public MoveAdapter createAdapterForRule(Rulable rule) {
         if (rule instanceof Connect4Rule) {
             return new ColInputAdapter(view);
         } else if (rule instanceof GomokuRule || rule instanceof TicTacToeRule) {

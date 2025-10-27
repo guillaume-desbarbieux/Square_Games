@@ -8,7 +8,7 @@ import java.util.List;
  * such as initializing a board, validating moves, determining game state,
  * and handling player turns.
  */
-public abstract class Rule {
+public abstract class Rule implements Rulable {
     private final int height;
     private final int width;
     private final int defaultNbPlayers;
@@ -16,8 +16,8 @@ public abstract class Rule {
     /**
      * Constructs a Rule object with specified board dimensions and a default number of players.
      *
-     * @param height the height of the game board
-     * @param width the width of the game board
+     * @param height           the height of the game board
+     * @param width            the width of the game board
      * @param defaultNbPlayers the default number of players in the game
      */
     public Rule(int height, int width, int defaultNbPlayers) {
@@ -51,21 +51,10 @@ public abstract class Rule {
      * to the rules of the specific game.
      *
      * @param board the current state of the game board, which will be updated with the move
-     * @param move the move to be played, containing the player making the move and
-     *             the row and column where the piece is to be placed
+     * @param move  the move to be played, containing the player making the move and
+     *              the row and column where the piece is to be placed
      */
     public abstract void playMove(Board board, Move move);
-
-    /**
-     * Determines whether the game has ended based on the current board state and the last move played.
-     * This method evaluates the game's rules to check if there is a winning condition,
-     * a full board, or any other condition that signals the end of the game.
-     *
-     * @param board the current state of the game board
-     * @param lastMove the most recent move played, containing the player and the position of the move
-     * @return true if the game is over, false otherwise
-     */
-    public abstract boolean isGameOver(Board board, Move lastMove);
 
     public abstract List<Move> getValidMoves(Board board, int playerId);
 
@@ -76,8 +65,8 @@ public abstract class Rule {
      * the game's specific requirements for move placement.
      *
      * @param board the current state of the game board, represented as a {@code Board} object
-     * @param move the move to validate, represented as a {@code Move} object containing
-     *             the player, row, and column of the intended action
+     * @param move  the move to validate, represented as a {@code Move} object containing
+     *              the player, row, and column of the intended action
      * @return true if the move is valid based on the game's rules, false otherwise
      */
     public abstract boolean isMoveValid(Board board, Move move);
@@ -96,7 +85,7 @@ public abstract class Rule {
      * The specific winning condition is defined by the rules of the game and may depend on factors
      * such as aligning a certain number of pieces, configurations on the board, or other game-specific criteria.
      *
-     * @param board the current state of the game board, represented as a {@code Board} object
+     * @param board    the current state of the game board, represented as a {@code Board} object
      * @param lastMove the most recent move played, represented as a {@code Move} object;
      *                 contains the player and position (row and column) of the move
      * @return true if the last move results in a win based on the game's rules, false otherwise

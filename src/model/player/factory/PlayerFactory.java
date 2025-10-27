@@ -5,7 +5,7 @@ import model.player.representation.Representation;
 import model.player.ai.ArtificialPlayer;
 import model.player.HumanPlayer;
 import model.player.Player;
-import model.player.ai.Playable;
+import model.player.ai.ableToPlayAlone;
 import model.player.ai.MakeAlignementAI;
 import model.player.representation.RepresentationFactory;
 
@@ -49,7 +49,7 @@ public class PlayerFactory {
      * @param ai              the artificial intelligence system responsible for decision-making during the game.
      * @return a new instance of ArtificialPlayer configured with the specified ID, representation, and AI system.
      */
-    private Player createArtificialPlayer(int id, Representation representation, Playable ai) {
+    private Player createArtificialPlayer(int id, Representation representation, ableToPlayAlone ai) {
         return new ArtificialPlayer(id, representation, ai);
     }
 
@@ -65,7 +65,7 @@ public class PlayerFactory {
     public List<Player> createPlayers(int nbHumanPlayers, int nbArtificialPlayers) {
         List<Player> players = new ArrayList<>();
         List<Representation> representations = representationFactory.getRepresentations(nbHumanPlayers + nbArtificialPlayers);
-        Playable ai = new MakeAlignementAI();
+        ableToPlayAlone ai = new MakeAlignementAI();
 
         for (int i = 0; i < nbHumanPlayers; i++) {
             players.add(createHumanPlayer(i, representations.get(i)));

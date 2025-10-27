@@ -2,8 +2,8 @@ package model.player.ai;
 
 import model.Board;
 import model.Move;
+import model.Rulable;
 import model.player.Player;
-import model.Rule;
 import model.rule.AlignementGameRule;
 
 import java.util.*;
@@ -17,7 +17,7 @@ import java.util.*;
  * This AI evaluates potential moves to maximize the chances of winning while minimizing
  * losses. It also avoids immediate losing moves by simulating opponent responses.
  */
-public class MakeAlignementAI implements Playable {
+public class MakeAlignementAI implements ableToPlayAlone {
     private static final int MAX_DEPTH = 9;
 
     /**
@@ -30,13 +30,13 @@ public class MakeAlignementAI implements Playable {
      * @return the next move to be played for the given player
      */
     @Override
-    public Move getNextMove(Board board, Rule rule, Player player, List<Player> players) {
+    public Move getNextMove(Board board, Rulable rule, Player player, List<Player> players) {
         Player opponent = getOpponent(player, players);
         List<Move> validMoves = rule.getValidMoves(board, player.getId());
         if (validMoves.isEmpty())
             return null;
         if (validMoves.size() == 1)
-            return validMoves.get(0);
+            return validMoves.getFirst();
 
         for (Move move : validMoves)
             if (rule.isMoveWinning(board, move))
@@ -62,7 +62,7 @@ public class MakeAlignementAI implements Playable {
         return bestMoves.get(new Random().nextInt(bestMoves.size()));
     }
 
-    private int evaluateMove(Board board, Rule rule, Player player, Player opponent, int depth, boolean wasPlayerMove, int alpha, int beta) {
+    private int evaluateMove(Board board, Rulable rule, Player player, Player opponent, int depth, boolean wasPlayerMove, int alpha, int beta) {
         if (rule.isBoardFull(board) || depth == 0)
             return evaluateBoard(board, rule, player, opponent);
 
@@ -78,7 +78,7 @@ public class MakeAlignementAI implements Playable {
             rule.playMove(clonedBoard, move);
 
             if (rule.isMoveWinning(clonedBoard, move))
-                return wasPlayerMove ? -1000 - depth : +1000 + depth;
+                return wasPlayerMove ? -1000 - depth : 1000 + depth;
 
             List<Move> nextMoves = rule.getValidMoves(clonedBoard, wasPlayerMove ? player.getId() : opponent.getId());
             boolean losingMove = false;
@@ -109,7 +109,7 @@ public class MakeAlignementAI implements Playable {
         return bestEval;
     }
 
-    private int evaluateBoard(Board board, Rule rule, Player player, Player opponent) {
+    private int evaluateBoard(Board board, Rulable rule, Player player, Player opponent) {
         int playerScore = 0;
         for (Move move : rule.getValidMoves(board, player.getId())) {
             List<Integer> alignements = ((AlignementGameRule) rule).countAlignement(board, move, true);

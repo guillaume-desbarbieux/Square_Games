@@ -74,20 +74,6 @@ public class AlignementGameRule extends Rule {
     }
 
     /**
-     * Determines whether the game is over based on the state of the board
-     * and the last move played. The game is considered over if the last move
-     * results in a winning alignment or if the board is completely full.
-     *
-     * @param board    the game board to check for game-over conditions
-     * @param lastMove the move most recently played that may have caused the game to end
-     * @return true if the game is over, either due to a win or a full board, false otherwise
-     */
-    @Override
-    public boolean isGameOver(Board board, Move lastMove) {
-        return (isMoveWinning(board, lastMove) || isBoardFull(board));
-    }
-
-    /**
      * Checks if the game board is entirely filled with non-empty cells.
      *
      * @param board the game board to evaluate for fullness

@@ -9,7 +9,7 @@ import model.player.representation.Representation;
  * ArtificialIntelligence interface to automate decision-making during gameplay.
  */
 public class ArtificialPlayer extends Player {
-    private final Playable ai;
+    private final ableToPlayAlone ai;
 
     /**
      * Constructs an instance of ArtificialPlayer, integrating a unique identifier,
@@ -21,7 +21,7 @@ public class ArtificialPlayer extends Player {
      * @param ai              the ArtificialIntelligence instance associated with this player
      *                        for determining its actions during the game.
      */
-    public ArtificialPlayer(int id, Representation representation, Playable ai) {
+    public ArtificialPlayer(int id, Representation representation, ableToPlayAlone ai) {
         super(id, representation);
         this.ai = ai;
     }
@@ -29,9 +29,9 @@ public class ArtificialPlayer extends Player {
     /**
      * Retrieves the Artificial Intelligence (AI) system associated with this artificial player.
      *
-     * @return the {@link Playable} instance used for decision-making by this player
+     * @return the {@link ableToPlayAlone} instance used for decision-making by this player
      */
-    public Playable getAi() {
+    public ableToPlayAlone getAi() {
         return this.ai;
     }
 }

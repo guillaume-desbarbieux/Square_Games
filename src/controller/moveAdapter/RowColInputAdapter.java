@@ -1,11 +1,11 @@
 package controller.moveAdapter;
 
+import model.Rulable;
 import view.dictionary.GameMessage;
 import model.Board;
-import model.Rule;
 import model.Move;
 import model.player.Player;
-import model.player.ai.Playable;
+import model.player.ai.ableToPlayAlone;
 import view.Viewable;
 
 import java.util.List;
@@ -61,7 +61,7 @@ public class RowColInputAdapter implements MoveAdapter {
      * @return the move decided by the AI player
      */
     @Override
-    public Move getMoveFromAI(Board board, Rule rule, Player player, List<Player> players, Playable ai) {
+    public Move getMoveFromAI(Board board, Rulable rule, Player player, List<Player> players, ableToPlayAlone ai) {
         return ai.getNextMove(board, rule, player, players);
     }
 }

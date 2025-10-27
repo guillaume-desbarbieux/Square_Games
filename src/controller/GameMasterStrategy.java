@@ -2,14 +2,14 @@ package controller;
 
 import controller.moveAdapter.MoveAdapter;
 import model.Move;
-import model.Rule;
+import model.Rulable;
 
 import model.player.Player;
 
 
 public interface GameMasterStrategy {
 
-    MoveAdapter createAdapterForRule(Rule rule);
+    MoveAdapter createAdapterForRule(Rulable rule);
 
     void start();
 

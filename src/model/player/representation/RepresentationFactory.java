@@ -3,7 +3,6 @@ package model.player.representation;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 /**
  * The RepresentationFactory class is responsible for generating Representation objects
@@ -14,7 +13,6 @@ public class RepresentationFactory {
     private final List<Color> colors;
     private final Color resetColor;
     private final List<Character> symbols;
-    private final Random random;
     private final Character highlight;
 
     /**
@@ -29,7 +27,6 @@ public class RepresentationFactory {
         this.symbols = new ArrayList<>(symbols);
         this.colors = new ArrayList<>(colors);
         this.resetColor = Color.RESET;
-        this.random = new Random();
         this.highlight = '✪';
     }
 

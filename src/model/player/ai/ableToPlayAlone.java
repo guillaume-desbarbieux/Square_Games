@@ -1,8 +1,8 @@
 package model.player.ai;
 
 import model.Board;
+import model.Rulable;
 import model.player.Player;
-import model.Rule;
 import model.Move;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
  * Implementations of this interface define the logic for determining the next move
  * of a player in a turn-based game.
  */
-public interface Playable {
+public interface ableToPlayAlone {
     /**
      * Determines the next move for a player in a turn-based game based on the current
      * state of the board, applicable rules, and other players' states.
@@ -24,5 +24,5 @@ public interface Playable {
      * @return the next move to be played for the specified player, taking into account the game rules
      *         and the state of the board.
      */
-    Move getNextMove(Board board, Rule rule, Player player, List<Player> players);
+    Move getNextMove(Board board, Rulable rule, Player player, List<Player> players);
 }
