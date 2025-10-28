@@ -4,11 +4,8 @@ import model.*;
 import model.move.Coordinates;
 import model.move.SimpleMove;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.SequencedCollection;
 
 /**
  * Represents a rule for an alignment-based game where players must align a number

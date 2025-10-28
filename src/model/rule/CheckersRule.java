@@ -22,6 +22,13 @@ public class CheckersRule extends Rule implements RulableStrategy {
         this.playerIdGoingUp = -1;
     }
 
+    public CheckersRule(int playerIdGoingDown, int playerIdGoingUp, ComplexMove lastMove){
+        super(10,10,2);
+        this.playerIdGoingDown = playerIdGoingDown;
+        this.playerIdGoingUp = playerIdGoingUp;
+        this.lastMove = lastMove;
+    }
+
     @Override
     public int getDefaultNbPlayers() {
         return 2;

@@ -23,7 +23,7 @@ public class MakeAlignementAI implements ableToPlayAlone, Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private static final int MAX_DEPTH = 11;
+    private static final int MAX_DEPTH = 7;
 
     /**
      * Determines the next move for the given player based on the current board state, rule set, and list of players.

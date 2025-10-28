@@ -2,6 +2,7 @@ package controller;
 
 import controller.persistence.GameSerialization;
 import controller.persistence.Persistence;
+import model.GameSave;
 import model.rule.CheckersRule;
 import model.rule.Connect4Rule;
 import model.rule.GomokuRule;
@@ -9,6 +10,7 @@ import model.rule.TicTacToeRule;
 import view.Viewable;
 import view.cli.Cli;
 import view.dictionary.GameChoice;
+import view.dictionary.GameError;
 import view.dictionary.GameMessage;
 import view.dictionary.GameTitle;
 
@@ -31,6 +33,7 @@ import java.util.List;
  */
 public class Square_Games {
     private final Viewable view;
+    private final Persistence persist;
 
     /**
      * Constructs a new instance of the Square_Games class.
@@ -42,28 +45,73 @@ public class Square_Games {
      */
     public Square_Games() {
         this.view = new Cli();
+        this.persist = new GameSerialization();
     }
 
     public void start() {
         GameChoice choice = null;
-        Persistence persist = new GameSerialization();
 
         while (choice != GameChoice.QUIT) {
             view.display(GameTitle.SQUARE_GAMES);
-            choice = view.getChoice(GameMessage.GET_GAME, List.of(GameChoice.TIC_TAC_TOE, GameChoice.GOMOKU, GameChoice.CONNECT4, GameChoice.CHECKERS, GameChoice.QUIT));
+            choice = view.getChoice(GameMessage.GET_GAME, List.of(GameChoice.TIC_TAC_TOE, GameChoice.GOMOKU, GameChoice.CONNECT4, GameChoice.CHECKERS, GameChoice.QUIT, GameChoice.SAVES));
 
             GameMaster gameMaster = switch (choice) {
                 case TIC_TAC_TOE -> new GameMaster(new TicTacToeRule(), view, GameTitle.TIC_TAC_TOE, persist);
                 case GOMOKU -> new GameMaster(new GomokuRule(), view, GameTitle.GOMOKU, persist);
                 case CONNECT4 -> new GameMaster(new Connect4Rule(), view, GameTitle.CONNECT4, persist);
                 case CHECKERS -> new GameMaster(new CheckersRule(), view, GameTitle.CHECKERS, persist);
+                case SAVES -> getSaves();
                 default -> null;
             };
 
-            if (gameMaster != null) {
+            if (gameMaster != null)
                 gameMaster.start();
-            }
         }
         view.display(GameMessage.SEE_YOU);
+    }
+
+    /*
+    private GameMaster getGames() {
+        List<GameMaster> games = persist.getGames();
+
+        if (games.isEmpty()) {
+            view.display(GameError.NO_SAVED_GAMES);
+            return null;
+        }
+
+        view.display("0 : Annuler");
+        for (int i = 1 ; i <= games.size() ; i++)
+            view.display(i + " : " + games.get(i-1).toString());
+
+        int choice = view.getInt(GameMessage.GET_CHOICE, 0, games.size());
+
+        if (choice == 0)
+            return null;
+
+        GameMaster game = games.get(choice -1);
+        game.reload(persist, view);
+        return game;
+    }
+    */
+
+    private GameMaster getSaves() {
+        List<GameSave> saves = persist.getSaves();
+
+        if (saves.isEmpty()) {
+            view.display(GameError.NO_SAVED_GAMES);
+            return null;
+        }
+
+        view.display("0 : Annuler");
+        for (int i = 1; i <= saves.size(); i++)
+            view.display(i + " : " + saves.get(i - 1).toString());
+
+        int choice = view.getInt(GameMessage.GET_CHOICE, 0, saves.size());
+
+        if (choice == 0)
+            return null;
+
+        GameSave save = saves.get(choice - 1);
+        return new GameMaster(view, persist, save);
     }
 }

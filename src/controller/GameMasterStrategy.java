@@ -9,7 +9,7 @@ import model.player.Player;
 
 public interface GameMasterStrategy {
 
-    MoveAdapter createAdapterForRule(RulableStrategy rule);
+    void setAdapter();
 
     void start();
 

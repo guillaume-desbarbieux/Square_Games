@@ -14,5 +14,5 @@ package view.dictionary;
  * - INVALID_CHOICE: Indicates a choice made by the user that is not valid in the current context.
  */
 public enum GameError {
-    IS_NOT_INT, OUT_OF_RANGE, NO_CHOICES, OUT_OF_BOARD, INVALID_MOVE, INVALID_CHOICE,
+    IS_NOT_INT, OUT_OF_RANGE, NO_CHOICES, OUT_OF_BOARD, INVALID_MOVE, INVALID_CHOICE, NO_SAVED_GAMES,
 }

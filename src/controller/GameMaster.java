@@ -6,6 +6,7 @@ import controller.moveAdapter.MoveAdapter;
 import controller.moveAdapter.RowColInputAdapter;
 import controller.persistence.Persistence;
 import model.*;
+import model.move.ComplexMove;
 import model.player.ai.ArtificialPlayer;
 import model.player.HumanPlayer;
 import model.rule.*;
@@ -21,6 +22,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static controller.GameState.*;
 
@@ -34,10 +36,12 @@ public class GameMaster implements GameMasterStrategy, Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    private final String id;
+
     private final RulableStrategy rule;
-    private transient final Viewable view;
+    private transient Viewable view;
     private final PlayerFactory playerFactory;
-    private final MoveAdapter adapter;
+    private transient MoveAdapter adapter;
     private final GameTitle title;
     private GameState gameState;
 
@@ -50,7 +54,7 @@ public class GameMaster implements GameMasterStrategy, Serializable {
     private final List<MoveStrategy> movesHistory;
     private List<String> representations;
     private List<String> highlights;
-    private final Persistence persist;
+    private transient Persistence persist;
 
 
     /**
@@ -61,36 +65,92 @@ public class GameMaster implements GameMasterStrategy, Serializable {
      * @param title the title of the game being played
      */
     public GameMaster(RulableStrategy rule, Viewable view, GameTitle title, Persistence persist) {
+        this.id = UUID.randomUUID().toString();
         this.rule = rule;
         this.title = title;
         this.view = view;
         this.playerFactory = new PlayerFactory();
-        this.adapter = createAdapterForRule(rule);
+        setAdapter();
         this.movesHistory = new ArrayList<>();
+        this.persist = persist;
+        this.gameState = null;
+    }
+
+    public GameMaster(Viewable view, Persistence persist, GameSave save) {
+        this.id = save.id();
+        this.title = save.title();
+        this.players = save.players();
+        representations = new ArrayList<>();
+        highlights = new ArrayList<>();
+        listIds = new ArrayList<>();
+        for (Player player : players) {
+            representations.add(player.getRepresentation().render(false));
+            highlights.add(player.getRepresentation().render(true));
+            listIds.add(player.getId());
+        }
+        this.movesHistory = save.moveHistory();
+        this.rule = switch (title) {
+            case CHECKERS -> new CheckersRule(listIds.get(0), listIds.get(1), (ComplexMove) movesHistory.getLast());
+            case TIC_TAC_TOE -> new TicTacToeRule();
+            case GOMOKU -> new GomokuRule();
+            case CONNECT4 -> new Connect4Rule();
+            default -> null;
+        };
+        this.view = view;
+        this.playerFactory = new PlayerFactory();
+        setAdapter();
+        this.gameState = save.gameState();
+        setBoard(movesHistory);
+        this.currentPlayer = players.get(save.currentPlayerId());
+        this.currentMove = save.currentMove();
+
         this.persist = persist;
     }
 
-    public MoveAdapter createAdapterForRule(RulableStrategy rule) {
+    private void setBoard(List<MoveStrategy> movesHistory) {
+        this.board = rule.getInitialBoard();
+        for (MoveStrategy move : movesHistory)
+            rule.playMove(board, move);
+
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public void reload(Persistence persist, Viewable view) {
+        this.persist = persist;
+        this.view = view;
+        setAdapter();
+    }
+
+    public void setAdapter() {
         if (rule instanceof Connect4Rule) {
-            return new ColInputAdapter(view);
+            this.adapter = new ColInputAdapter(view);
         } else if (rule instanceof GomokuRule || rule instanceof TicTacToeRule) {
-            return new RowColInputAdapter(view);
+            this.adapter = new RowColInputAdapter(view);
         } else if (rule instanceof CheckersRule)
-            return new ComplexMoveAdapter(view);
-        // Par défaut
-        return new RowColInputAdapter(view);
+            this.adapter = new ComplexMoveAdapter(view);
     }
 
     /**
      * Starts the game execution by initializing the game's state and invoking the state machine mechanism.
      */
     public void start() {
-        this.gameState = GameState.WELCOME;
+        if (gameState == null)
+            gameState = GameState.WELCOME;
         stateMachine();
     }
 
     public void stateMachine() {
-        if (persist.saveGame(this))
+        // if (persist.saveGame(this))
+        //     view.display("Partie sauvegardée - " + gameState);
+
+        if (saveGame())
             view.display("Partie sauvegardée - " + gameState);
 
         switch (gameState) {
@@ -108,6 +168,11 @@ public class GameMaster implements GameMasterStrategy, Serializable {
         }
         if (gameState != QUIT)
             stateMachine();
+    }
+
+    private boolean saveGame() {
+        GameSave save = new GameSave(id, title, gameState, players, currentPlayer == null ? -1 : currentPlayer.getId(), movesHistory, currentMove);
+        return persist.saveGame(save);
     }
 
     public void quit() {
@@ -216,5 +281,10 @@ public class GameMaster implements GameMasterStrategy, Serializable {
             return adapter.getMoveFromAI(board, rule, player, players, aiPlayer.getAi());
         }
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return (this.title + " (" + gameState + ")");
     }
 }
