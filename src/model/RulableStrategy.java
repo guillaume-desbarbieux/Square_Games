@@ -18,7 +18,7 @@ public interface RulableStrategy {
 
     boolean isMoveWinning(Board board, MoveStrategy lastMove);
 
-    int getNextPlayerId(int playerId, List<Integer> playersId);
+    int getNextPlayerId(Board board, MoveStrategy lastMove, List<Integer> playersId);
 
     int getFirstPlayerId(List<Integer> listIds);
 

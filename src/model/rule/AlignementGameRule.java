@@ -102,18 +102,10 @@ public class AlignementGameRule extends Rule {
         return listValidMoves;
     }
 
-    /**
-     * Determines and returns the ID of the next player based on the current player's ID
-     * and a list of all player IDs. The next player ID is calculated in a cyclic manner,
-     * wrapping back to the start of the list after the last player.
-     *
-     * @param playerId the ID of the current player
-     * @param listId   the list of all player IDs in the game
-     * @return the ID of the next player in the sequence
-     */
+
     @Override
-    public int getNextPlayerId(int playerId, List<Integer> listId) {
-        return listId.get(((playerId + 1) % listId.size()));
+    public int getNextPlayerId(Board board, MoveStrategy lastMove, List<Integer> listId) {
+        return listId.get(((lastMove.getPlayerId() + 1) % listId.size()));
     }
 
     @Override

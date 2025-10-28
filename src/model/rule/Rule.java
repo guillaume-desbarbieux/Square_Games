@@ -97,7 +97,7 @@ public abstract class Rule implements RulableStrategy {
     public abstract boolean isMoveWinning(Board board, MoveStrategy lastMove);
 
 
-    public abstract int getNextPlayerId(int playerId, List<Integer> playersId);
+    public abstract int getNextPlayerId(Board board, MoveStrategy lastMove, List<Integer> playersId);
 
     public abstract int getFirstPlayerId(List<Integer> listIds);
 

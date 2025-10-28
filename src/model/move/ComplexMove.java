@@ -7,7 +7,7 @@ public class ComplexMove implements MoveStrategy {
     private final Coordinates startCoordinates;
     private final Coordinates endCoordinates;
 
-    public ComplexMove(int playerId, Coordinates startCoordinates, Coordinates endCoordinates){
+    public ComplexMove(int playerId, Coordinates startCoordinates, Coordinates endCoordinates) {
         this.playerId = playerId;
         this.startCoordinates = startCoordinates;
         this.endCoordinates = endCoordinates;
@@ -30,11 +30,16 @@ public class ComplexMove implements MoveStrategy {
         return endCoordinates.getCol();
     }
 
-    public Coordinates getStart(){
+    public Coordinates getStart() {
         return startCoordinates;
     }
 
-    public Coordinates getEnd(){
+    public Coordinates getEnd() {
         return endCoordinates;
+    }
+
+    @Override
+    public String toString() {
+        return "{start=" + startCoordinates.toString() + ", end=" + endCoordinates.toString() + '}';
     }
 }

@@ -145,6 +145,10 @@ public class GameMaster implements GameMasterStrategy{
     public void askForMove() {
         view.display(board, representations, highlights);
         view.display(GameMessage.PLAYER_TURN, currentPlayer.render());
+        List<MoveStrategy> validMoves = rule.getValidMoves(board, currentPlayer.getId());
+        for (MoveStrategy move : validMoves) {
+            view.display(move.toString());
+        }
         MoveStrategy move = getNextMove(currentPlayer);
 
         if (rule.isMoveValid(board, move)) {
@@ -170,7 +174,7 @@ public class GameMaster implements GameMasterStrategy{
     }
 
     public void getNextPlayer() {
-        currentPlayer = players.get(rule.getNextPlayerId(currentPlayer.getId(), listIds));
+        currentPlayer = players.get(rule.getNextPlayerId(board, movesHistory.getLast(), listIds));
         gameState = TURN;
     }
 

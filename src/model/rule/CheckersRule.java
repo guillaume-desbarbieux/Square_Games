@@ -5,7 +5,9 @@ import model.Cell;
 import model.MoveStrategy;
 import model.RulableStrategy;
 import model.move.ComplexMove;
+import model.move.Coordinates;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CheckersRule implements RulableStrategy {
@@ -13,7 +15,6 @@ public class CheckersRule implements RulableStrategy {
     private int playerIdGoingDown;
     private final int defaultHeight;
     private final int defaultWidth;
-    private boolean isTurnFinish;
     private ComplexMove lastMove;
 
 
@@ -22,7 +23,6 @@ public class CheckersRule implements RulableStrategy {
         this.playerIdGoingUp = -1;
         this.defaultHeight = 10;
         this.defaultWidth = 10;
-        this.isTurnFinish = true;
     }
 
     @Override
@@ -36,93 +36,82 @@ public class CheckersRule implements RulableStrategy {
             throw new Error("Vous n'avez pas initialisé les joueurs avant !");
 
         Board board = new Board(defaultHeight, defaultWidth);
-        for (int row = 0; row < 3; row += 2) {
-            for (int col = 1; col < defaultWidth; col += 2) {
-                board.getCell(row, col).setOwnerId(playerIdGoingDown);
-                board.getCell(row + 1, col - 1).setOwnerId(playerIdGoingDown);
-            }
-        }
-
-        for (int row = defaultHeight - 4; row < defaultHeight; row += 2) {
-            for (int col = 1; col < defaultWidth; col += 2) {
-                board.getCell(row, col).setOwnerId(playerIdGoingUp);
-                board.getCell(row + 1, col - 1).setOwnerId(playerIdGoingUp);
-            }
-        }
-
+        for (int row = 0; row < defaultHeight; row++)
+            for (int col = 0; col < defaultWidth; col++)
+                if ((row + col) % 2 == 1) {
+                    if (row < 4)
+                        board.getCell(row, col).setOwnerId(playerIdGoingDown);
+                    if (row >= defaultHeight - 4)
+                        board.getCell(row, col).setOwnerId(playerIdGoingUp);
+                }
         return board;
     }
 
     @Override
     public void playMove(Board board, MoveStrategy move) {
-        if (lastMove!= null && lastMove.getPlayerId() != move.getPlayerId())
-            lastMove = null;
-
-
         if (move instanceof ComplexMove cMove) {
             int startRow = cMove.getStart().getRow();
             int startCol = cMove.getStart().getCol();
             int endRow = cMove.getEnd().getRow();
             int endCol = cMove.getEnd().getCol();
 
+            lastMove = cMove;
             board.getCell(startRow, startCol).setEmpty();
-            if (endCol == startCol + 2 || endCol == startCol - 2) {
+            if (Math.abs(startRow - endRow) == 2)
                 board.getCell((startRow + endRow) / 2, (startCol + endCol) / 2).setEmpty();
-                lastMove = cMove;
-                isTurnFinish = !canBeContinue(board, cMove);
-            }
-
             board.getCell(endRow, endCol).setOwnerId(move.getPlayerId());
         }
     }
 
-    private boolean canBeContinue(Board board, ComplexMove move) {
-        if (move.getPlayerId() == playerIdGoingUp) {
-            if (move.getEnd().getRow() - 2 > 0) {
-                if (move.getEnd().getCol() > 1){
-                    Cell eatenCell = board.getCell(move.getEnd().getRow()-1, move.getEnd().getCol()-1);
-                    if (!eatenCell.isEmpty() && eatenCell.getOwnerId() != move.getPlayerId()){
-                        Cell arrivalCell = board.getCell(move.getEnd().getRow()-2, move.getEnd().getCol()-2);
-                        if (arrivalCell.isEmpty())
-                            return true;
-                    }
-                }
-                if (move.getEnd().getCol() < defaultWidth -2){
-                    Cell eatenCell = board.getCell(move.getEnd().getRow()-1, move.getEnd().getCol()+1);
-                    if (!eatenCell.isEmpty() && eatenCell.getOwnerId() != move.getPlayerId()){
-                        Cell arrivalCell = board.getCell(move.getEnd().getRow()-2, move.getEnd().getCol()+2);
-                        if (arrivalCell.isEmpty())
-                            return true;
-                    }
-                }
-            }
-        }
-        if (move.getPlayerId() == playerIdGoingDown) {
-            if (move.getEnd().getRow() + 2 < defaultHeight) {
-                if (move.getEnd().getCol() > 1){
-                    Cell eatenCell = board.getCell(move.getEnd().getRow()+1, move.getEnd().getCol()-1);
-                    if (!eatenCell.isEmpty() && eatenCell.getOwnerId() != move.getPlayerId()){
-                        Cell arrivalCell = board.getCell(move.getEnd().getRow()+2, move.getEnd().getCol()-2);
-                        if (arrivalCell.isEmpty())
-                            return true;
-                    }
-                }
-                if (move.getEnd().getCol() < defaultWidth -2){
-                    Cell eatenCell = board.getCell(move.getEnd().getRow()+1, move.getEnd().getCol()+1);
-                    if (!eatenCell.isEmpty() && eatenCell.getOwnerId() != move.getPlayerId()){
-                        Cell arrivalCell = board.getCell(move.getEnd().getRow()+2, move.getEnd().getCol()+2);
-                        return arrivalCell.isEmpty();
-                    }
-                }
-            }
-        }
-        return false;
+    private boolean canContinueEating(Board board, ComplexMove move) {
+        List<MoveStrategy> possibleMoves = getValidMovesFromCell(board, move.getPlayerId(), move.getEnd().getRow(), move.getEnd().getCol(), true);
+        return !possibleMoves.isEmpty();
     }
 
     @Override
     public List<MoveStrategy> getValidMoves(Board board, int playerId) {
-        //TODO à faire pour l'IA
-        return null;
+        if (lastMove != null && lastMove.getPlayerId() == playerId)
+            return getFollowingMoves(board);
+
+        List<MoveStrategy> eatingMoves = getValidMovesFromBoard(board, playerId, true);
+
+        if (eatingMoves.isEmpty())
+            return getValidMovesFromBoard(board, playerId, false);
+        else
+            return eatingMoves;
+    }
+
+    private List<MoveStrategy> getFollowingMoves(Board board) {
+        if (lastMove == null)
+            return new ArrayList<>();
+        List<MoveStrategy> moves = getValidMovesFromCell(board, lastMove.getPlayerId(), lastMove.getEnd().getRow(), lastMove.getEnd().getCol(), true);
+        moves.removeIf(move -> !isFollowingMoveValid((ComplexMove) move));
+        return moves;
+    }
+
+    private List<MoveStrategy> getValidMovesFromCell(Board board, int playerId, int row, int col, boolean onlyEating) {
+        int dist = onlyEating ? 2 : 1;
+        List<MoveStrategy> moves = new ArrayList<>(List.of(
+                new ComplexMove(playerId, new Coordinates(row, col), new Coordinates(row + dist, col + dist)),
+                new ComplexMove(playerId, new Coordinates(row, col), new Coordinates(row + dist, col - dist)),
+                new ComplexMove(playerId, new Coordinates(row, col), new Coordinates(row - dist, col + dist)),
+                new ComplexMove(playerId, new Coordinates(row, col), new Coordinates(row - dist, col - dist))));
+        moves.removeIf(move -> !isMoveValid(board, move));
+        return moves;
+    }
+
+    private List<MoveStrategy> getValidMovesFromBoard(Board board, int playerId, boolean onlyEating) {
+        List<MoveStrategy> validMoves = new ArrayList<>();
+
+        for (int row = 0; row < board.getHeight(); row++) {
+            for (int col = 0; col < board.getWidth(); col++) {
+                Cell cell = board.getCell(row, col);
+                if (!cell.isEmpty() && cell.getOwnerId() == playerId) {
+                    validMoves.addAll(getValidMovesFromCell(board, playerId, row, col, onlyEating));
+                }
+            }
+        }
+        return validMoves;
     }
 
     @Override
@@ -130,40 +119,51 @@ public class CheckersRule implements RulableStrategy {
         if (playerIdGoingUp == -1 || playerIdGoingDown == -1)
             return false;
 
-        if (move instanceof ComplexMove cMove) {
-
-            if (!isMoveInBoard(board, cMove))
-                return false;
-
-            if (lastMove != null && lastMove.getPlayerId() == move.getPlayerId()) {
-                return isNewMoveValid(board, cMove) && isFollowingMoveValid(cMove);
-            } else
-                return isNewMoveValid(board, cMove);
-        } else
+        if (!(move instanceof ComplexMove cMove))
             return false;
+
+        if (!isMoveInBoard(board, cMove))
+            return false;
+
+        if (!hasValidCoordinates(board, cMove))
+            return false;
+
+
+        if (isTurnFinish(board))
+            if (canEat(board, cMove.getPlayerId()))
+                return isEatingMove(cMove);
+            else
+                return true;
+        else
+            return isFollowingMoveValid(cMove);
+
+
+    }
+
+    private boolean canEat(Board board, int playerId) {
+        return !getValidMovesFromBoard(board, playerId, true).isEmpty();
     }
 
     private boolean isMoveInBoard(Board board, ComplexMove move) {
-        int startRow = move.getStart().getRow();
-        int startCol = move.getStart().getCol();
-        int endRow = move.getEnd().getRow();
-        int endCol = move.getEnd().getCol();
+        return isCoordinatesInBoard(board, move.getStart())
+                && isCoordinatesInBoard(board, move.getEnd());
+    }
 
-        return !(startRow < 0 || startRow >= board.getHeight()
-                || startCol < 0 || startCol >= board.getWidth()
-                || endRow < 0 || endRow >= board.getHeight()
-                || endCol < 0 || endCol >= board.getWidth());
+    private boolean isCoordinatesInBoard(Board board, Coordinates coordinates) {
+        return isCoordinatesInBoard(board, coordinates.getRow(), coordinates.getCol());
+    }
+
+    private boolean isCoordinatesInBoard(Board board, int row, int col) {
+        return row >= 0 && row < board.getHeight() && col >= 0 && col < board.getWidth();
     }
 
     private boolean isFollowingMoveValid(ComplexMove move) {
-        if (lastMove.getEnd().getRow() == move.getStart().getRow()
-                && lastMove.getEnd().getCol() == move.getStart().getCol()) {
-            return Math.abs(move.getStart().getCol() - move.getEnd().getCol()) == 2;
-        }
-        return false;
+        return lastMove.getEnd().getRow() == move.getStart().getRow()
+                && lastMove.getEnd().getCol() == move.getStart().getCol()
+                && Math.abs(move.getStart().getCol() - move.getEnd().getCol()) == 2;
     }
 
-    private boolean isNewMoveValid(Board board, ComplexMove move) {
+    private boolean hasValidCoordinates(Board board, ComplexMove move) {
         int startRow = move.getStart().getRow();
         int startCol = move.getStart().getCol();
         int endRow = move.getEnd().getRow();
@@ -211,16 +211,23 @@ public class CheckersRule implements RulableStrategy {
         return true;
     }
 
-    @Override
-    public int getNextPlayerId(int playerId, List<Integer> playersId) {
-        if (!isTurnFinish)
-            return playerId;
+    private boolean isEatingMove(ComplexMove move) {
+        return Math.abs(move.getEnd().getRow() - move.getStart().getRow()) == 2;
+    }
 
-        for (Integer pId : playersId) {
-            if (pId != playerId)
-                return pId;
-        }
-        return -1;
+    private boolean isTurnFinish(Board board) {
+        return lastMove == null
+                || !isEatingMove(lastMove)
+                || !canContinueEating(board, lastMove);
+    }
+
+    @Override
+    public int getNextPlayerId(Board board, MoveStrategy lastMove, List<Integer> playersId) {
+        if (!isTurnFinish(board))
+            return lastMove.getPlayerId();
+
+        int idx = playersId.indexOf(lastMove.getPlayerId());
+        return playersId.get((idx + 1) % playersId.size());
     }
 
     @Override

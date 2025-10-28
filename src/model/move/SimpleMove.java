@@ -46,4 +46,9 @@ public class SimpleMove implements MoveStrategy {
     public int getRow() {
         return coordinates.getRow();
     }
+
+    @Override
+    public String toString(){
+        return "{" + coordinates.toString() + "}";
+    }
 }
