@@ -96,7 +96,7 @@ public class CheckersRule implements RulableStrategy {
                 new ComplexMove(playerId, new Coordinates(row, col), new Coordinates(row + dist, col - dist)),
                 new ComplexMove(playerId, new Coordinates(row, col), new Coordinates(row - dist, col + dist)),
                 new ComplexMove(playerId, new Coordinates(row, col), new Coordinates(row - dist, col - dist))));
-        moves.removeIf(move -> !isMoveValid(board, move));
+        moves.removeIf(move -> !isMoveInBoard(board, (ComplexMove) move) || !hasValidCoordinates(board, (ComplexMove) move));
         return moves;
     }
 
