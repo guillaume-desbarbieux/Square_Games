@@ -6,23 +6,20 @@ import model.MoveStrategy;
 import model.RulableStrategy;
 import model.move.ComplexMove;
 import model.move.Coordinates;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class CheckersRule implements RulableStrategy {
+public class CheckersRule extends Rule implements RulableStrategy {
+
     private int playerIdGoingUp;
     private int playerIdGoingDown;
-    private final int defaultHeight;
-    private final int defaultWidth;
     private ComplexMove lastMove;
 
 
     public CheckersRule() {
+        super(10,10,2);
         this.playerIdGoingDown = -1;
         this.playerIdGoingUp = -1;
-        this.defaultHeight = 10;
-        this.defaultWidth = 10;
     }
 
     @Override
@@ -35,13 +32,13 @@ public class CheckersRule implements RulableStrategy {
         if (playerIdGoingDown == -1 || playerIdGoingUp == -1)
             throw new Error("Vous n'avez pas initialisé les joueurs avant !");
 
-        Board board = new Board(defaultHeight, defaultWidth);
-        for (int row = 0; row < defaultHeight; row++)
-            for (int col = 0; col < defaultWidth; col++)
+        Board board = new Board(getHeight(), getWidth());
+        for (int row = 0; row < getHeight(); row++)
+            for (int col = 0; col < getWidth(); col++)
                 if ((row + col) % 2 == 1) {
                     if (row < 4)
                         board.getCell(row, col).setOwnerId(playerIdGoingDown);
-                    if (row >= defaultHeight - 4)
+                    if (row >= getHeight() - 4)
                         board.getCell(row, col).setOwnerId(playerIdGoingUp);
                 }
         return board;
@@ -238,12 +235,9 @@ public class CheckersRule implements RulableStrategy {
     }
 
     @Override
-    public int getHeight() {
-        return defaultHeight;
-    }
-
-    @Override
-    public int getWidth() {
-        return defaultWidth;
+    public String toString() {
+        return String.format("""
+                Mangez tous les pions adverses.
+                %50s""", "Bonne chance !");
     }
 }

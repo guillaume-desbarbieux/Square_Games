@@ -1,5 +1,7 @@
 package model.player.representation;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,7 +11,10 @@ import java.util.List;
  * using customizable color and symbol configurations. It provides functionality
  * to create individual or multiple representations with random visual attributes.
  */
-public class RepresentationFactory {
+public class RepresentationFactory implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private final List<Color> colors;
     private final Color resetColor;
     private final List<Character> symbols;

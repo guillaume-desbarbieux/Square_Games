@@ -1,6 +1,12 @@
 package model.move;
 
-public class Coordinates {
+import java.io.Serial;
+import java.io.Serializable;
+
+public class Coordinates implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private final int row;
     private final int col;
 

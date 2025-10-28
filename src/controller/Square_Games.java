@@ -1,5 +1,7 @@
 package controller;
 
+import controller.persistence.GameSerialization;
+import controller.persistence.Persistence;
 import model.rule.CheckersRule;
 import model.rule.Connect4Rule;
 import model.rule.GomokuRule;
@@ -44,16 +46,22 @@ public class Square_Games {
 
     public void start() {
         GameChoice choice = null;
+        Persistence persist = new GameSerialization();
 
         while (choice != GameChoice.QUIT) {
             view.display(GameTitle.SQUARE_GAMES);
             choice = view.getChoice(GameMessage.GET_GAME, List.of(GameChoice.TIC_TAC_TOE, GameChoice.GOMOKU, GameChoice.CONNECT4, GameChoice.CHECKERS, GameChoice.QUIT));
 
-            switch (choice) {
-                case TIC_TAC_TOE -> new GameMaster(new TicTacToeRule(), view, GameTitle.TIC_TAC_TOE).start();
-                case GOMOKU -> new GameMaster(new GomokuRule(), view, GameTitle.GOMOKU).start();
-                case CONNECT4 -> new GameMaster(new Connect4Rule(), view, GameTitle.CONNECT4).start();
-                case CHECKERS -> new GameMaster(new CheckersRule(), view, GameTitle.CHECKERS).start();
+            GameMaster gameMaster = switch (choice) {
+                case TIC_TAC_TOE -> new GameMaster(new TicTacToeRule(), view, GameTitle.TIC_TAC_TOE, persist);
+                case GOMOKU -> new GameMaster(new GomokuRule(), view, GameTitle.GOMOKU, persist);
+                case CONNECT4 -> new GameMaster(new Connect4Rule(), view, GameTitle.CONNECT4, persist);
+                case CHECKERS -> new GameMaster(new CheckersRule(), view, GameTitle.CHECKERS, persist);
+                default -> null;
+            };
+
+            if (gameMaster != null) {
+                gameMaster.start();
             }
         }
         view.display(GameMessage.SEE_YOU);

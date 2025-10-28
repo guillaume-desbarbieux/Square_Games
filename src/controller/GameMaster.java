@@ -4,6 +4,7 @@ import controller.moveAdapter.ColInputAdapter;
 import controller.moveAdapter.ComplexMoveAdapter;
 import controller.moveAdapter.MoveAdapter;
 import controller.moveAdapter.RowColInputAdapter;
+import controller.persistence.Persistence;
 import model.*;
 import model.player.ai.ArtificialPlayer;
 import model.player.HumanPlayer;
@@ -16,6 +17,8 @@ import view.dictionary.GameError;
 import view.dictionary.GameMessage;
 import view.dictionary.GameTitle;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,9 +30,12 @@ import static controller.GameState.*;
  * that orchestrates game initialization, player turns, and win/draw logic while ensuring
  * adherence to game rules.
  */
-public class GameMaster implements GameMasterStrategy{
+public class GameMaster implements GameMasterStrategy, Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private final RulableStrategy rule;
-    private final Viewable view;
+    private transient final Viewable view;
     private final PlayerFactory playerFactory;
     private final MoveAdapter adapter;
     private final GameTitle title;
@@ -44,6 +50,7 @@ public class GameMaster implements GameMasterStrategy{
     private final List<MoveStrategy> movesHistory;
     private List<String> representations;
     private List<String> highlights;
+    private final Persistence persist;
 
 
     /**
@@ -53,13 +60,14 @@ public class GameMaster implements GameMasterStrategy{
      * @param view  the view used for displaying messages, boards, and receiving user input
      * @param title the title of the game being played
      */
-    public GameMaster(RulableStrategy rule, Viewable view, GameTitle title) {
+    public GameMaster(RulableStrategy rule, Viewable view, GameTitle title, Persistence persist) {
         this.rule = rule;
         this.title = title;
         this.view = view;
         this.playerFactory = new PlayerFactory();
         this.adapter = createAdapterForRule(rule);
         this.movesHistory = new ArrayList<>();
+        this.persist = persist;
     }
 
     public MoveAdapter createAdapterForRule(RulableStrategy rule) {
@@ -82,6 +90,9 @@ public class GameMaster implements GameMasterStrategy{
     }
 
     public void stateMachine() {
+        if (persist.saveGame(this))
+            view.display("Partie sauvegardée - " + gameState);
+
         switch (gameState) {
             case WELCOME -> welcome();
             case QUICK_START -> initPlayers(1, rule.getDefaultNbPlayers() - 1);
@@ -162,6 +173,7 @@ public class GameMaster implements GameMasterStrategy{
         rule.playMove(board, currentMove);
         movesHistory.add(currentMove);
         gameState = CHECK_IF_ENDED;
+
     }
 
     public void checkIfEnded() {

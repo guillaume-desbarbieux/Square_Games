@@ -2,7 +2,13 @@ package model.move;
 
 import model.MoveStrategy;
 
-public class ComplexMove implements MoveStrategy {
+import java.io.Serial;
+import java.io.Serializable;
+
+public class ComplexMove implements MoveStrategy, Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private final int playerId;
     private final Coordinates startCoordinates;
     private final Coordinates endCoordinates;

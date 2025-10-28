@@ -1,5 +1,7 @@
 package model;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -9,17 +11,10 @@ import java.util.List;
  * to retrieve individual cells, retrieve its dimensions, and create
  * a copy of itself.
  */
-public class Board {
-    /**
-     * A two-dimensional array representing the grid of cells in the board.
-     * Each element in the array is a {@code Cell} object, which corresponds to
-     * a specific position on the board. The array structure reflects the rows
-     * and columns of the board, allowing interaction with individual cells
-     * based on their indices.
-     * This field is marked as {@code protected} to allow access from subclasses,
-     * and {@code final} to ensure the grid structure itself cannot be reassigned
-     * after initialization.
-     */
+public class Board implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private final Cell[][] cells;
 
     public Board(int height, int width) {

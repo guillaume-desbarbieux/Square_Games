@@ -1,11 +1,17 @@
 package model;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * The Cell class represents a single, interactive unit within a game grid or board.
  * Each Cell maintains a visual representation, ownership information, and its highlighted state.
  * The class provides methods to manipulate and query the state of the cell.
  */
-public class Cell {
+public class Cell implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private boolean isHighlighted;
     private int ownerId;
 

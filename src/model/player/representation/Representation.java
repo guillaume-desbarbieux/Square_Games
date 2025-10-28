@@ -1,12 +1,17 @@
 package model.player.representation;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 /**
  * The Representation class models a visual component that can have two states -
  * standard representation and highlighted representation. It is designed to encapsulate
  * the visual formatting logic and provide a unified way to render its state based
  * on the given context.
  */
-public class Representation {
+public class Representation implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     private final String representation;
     private final String highlight;
 

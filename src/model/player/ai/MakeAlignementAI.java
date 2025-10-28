@@ -6,6 +6,8 @@ import model.RulableStrategy;
 import model.player.Player;
 import model.rule.AlignementGameRule;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -17,7 +19,10 @@ import java.util.*;
  * This AI evaluates potential moves to maximize the chances of winning while minimizing
  * losses. It also avoids immediate losing moves by simulating opponent responses.
  */
-public class MakeAlignementAI implements ableToPlayAlone {
+public class MakeAlignementAI implements ableToPlayAlone, Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private static final int MAX_DEPTH = 11;
 
     /**

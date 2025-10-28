@@ -10,6 +10,8 @@ import model.player.Player;
 import model.player.ai.ableToPlayAlone;
 import view.Viewable;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -22,8 +24,11 @@ import java.util.List;
  * and column within the bounds of the game board. For AI players, it delegates
  * move generation to the provided ArtificialIntelligence instance.
  */
-public class RowColInputAdapter implements MoveAdapter {
-    private final Viewable view;
+public class RowColInputAdapter implements MoveAdapter, Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    private final transient Viewable view;
 
     /**
      * Constructs a RowColInputAdapter with the specified View instance.

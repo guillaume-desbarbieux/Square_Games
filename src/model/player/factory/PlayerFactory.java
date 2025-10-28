@@ -9,6 +9,8 @@ import model.player.ai.ableToPlayAlone;
 import model.player.ai.MakeAlignementAI;
 import model.player.representation.RepresentationFactory;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +19,10 @@ import java.util.List;
  * and artificial intelligence-controlled players. The PlayerFactory leverages a
  * RepresentationFactory to assign unique visual representations to each player.
  */
-public class PlayerFactory {
+public class PlayerFactory implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private final RepresentationFactory representationFactory;
 
     /**

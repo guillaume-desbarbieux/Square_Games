@@ -1,5 +1,7 @@
 package controller;
 
+import java.io.Serializable;
+
 public enum GameState {
     WELCOME,
     SETTINGS,

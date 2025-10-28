@@ -21,6 +21,7 @@ import java.util.Scanner;
  * a GameDictionary instance to retrieve human-readable messages, errors, titles, or choices.
  */
 public class Cli implements Viewable {
+
     private final GameDictionary dictionary = new GameDictionary();
     private final Scanner scanner = new Scanner(System.in);
     private boolean maximize = false;
