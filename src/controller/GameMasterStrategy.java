@@ -1,8 +1,6 @@
 package controller;
 
-import controller.moveAdapter.MoveAdapter;
 import model.MoveStrategy;
-import model.RulableStrategy;
 
 import model.player.Player;
 

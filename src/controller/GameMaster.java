@@ -39,7 +39,7 @@ public class GameMaster implements GameMasterStrategy, Serializable {
     private final String id;
 
     private final RulableStrategy rule;
-    private transient Viewable view;
+    private final transient Viewable view;
     private final PlayerFactory playerFactory;
     private transient MoveAdapter adapter;
     private final GameTitle title;
@@ -54,7 +54,7 @@ public class GameMaster implements GameMasterStrategy, Serializable {
     private final List<MoveStrategy> movesHistory;
     private List<String> representations;
     private List<String> highlights;
-    private transient Persistence persist;
+    private final transient Persistence persist;
 
 
     /**
@@ -114,18 +114,8 @@ public class GameMaster implements GameMasterStrategy, Serializable {
 
     }
 
-    public String getId() {
-        return id;
-    }
-
     public long getSerialVersionUID() {
         return serialVersionUID;
-    }
-
-    public void reload(Persistence persist, Viewable view) {
-        this.persist = persist;
-        this.view = view;
-        setAdapter();
     }
 
     public void setAdapter() {
@@ -147,9 +137,6 @@ public class GameMaster implements GameMasterStrategy, Serializable {
     }
 
     public void stateMachine() {
-        // if (persist.saveGame(this))
-        //     view.display("Partie sauvegardée - " + gameState);
-
         if (saveGame())
             view.display("Partie sauvegardée - " + gameState);
 

@@ -70,30 +70,6 @@ public class Square_Games {
         view.display(GameMessage.SEE_YOU);
     }
 
-    /*
-    private GameMaster getGames() {
-        List<GameMaster> games = persist.getGames();
-
-        if (games.isEmpty()) {
-            view.display(GameError.NO_SAVED_GAMES);
-            return null;
-        }
-
-        view.display("0 : Annuler");
-        for (int i = 1 ; i <= games.size() ; i++)
-            view.display(i + " : " + games.get(i-1).toString());
-
-        int choice = view.getInt(GameMessage.GET_CHOICE, 0, games.size());
-
-        if (choice == 0)
-            return null;
-
-        GameMaster game = games.get(choice -1);
-        game.reload(persist, view);
-        return game;
-    }
-    */
-
     private GameMaster getSaves() {
         List<GameSave> saves = persist.getSaves();
 
