@@ -1,12 +1,14 @@
 package model.rule;
 
+import java.io.Serializable;
+
 /**
  * The TicTacToeRule class defines the specific rules for the Tic-Tac-Toe game.
  * It extends the AlignementGameRule class, inheriting its general alignment game behavior.
  * This class is configured specifically for a 3x3 board, requiring 3 marks
  * aligned in a row, column, or diagonal to determine the winner.
  */
-public class TicTacToeRule extends AlignementGameRule {
+public class TicTacToeRule extends AlignementGameRule implements Serializable {
     /**
      * Constructs a new TicTacToeRule object specifically tailored to implement
      * the rules of the Tic-Tac-Toe game. The game is played on a 3x3 grid, with

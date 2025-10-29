@@ -1,6 +1,8 @@
 package controller;
 
-public enum GameState {
+import java.io.Serializable;
+
+public enum GameState implements Serializable {
     WELCOME,
     SETTINGS,
     QUICK_START,

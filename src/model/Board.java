@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -9,7 +10,7 @@ import java.util.List;
  * to retrieve individual cells, retrieve its dimensions, and create
  * a copy of itself.
  */
-public class Board {
+public class Board implements Serializable {
     /**
      * A two-dimensional array representing the grid of cells in the board.
      * Each element in the array is a {@code Cell} object, which corresponds to

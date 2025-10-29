@@ -1,6 +1,8 @@
 package model.move;
 
-public class Coordinates {
+import java.io.Serializable;
+
+public class Coordinates implements Serializable {
     private final int row;
     private final int col;
 

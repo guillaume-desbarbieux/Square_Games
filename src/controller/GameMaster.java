@@ -5,6 +5,7 @@ import controller.moveAdapter.ComplexMoveAdapter;
 import controller.moveAdapter.MoveAdapter;
 import controller.moveAdapter.RowColInputAdapter;
 import model.*;
+import model.move.ComplexMove;
 import model.player.ai.ArtificialPlayer;
 import model.player.HumanPlayer;
 import model.rule.*;
@@ -16,6 +17,8 @@ import view.dictionary.GameError;
 import view.dictionary.GameMessage;
 import view.dictionary.GameTitle;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,10 +30,10 @@ import static controller.GameState.*;
  * that orchestrates game initialization, player turns, and win/draw logic while ensuring
  * adherence to game rules.
  */
-public class GameMaster implements GameMasterStrategy{
+public class GameMaster implements GameMasterStrategy, Serializable {
     private final RulableStrategy rule;
-    private final Viewable view;
-    private final PlayerFactory playerFactory;
+    private transient final Viewable view;
+    private transient final PlayerFactory playerFactory;
     private final MoveAdapter adapter;
     private final GameTitle title;
     private GameState gameState;
@@ -41,9 +44,10 @@ public class GameMaster implements GameMasterStrategy{
     private Player currentPlayer;
     private MoveStrategy currentMove;
 
-    private final List<MoveStrategy> movesHistory;
+    private List<MoveStrategy> movesHistory;
     private List<String> representations;
     private List<String> highlights;
+    private final Persistence persistence;
 
 
     /**
@@ -53,13 +57,19 @@ public class GameMaster implements GameMasterStrategy{
      * @param view  the view used for displaying messages, boards, and receiving user input
      * @param title the title of the game being played
      */
-    public GameMaster(RulableStrategy rule, Viewable view, GameTitle title) {
+    public GameMaster(RulableStrategy rule, Viewable view, GameTitle title, Persistence persistence) {
         this.rule = rule;
         this.title = title;
         this.view = view;
         this.playerFactory = new PlayerFactory();
         this.adapter = createAdapterForRule(rule);
         this.movesHistory = new ArrayList<>();
+        this.persistence = persistence;
+    }
+
+    @Override
+    public String toString() {
+        return title.toString();
     }
 
     public MoveAdapter createAdapterForRule(RulableStrategy rule) {
@@ -82,6 +92,7 @@ public class GameMaster implements GameMasterStrategy{
     }
 
     public void stateMachine() {
+
         switch (gameState) {
             case WELCOME -> welcome();
             case QUICK_START -> initPlayers(1, rule.getDefaultNbPlayers() - 1);
@@ -95,8 +106,13 @@ public class GameMaster implements GameMasterStrategy{
             case DRAW -> gameDraw();
             case QUIT -> quit();
         }
+        saveGame();
         if (gameState != QUIT)
             stateMachine();
+    }
+
+    public GameState getGameState() {
+        return gameState;
     }
 
     public void quit() {
@@ -105,10 +121,35 @@ public class GameMaster implements GameMasterStrategy{
 
     public void welcome() {
         view.display(title);
-        GameChoice choice = view.getChoice(GameMessage.WELCOME, List.of(GameChoice.QUICK_START, GameChoice.SETTINGS));
-        switch (choice) {
-            case QUICK_START -> gameState = QUICK_START;
-            case SETTINGS -> gameState = SETTINGS;
+
+        view.display("Recharger la dernière partie ?");
+        GameChoice input = view.getChoice(GameMessage.GET_CHOICE, List.of(GameChoice.YES, GameChoice.NO));
+        if(input.equals(GameChoice.YES)) {
+            try{
+                GameMaster loadedGameMaster = persistence.load(title.toString());
+                gameState = loadedGameMaster.getGameState();
+                players = loadedGameMaster.players;
+                board = loadedGameMaster.board;
+                currentPlayer = loadedGameMaster.currentPlayer;
+                representations = loadedGameMaster.representations;
+                listIds = loadedGameMaster.listIds;
+                movesHistory = loadedGameMaster.movesHistory;
+                if(rule instanceof CheckersRule checkersRule){
+                    System.out.println("Last move : " + checkersRule.getLastMove());
+                    checkersRule.setLastMove((ComplexMove) movesHistory.getLast());
+                    System.out.println("Last de l'history : " + (ComplexMove) movesHistory.getLast());
+                    System.out.println("Last move : " + checkersRule.getLastMove());
+                }
+
+            } catch (IOException | ClassNotFoundException e) {
+                view.display("Erreur de chargement " + e.getMessage());
+            }
+        }else{
+            GameChoice choice = view.getChoice(GameMessage.WELCOME, List.of(GameChoice.QUICK_START, GameChoice.SETTINGS));
+            switch (choice) {
+                case QUICK_START -> gameState = QUICK_START;
+                case SETTINGS -> gameState = SETTINGS;
+            }
         }
     }
 
@@ -204,5 +245,13 @@ public class GameMaster implements GameMasterStrategy{
             return adapter.getMoveFromAI(board, rule, player, players, aiPlayer.getAi());
         }
         return null;
+    }
+
+    public void saveGame() {
+        try{
+            persistence.save(this);
+        } catch (IOException e) {
+            System.out.println("Error saving game " + e.getMessage());
+        }
     }
 }

@@ -2,6 +2,8 @@ package model.move;
 
 import model.MoveStrategy;
 
+import java.io.Serializable;
+
 /**
  * The Move class represents a single action taken by a player in a game.
  * A move comprises the player making the move, and the row and column
@@ -10,7 +12,7 @@ import model.MoveStrategy;
  * This class is immutable, ensuring that the properties of a move cannot
  * be modified once the object is created.
  */
-public class SimpleMove implements MoveStrategy {
+public class SimpleMove implements MoveStrategy, Serializable {
     private final int playerId;
     private final Coordinates coordinates;
 

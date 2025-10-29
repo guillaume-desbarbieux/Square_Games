@@ -4,6 +4,7 @@ import model.Board;
 import model.MoveStrategy;
 import model.RulableStrategy;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ import java.util.List;
  * such as initializing a board, validating moves, determining game state,
  * and handling player turns.
  */
-public abstract class Rule implements RulableStrategy {
+public abstract class Rule implements RulableStrategy, Serializable {
     private final int height;
     private final int width;
     private final int defaultNbPlayers;

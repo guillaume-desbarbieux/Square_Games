@@ -10,10 +10,11 @@ import model.player.ai.ableToPlayAlone;
 import view.Viewable;
 import view.dictionary.GameMessage;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ComplexMoveAdapter implements MoveAdapter {
-    private final Viewable view;
+public class ComplexMoveAdapter implements MoveAdapter, Serializable {
+    private transient final Viewable view;
     public ComplexMoveAdapter(Viewable view) {
         this.view = view;
     }

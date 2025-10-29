@@ -2,6 +2,8 @@ package model.player;
 
 import model.player.representation.Representation;
 
+import java.io.Serializable;
+
 /**
  * The Player class is an abstract representation of a game player. It provides
  * the foundational structure for identifying and visually representing a player
@@ -12,7 +14,7 @@ import model.player.representation.Representation;
  * It also provides methods for retrieving these properties and rendering the player's
  * visual appearance within the game.
  */
-public abstract class Player {
+public abstract class Player implements Serializable {
     private final int id;
     private final Representation representation;
 

@@ -25,4 +25,5 @@ public interface RulableStrategy {
     int getHeight();
 
     int getWidth();
+
 }

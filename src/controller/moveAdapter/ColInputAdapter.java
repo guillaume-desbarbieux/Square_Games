@@ -10,6 +10,7 @@ import model.player.Player;
 import model.player.ai.ableToPlayAlone;
 import view.Viewable;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -24,8 +25,8 @@ import java.util.List;
  * - Calculates the row for a move by determining the lowest available cell in the specified column.
  * - Retrieves moves for an AI player by delegating the computation to an ArtificialIntelligence instance.
  */
-public class ColInputAdapter implements MoveAdapter {
-    private final Viewable view;
+public class ColInputAdapter implements MoveAdapter, Serializable {
+    private transient final Viewable view;
 
     /**
      * Constructs a ColInputAdapter instance with a given View object.
