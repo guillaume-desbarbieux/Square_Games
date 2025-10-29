@@ -1,7 +1,5 @@
 package controller;
 
-import view.dictionary.GameChoice;
-
 public interface MenuObserver {
-    void onGameChoiceAsked(GameChoice gameChoice);
+    void onUpdate(EventType eventType, Generique param);
 }

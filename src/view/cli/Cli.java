@@ -1,9 +1,10 @@
 package view.cli;
 
+import controller.EventType;
+import controller.Generique;
 import controller.MenuObservable;
 import controller.MenuObserver;
 import model.Cell;
-import model.GameSave;
 import view.dictionary.GameChoice;
 import view.dictionary.GameError;
 import view.dictionary.GameMessage;
@@ -12,10 +13,7 @@ import model.Board;
 import view.dictionary.GameDictionary;
 import view.Viewable;
 
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * The Cli class represents a Command Line Interface (CLI) implementation of the View interface.
@@ -43,8 +41,11 @@ public class Cli implements Viewable, MenuObservable {
      * preparing it to handle user input and display output for various
      * game-related functionalities.
      */
-    public Cli() {
-        menuObservers = new ArrayList<>();
+    public Cli(EventType... eventTypes) {
+        menuObservers = new HashMap<>();
+
+        for (EventType eventType : eventTypes)
+            menuObservers.put(eventType, new ArrayList<>());
     }
 
     /**
@@ -95,7 +96,7 @@ public class Cli implements Viewable, MenuObservable {
      * and delegates the output to another method for display.
      *
      * @param message the game message to be displayed
-     * @param extra additional information to be appended to the message
+     * @param extra   additional information to be appended to the message
      */
     @Override
     public void display(GameMessage message, String extra) {
@@ -116,7 +117,7 @@ public class Cli implements Viewable, MenuObservable {
         String title = dictionary.get(key);
         String border = "═".repeat(title.length());
         display(BLUE + "╔══" + border + "══╗" + RESET);
-        display(BLUE + "║  " + title  + "  ║" + RESET);
+        display(BLUE + "║  " + title + "  ║" + RESET);
         display(BLUE + "╚══" + border + "══╝" + RESET);
     }
 
@@ -184,8 +185,8 @@ public class Cli implements Viewable, MenuObservable {
      * until the user provides a value within the range.
      *
      * @param message the game message to display as a prompt
-     * @param min the minimum allowable value for the input
-     * @param max the maximum allowable value for the input
+     * @param min     the minimum allowable value for the input
+     * @param max     the maximum allowable value for the input
      * @return the integer value provided by the user within the specified range
      */
     @Override
@@ -212,7 +213,7 @@ public class Cli implements Viewable, MenuObservable {
      * @return the game choice selected by the user, or null if no choices are available
      */
     @Override
-    public GameChoice getChoice(GameMessage message, List<GameChoice> choices) {
+    public GameChoice getChoice(EventType eventType, GameMessage message, List<GameChoice> choices) {
         display(message);
 
         int size = choices.size();
@@ -226,35 +227,12 @@ public class Cli implements Viewable, MenuObservable {
         int index = getInt(GameMessage.GET_CHOICE);
         if (index < 1 || index > size) {
             display(GameError.INVALID_CHOICE);
-            return getChoice(message, choices);
+            return getChoice(EventType.SAVE_NUMBER, message, choices);
         }
         GameChoice choice = choices.get(index - 1);
-        notifyGameChoiceAsked(choice);
+        notify(eventType, new Generique(choice));
         return choice;
     }
-
-    /**
-     * Prompts the user for a string input corresponding to the given game message.
-     * <p>
-     * This method first displays the specified {@code GameMessage} to the console
-     * by delegating to the {@code display} method. It then retrieves the user's
-     * response as a string from the scanner.
-     *
-     * @param message the game message to display as a prompt to the user
-     * @return the string input provided by the user
-     */
-    @Override
-    public String getString(GameMessage message) {
-        display(message);
-        return scanner.nextLine();
-    }
-
-    @Override
-    public boolean getBool(GameMessage gameMessage) {
-        GameChoice choice = getChoice(gameMessage, List.of(GameChoice.YES, GameChoice.NO));
-        return choice == GameChoice.YES;
-    }
-
     /**
      * Displays the current state of the board in a formatted manner.
      * <p>
@@ -289,7 +267,7 @@ public class Cli implements Viewable, MenuObservable {
         for (int i = 0; i < board.getHeight(); i++) {
             message.append(String.format("%" + indexWidth + "d", i + 1)).append(horizontalSeparator);
             for (int j = 0; j < board.getWidth(); j++) {
-                Cell cell = board.getCell(i,j);
+                Cell cell = board.getCell(i, j);
                 String render = "·";
                 if (!cell.isEmpty())
                     if (cell.isHighlighted())
@@ -304,22 +282,26 @@ public class Cli implements Viewable, MenuObservable {
     }
 
 
-    private final List<MenuObserver> menuObservers;
+    private final Map<EventType, List<MenuObserver>> menuObservers;
 
     @Override
-    public void addMenuObserver(MenuObserver menuObserver) {
-        if (!menuObservers.contains(menuObserver))
-            menuObservers.add(menuObserver);
+    public void subscribe(MenuObserver observer, EventType... eventTypes) {
+        for (EventType type : eventTypes) {
+            List<MenuObserver> observers = menuObservers.get(type);
+            if (!observers.contains(observer))
+                observers.add(observer);
+        }
     }
 
     @Override
-    public void removeMenuObserver(MenuObserver menuObserver) {
-        menuObservers.remove(menuObserver);
+    public void unsubscribe(MenuObserver observer, EventType... eventTypes) {
+        for (EventType type : eventTypes)
+            menuObservers.get(type).remove(observer);
     }
 
     @Override
-    public void notifyGameChoiceAsked(GameChoice gameChoice) {
-        for (MenuObserver menuObserver : menuObservers)
-            menuObserver.onGameChoiceAsked(gameChoice);
+    public void notify(EventType eventType, Generique param) {
+        for (MenuObserver observer : menuObservers.get(eventType))
+            observer.onUpdate(eventType, param);
     }
 }

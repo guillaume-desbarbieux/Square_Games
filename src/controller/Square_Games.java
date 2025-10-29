@@ -16,24 +16,10 @@ import view.dictionary.GameTitle;
 
 import java.util.List;
 
+import static controller.EventType.*;
 import static controller.GameState.*;
-import static view.dictionary.GameChoice.SAVES;
+import static view.dictionary.GameChoice.GET_SAVES;
 
-/**
- * The Square_Games class serves as the main entry point for running and managing
- * a variety of board games such as Tic Tac Toe, Gomoku, and Connect4. The class
- * presents an interactive command-line interface (CLI) that allows users to select
- * and play their desired game. The user can choose to play one of the available
- * games or exit the application.
- * <p>
- * Responsibilities of this class include:
- * - Displaying the game menu and title screen using a View implementation (CLI).
- * - Allowing users to select a game from a list of available options.
- * - Initializing and starting the selected game using the appropriate game rules.
- * - Providing the ability to quit the application through the menu.
- * <p>
- * Each game is managed by the GameMaster class, which handles the game logic and player interactions.
- */
 public class Square_Games implements MenuObserver {
     private final Viewable view;
     private final Persistence persist;
@@ -41,18 +27,10 @@ public class Square_Games implements MenuObserver {
     private GameChoice currentChoice;
     private GameMaster gameMaster;
 
-    /**
-     * Constructs a new instance of the Square_Games class.
-     * <p>
-     * This constructor initializes the Square_Games instance with a default command-line interface (CLI)
-     * implementation for the View. The CLI is responsible for displaying messages to the user and managing
-     * their input during the gameplay. The created instance serves as the primary interface for starting and
-     * managing available board games provided by the application.
-     */
     public Square_Games() {
-        this.view = new Cli();
+        this.view = new Cli(MAIN_MENU_CHOICE, SAVE_NUMBER, GAME_MENU_CHOICE);
         this.persist = new GameSerialization();
-        ((MenuObservable) view).addMenuObserver(this);
+        ((MenuObservable) view).subscribe(this, MAIN_MENU_CHOICE);
     }
 
     public void start() {
@@ -65,17 +43,17 @@ public class Square_Games implements MenuObserver {
         switch (gameState) {
             case WELCOME -> welcome();
             case INIT_GAME -> initGame();
-            case SAVES -> getSaves();
+            case GET_SAVE -> getSaves();
             case PLAY -> play();
             case QUIT -> quit();
         }
     }
 
     private void play() {
-        ((MenuObservable) view).removeMenuObserver(this);
+        ((MenuObservable) view).unsubscribe(this);
         view.display("C'est parti !!!");
         gameMaster.start();
-        ((MenuObservable) view).addMenuObserver(this);
+        ((MenuObservable) view).subscribe(this);
         gameState = WELCOME;
         stateMachine();
     }
@@ -100,7 +78,7 @@ public class Square_Games implements MenuObserver {
 
     private void welcome() {
         view.display(GameTitle.SQUARE_GAMES);
-        view.getChoice(GameMessage.GET_GAME, List.of(GameChoice.TIC_TAC_TOE, GameChoice.GOMOKU, GameChoice.CONNECT4, GameChoice.CHECKERS, GameChoice.QUIT, SAVES));
+        view.getChoice(EventType.MAIN_MENU_CHOICE, GameMessage.GET_GAME, List.of(GameChoice.TIC_TAC_TOE, GameChoice.GOMOKU, GameChoice.CONNECT4, GameChoice.CHECKERS, GameChoice.QUIT, GET_SAVES));
         stateMachine();
     }
 
@@ -125,14 +103,24 @@ public class Square_Games implements MenuObserver {
     }
 
     @Override
-    public void onGameChoiceAsked(GameChoice gameChoice) {
-        currentChoice = gameChoice;
-        if (currentChoice == GameChoice.QUIT)
-            gameState = QUIT;
-        else if (currentChoice == SAVES)
-            gameState = GameState.SAVES;
-        else
-            gameState = INIT_GAME;
+    public void onUpdate(EventType eventType, Generique param) {
+        switch (eventType) {
+            case MAIN_MENU_CHOICE -> treatMenuChoice(param);
+            default -> System.err.println("Notification inconnue reçue : " + this + eventType + param);
+        }
+    }
+
+    private void treatMenuChoice(Generique param) {
+        if (param.param() instanceof GameChoice gameChoice)
+            switch (gameChoice) {
+                case QUIT -> gameState = QUIT;
+                case GET_SAVES -> gameState = GameState.GET_SAVE;
+                case TIC_TAC_TOE, CONNECT4, CHECKERS, GOMOKU -> {
+                    currentChoice = gameChoice;
+                    gameState = INIT_GAME;
+                }
+                default -> view.display(GameError.INVALID_CHOICE);
+            }
         stateMachine();
     }
 }

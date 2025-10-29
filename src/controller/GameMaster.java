@@ -168,7 +168,7 @@ public class GameMaster implements GameMasterStrategy, Serializable {
 
     public void welcome() {
         view.display(title);
-        GameChoice choice = view.getChoice(GameMessage.WELCOME, List.of(GameChoice.QUICK_START, GameChoice.SETTINGS));
+        GameChoice choice = view.getChoice(EventType.GAME_MENU_CHOICE, GameMessage.WELCOME, List.of(GameChoice.QUICK_START, GameChoice.SETTINGS));
         switch (choice) {
             case QUICK_START -> gameState = QUICK_START;
             case SETTINGS -> gameState = SETTINGS;
@@ -179,7 +179,7 @@ public class GameMaster implements GameMasterStrategy, Serializable {
         view.display(GameTitle.SETTINGS);
         int nbHumanPlayers = view.getInt(GameMessage.GET_NB_HUMAN_PLAYERS, 0, rule.getDefaultNbPlayers());
         int nbArtificialPlayers = rule.getDefaultNbPlayers() - nbHumanPlayers;
-        GameChoice choice = view.getChoice(GameMessage.GET_BOARD_SIZE, List.of(GameChoice.LITTLE, GameChoice.BIG));
+        GameChoice choice = view.getChoice(EventType.GAME_MENU_CHOICE, GameMessage.GET_BOARD_SIZE, List.of(GameChoice.LITTLE, GameChoice.BIG));
         view.setSize(choice);
         initPlayers(nbHumanPlayers, nbArtificialPlayers);
         gameState = INIT_GAME;

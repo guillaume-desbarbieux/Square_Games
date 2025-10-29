@@ -1,5 +1,6 @@
 package view;
 
+import controller.EventType;
 import model.Board;
 import view.dictionary.GameChoice;
 import view.dictionary.GameError;
@@ -157,21 +158,5 @@ public interface Viewable {
      *                this determines the available options presented to the user.
      * @return the {@code GameChoice} selected by the user from the provided list of options.
      */
-    GameChoice getChoice(GameMessage message, List<GameChoice> choices);
-
-    /**
-     * Retrieves a string representation of the specified {@code GameMessage}.
-     * <p>
-     * This method is typically used to convert a {@code GameMessage} into its
-     * corresponding textual form, which can then be displayed or processed further.
-     * The returned string may represent a preformatted or localized version
-     * of the message, depending on implementation.
-     *
-     * @param message the {@code GameMessage} to be converted; represents a predefined
-     *                message related to the game's state, prompts, or events
-     * @return a string representation of the provided {@code GameMessage}
-     */
-    String getString(GameMessage message);
-
-    boolean getBool(GameMessage gameMessage);
+    GameChoice getChoice(EventType eventType, GameMessage message, List<GameChoice> choices);
 }

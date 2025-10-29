@@ -1,10 +1,8 @@
 package controller;
 
-import view.dictionary.GameChoice;
-
 public interface MenuObservable {
-    void addMenuObserver(MenuObserver menuObserver);
-    void removeMenuObserver(MenuObserver menuObserver);
+    void subscribe(MenuObserver menuObserver, EventType... eventTypes);
+    void unsubscribe(MenuObserver menuObserver, EventType... eventTypes);
 
-    void notifyGameChoiceAsked(GameChoice gameChoice);
+    void notify(EventType eventType, Generique param);
 }

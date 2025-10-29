@@ -27,5 +27,5 @@ public enum GameChoice {
     TIC_TAC_TOE,
     GOMOKU,
     CONNECT4,
-    CHECKERS, YES, NO, SAVES, BIG
+    CHECKERS, YES, NO, GET_SAVES, BIG
 }
