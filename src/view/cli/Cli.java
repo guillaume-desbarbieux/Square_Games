@@ -227,7 +227,7 @@ public class Cli implements Viewable, MenuObservable {
         int index = getInt(GameMessage.GET_CHOICE);
         if (index < 1 || index > size) {
             display(GameError.INVALID_CHOICE);
-            return getChoice(EventType.SAVE_NUMBER, message, choices);
+            return getChoice(EventType.GET_SAVE_INDEX, message, choices);
         }
         GameChoice choice = choices.get(index - 1);
         notify(eventType, new Generique(choice));

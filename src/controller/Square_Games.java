@@ -2,17 +2,14 @@ package controller;
 
 import controller.persistence.GameSerialization;
 import controller.persistence.Persistence;
-import model.GameSave;
+import model.*;
 import model.rule.CheckersRule;
 import model.rule.Connect4Rule;
 import model.rule.GomokuRule;
 import model.rule.TicTacToeRule;
-import view.Viewable;
+import view.*;
 import view.cli.Cli;
-import view.dictionary.GameChoice;
-import view.dictionary.GameError;
-import view.dictionary.GameMessage;
-import view.dictionary.GameTitle;
+import view.dictionary.*;
 
 import java.util.List;
 
@@ -28,7 +25,7 @@ public class Square_Games implements MenuObserver {
     private GameMaster gameMaster;
 
     public Square_Games() {
-        this.view = new Cli(MAIN_MENU_CHOICE, SAVE_NUMBER, GAME_MENU_CHOICE);
+        this.view = new Cli(MAIN_MENU_CHOICE, GET_SAVE_INDEX, GAME_MENU_CHOICE);
         this.persist = new GameSerialization();
         ((MenuObservable) view).subscribe(this, MAIN_MENU_CHOICE);
     }
@@ -78,7 +75,7 @@ public class Square_Games implements MenuObserver {
 
     private void welcome() {
         view.display(GameTitle.SQUARE_GAMES);
-        view.getChoice(EventType.MAIN_MENU_CHOICE, GameMessage.GET_GAME, List.of(GameChoice.TIC_TAC_TOE, GameChoice.GOMOKU, GameChoice.CONNECT4, GameChoice.CHECKERS, GameChoice.QUIT, GET_SAVES));
+       view.getChoice(EventType.MAIN_MENU_CHOICE, GameMessage.GET_GAME, List.of(GameChoice.TIC_TAC_TOE, GameChoice.GOMOKU, GameChoice.CONNECT4, GameChoice.CHECKERS, GameChoice.QUIT, GET_SAVES));
         stateMachine();
     }
 
