@@ -11,6 +11,6 @@ public enum GameState {
     NEXT_PLAYER,
     WIN,
     DRAW,
-    QUIT,
+    QUIT, SAVES, START, PLAY, WAITING,
 }
 

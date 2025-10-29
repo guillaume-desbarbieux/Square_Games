@@ -1,6 +1,9 @@
 package view.cli;
 
+import controller.MenuObservable;
+import controller.MenuObserver;
 import model.Cell;
+import model.GameSave;
 import view.dictionary.GameChoice;
 import view.dictionary.GameError;
 import view.dictionary.GameMessage;
@@ -9,6 +12,7 @@ import model.Board;
 import view.dictionary.GameDictionary;
 import view.Viewable;
 
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -20,7 +24,7 @@ import java.util.Scanner;
  * escape sequences for styling output, such as coloring or formatting text, and it leverages
  * a GameDictionary instance to retrieve human-readable messages, errors, titles, or choices.
  */
-public class Cli implements Viewable {
+public class Cli implements Viewable, MenuObservable {
 
     private final GameDictionary dictionary = new GameDictionary();
     private final Scanner scanner = new Scanner(System.in);
@@ -40,6 +44,7 @@ public class Cli implements Viewable {
      * game-related functionalities.
      */
     public Cli() {
+        menuObservers = new ArrayList<>();
     }
 
     /**
@@ -223,7 +228,9 @@ public class Cli implements Viewable {
             display(GameError.INVALID_CHOICE);
             return getChoice(message, choices);
         }
-        return choices.get(index - 1);
+        GameChoice choice = choices.get(index - 1);
+        notifyGameChoiceAsked(choice);
+        return choice;
     }
 
     /**
@@ -294,5 +301,25 @@ public class Cli implements Viewable {
             message.append("\n").append(verticalSeparator);
         }
         display(message.toString());
+    }
+
+
+    private final List<MenuObserver> menuObservers;
+
+    @Override
+    public void addMenuObserver(MenuObserver menuObserver) {
+        if (!menuObservers.contains(menuObserver))
+            menuObservers.add(menuObserver);
+    }
+
+    @Override
+    public void removeMenuObserver(MenuObserver menuObserver) {
+        menuObservers.remove(menuObserver);
+    }
+
+    @Override
+    public void notifyGameChoiceAsked(GameChoice gameChoice) {
+        for (MenuObserver menuObserver : menuObservers)
+            menuObserver.onGameChoiceAsked(gameChoice);
     }
 }
