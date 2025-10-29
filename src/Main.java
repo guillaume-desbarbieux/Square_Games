@@ -1,4 +1,6 @@
+import controller.MenuObservable;
 import controller.Square_Games;
+import controller.UserListener;
 
 /**
  * The Main class serves as the entry point for the application.
@@ -19,6 +21,12 @@ public class Main {
      *             not used in this implementation.
      */
     public static void main(String[] args) {
-        new Square_Games().start();
+        Square_Games squareGameObserver = new Square_Games();
+        MenuObservable observable = new UserListener();
+
+        observable.addMenuObserver(squareGameObserver);
+
+        String choice = squareGameObserver.choiceGame();
+        observable.notifyChoiceGame(choice);
     }
 }

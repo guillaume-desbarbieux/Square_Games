@@ -1,5 +1,6 @@
 package view.cli;
 
+import controller.MenuObserver;
 import model.Cell;
 import view.dictionary.GameChoice;
 import view.dictionary.GameError;
@@ -236,7 +237,7 @@ public class Cli implements Viewable {
      * @return the string input provided by the user
      */
     @Override
-    public String getString(GameMessage message) {
+    public String getString(String message) {
         display(message);
         return scanner.nextLine();
     }

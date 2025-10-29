@@ -171,7 +171,7 @@ public interface Viewable {
      *                message related to the game's state, prompts, or events
      * @return a string representation of the provided {@code GameMessage}
      */
-    String getString(GameMessage message);
+    String getString(String message);
 
     boolean getBool(GameMessage gameMessage);
 }

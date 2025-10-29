@@ -6,12 +6,7 @@ import model.rule.GomokuRule;
 import model.rule.TicTacToeRule;
 import view.Viewable;
 import view.cli.Cli;
-import view.dictionary.GameChoice;
-import view.dictionary.GameMessage;
 import view.dictionary.GameTitle;
-
-import java.sql.SQLOutput;
-import java.util.List;
 
 /**
  * The Square_Games class serves as the main entry point for running and managing
@@ -28,9 +23,8 @@ import java.util.List;
  * <p>
  * Each game is managed by the GameMaster class, which handles the game logic and player interactions.
  */
-public class Square_Games {
+public class Square_Games implements MenuObserver {
     private final Viewable view;
-
     /**
      * Constructs a new instance of the Square_Games class.
      * <p>
@@ -43,21 +37,29 @@ public class Square_Games {
         this.view = new Cli();
     }
 
-    public void start() {
-        GameChoice choice = null;
+    public String choiceGame() {
+        return view.getString("Choix du jeu : tictactoe, gomoku, connect4, dames");
+    }
+
+    @Override
+    public void onSaveGame() {
+
+    }
+
+    @Override
+    public void onChoiceGame(String gameChoice) {
         GameSerialization gameSerialization = new GameSerialization();
-
-        while (choice != GameChoice.QUIT) {
-            view.display(GameTitle.SQUARE_GAMES);
-            choice = view.getChoice(GameMessage.GET_GAME, List.of(GameChoice.TIC_TAC_TOE, GameChoice.GOMOKU, GameChoice.CONNECT4, GameChoice.CHECKERS, GameChoice.QUIT));
-
-            switch (choice) {
-                case TIC_TAC_TOE -> new GameMaster(new TicTacToeRule(), view, GameTitle.TIC_TAC_TOE, gameSerialization).start();
-                case GOMOKU -> new GameMaster(new GomokuRule(), view, GameTitle.GOMOKU, gameSerialization).start();
-                case CONNECT4 -> new GameMaster(new Connect4Rule(), view, GameTitle.CONNECT4, gameSerialization).start();
-                case CHECKERS -> new GameMaster(new CheckersRule(), view, GameTitle.CHECKERS, gameSerialization).start();
-            }
+        switch (gameChoice) {
+            case "tictactoe" -> new GameMaster(new TicTacToeRule(), view, GameTitle.TIC_TAC_TOE, gameSerialization).start();
+            case "gomoku" -> new GameMaster(new GomokuRule(), view, GameTitle.GOMOKU, gameSerialization).start();
+            case "connect4" -> new GameMaster(new Connect4Rule(), view, GameTitle.CONNECT4, gameSerialization).start();
+            case "dames" -> new GameMaster(new CheckersRule(), view, GameTitle.CHECKERS, gameSerialization).start();
+            default -> view.display("Erreur de jeu");
         }
-        view.display(GameMessage.SEE_YOU);
+    }
+
+    @Override
+    public void onExitGame() {
+
     }
 }
